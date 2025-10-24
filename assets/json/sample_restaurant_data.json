@@ -1,0 +1,82 @@
+{
+  "featured": [
+    {
+      "id": "rest1",
+      "name": "Olive Garden",
+      "imageUrl": "https://source.unsplash.com/random/700x390?restaurant,italian,food",
+      "rating": 4.6,
+      "cuisineType": "Italian",
+      "eta": "30-40 min",
+      "address": "123 Main St, Anytown",
+      "offers": ["20% off pasta", "Free Appetizer"]
+    },
+    {
+      "id": "rest2",
+      "name": "Olive Garden2",
+      "imageUrl": "https://source.unsplash.com/random/700x390?restaurant,italian,food",
+      "rating": 4.6,
+      "cuisineType": "Italian",
+      "eta": "30-40 min",
+      "address": "123 Main St, Anytown",
+      "offers": ["20% off pasta", "Free Appetizer"]
+    }
+  ],
+  "trending": [
+    {
+      "id": "rest2",
+      "name": "Spice Route",
+      "imageUrl": "https://source.unsplash.com/random/300x200?restaurant,indian,curry",
+      "rating": 4.8,
+      "cuisineType": "Indian",
+      "eta": "25-35 min"
+    },
+    {
+      "id": "rest3",
+      "name": "The Cozy Cafe",
+      "imageUrl": "https://source.unsplash.com/random/300x200?restaurant,cafe,coffee",
+      "rating": 4.5,
+      "cuisineType": "Cafe",
+      "eta": "15-20 min"
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "event1",
+      "name": "The Grand Buffet",
+      "imageUrl": "https://source.unsplash.com/random/400x250?restaurant,buffet,event",
+      "rating": 0.0,
+      "cuisineType": "Multi-Cuisine",
+      "eta": "Event",
+      "eventTitle": "Weekend Brunch Fest",
+      "eventDate": "Sat & Sun, 11 AM - 3 PM",
+      "eventDescription": "All you can eat from a wide selection of global cuisines."
+    },
+    {
+      "id": "event2",
+      "name": "The Grand Buffet2",
+      "imageUrl": "https://source.unsplash.com/random/400x250?restaurant,buffet,event",
+      "rating": 0.0,
+      "cuisineType": "Multi-Cuisine",
+      "eta": "Event",
+      "eventTitle": "Weekend Brunch Fest",
+      "eventDate": "Sat & Sun, 11 AM - 3 PM",
+      "eventDescription": "All you can eat from a wide selection of global cuisines."
+    }
+  ],
+  "communities": [
+    {
+      "id": "com1",
+      "name": "Action Movie Fanatics",
+      "description": "Discuss the latest blockbusters!",
+      "imageUrl": "https://source.unsplash.com/random/80x80?logo,action",
+      "joinLink": "https://discord.gg/actionmovies"
+    },
+    {
+      "id": "com2",
+      "name": "Sci-Fi World Builders",
+      "description": "Explore new universes.",
+      "imageUrl": "https://source.unsplash.com/random/80x80?logo,scifi",
+      "joinLink": null
+    }
+  ]
+}

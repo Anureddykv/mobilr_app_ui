@@ -1,0 +1,70 @@
+{
+  "featured": [
+    {
+      "id": "gadget1",
+      "name": "Zenith Pro Smartphone",
+      "brand": "TechNova",
+      "imageUrl": "https://source.unsplash.com/random/700x390?gadget,smartphone,tech",
+      "rating": 4.7,
+      "price": "₹69,990",
+      "keyFeatures": ["AMOLED Display", "108MP Camera", "Snapdragon 8 Gen 3"],
+      "availability": "In Stock"
+    }
+  ],
+  "trending": [
+    {
+      "id": "gadget2",
+      "name": "Aura Buds X",
+      "brand": "SoundWave",
+      "imageUrl": "https://source.unsplash.com/random/250x250?gadget,earbuds,audio",
+      "rating": 4.5,
+      "price": "₹4,999",
+      "keyFeatures": ["Active Noise Cancellation", "24hr Battery", "IPX7 Water Resistant"]
+    },
+    {
+      "id": "gadget3",
+      "name": "Chrono Watch Series 5",
+      "brand": "TimeWear",
+      "imageUrl": "https://source.unsplash.com/random/250x250?gadget,smartwatch,wearable",
+      "rating": 4.6,
+      "price": "₹22,500",
+      "keyFeatures": ["ECG Monitor", "Always-On Display", "GPS"]
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "gadget4",
+      "name": "Nebula Tab Ultra",
+      "brand": "Visionary Inc.",
+      "imageUrl": "https://source.unsplash.com/random/250x350?gadget,tablet,future",
+      "price": "Coming Soon",
+      "keyFeatures": ["120Hz Mini-LED", "M3 Chipset", "Stylus Support"],
+      "releaseDate": "Q3 2024",
+      "availability": "Pre-order Soon"
+    }
+  ],
+  "community": [
+    {
+      "id": "cs1",
+      "title": "GTA VI Hub",
+      "developer": "Fan Community",
+      "bannerImageUrl": "https://source.unsplash.com/random/80x80?logo,gta",
+      "tags": [],
+      "rating": 0.0,
+      "voteCount": "",
+      "description": "Join the hype!",
+      "discordUrl": "https://discord.gg/gtavi"
+    },
+    {
+      "id": "cs2",
+      "title": "PUBG Mobile India",
+      "developer": "Krafton",
+      "bannerImageUrl": "https://source.unsplash.com/random/80x80?logo,pubg",
+      "tags": [],
+      "rating": 0.0,
+      "voteCount": "",
+      "description": "Official server.",
+      "discordUrl": "https://discord.gg/pubgmobilein"
+    }
+  ]
+}

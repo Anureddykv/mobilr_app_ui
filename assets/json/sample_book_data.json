@@ -1,0 +1,56 @@
+{
+  "featured": [
+    {
+      "id": "b1",
+      "title": "The Psychology of Money",
+      "author": "Morgan Housel",
+      "coverImageUrl": "https://source.unsplash.com/random/710x400?book,money",
+      "genres": ["Finance", "Psychology", "Self Help"],
+      "audienceRating": 4.8,
+      "audienceVoteCount": "15.2k Votes",
+      "description": "Timeless lessons on wealth, greed, and happiness."
+    }],
+  "trending": [
+    {
+      "id": "b2",
+      "title": "Read People Like a Book",
+      "author": "Patrick King",
+      "coverImageUrl": "https://source.unsplash.com/random/400x600?book,psychology",
+      "genres": ["Non Fiction", "Self Help", "Top 10"],
+      "audienceRating": 4.5,
+      "audienceVoteCount": "8.1k Votes"
+    },
+    {
+      "id": "b3",
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "coverImageUrl": "https://source.unsplash.com/random/400x600?book,habits",
+      "genres": ["Self Help", "Productivity"],
+      "audienceRating": 4.9,
+      "audienceVoteCount": "30k Votes"
+    }
+  ],
+  "genreSpecificBooks": [
+    {
+      "id": "b5",
+      "title": "Yugandhar",
+      "author": "Shivaji Sawant",
+      "coverImageUrl": "https://source.unsplash.com/random/400x600?book,epic,telugu",
+      "genres": ["Historical Fiction", "Telugu Literature"],
+      "audienceRating": 4.9,
+      "audienceVoteCount": "5k Votes"
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "b7",
+      "title": "The Winds of Winter",
+      "author": "George R.R. Martin",
+      "coverImageUrl": "https://source.unsplash.com/random/400x600?book,fantasy,winter",
+      "genres": ["Fantasy", "Epic"],
+      "audienceRating": 0.0,
+      "audienceVoteCount": "Highly Anticipated",
+      "releaseDate": "Hopefully Soon"
+    }
+  ]
+}

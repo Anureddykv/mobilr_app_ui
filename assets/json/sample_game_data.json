@@ -1,0 +1,74 @@
+{
+  "featured": [
+    {
+      "id": "g1",
+      "title": "GTA VI",
+      "developer": "Rockstar Games",
+      "bannerImageUrl": "https://source.unsplash.com/random/710x400?game,city,action",
+      "tags": ["Story Mode", "Open World", "Online", "Action"],
+      "rating": 4.9,
+      "voteCount": "Anticipated",
+      "description": "The next installment in the legendary Grand Theft Auto series."
+    }
+  ],
+  "trending": [
+    {
+      "id": "g5",
+      "title": "Cyberpunk 2077",
+      "developer": "CD Projekt Red",
+      "bannerImageUrl": "https://source.unsplash.com/random/242x368?game,cyberpunk,future",
+      "thumbnailUrl": "https://source.unsplash.com/random/242x368?game,cyberpunk,future,thumb",
+      "tags": ["RPG", "Open World", "Sci-Fi"],
+      "rating": 4.2,
+      "voteCount": "500k Votes",
+      "description": "Most Anticipated Game"
+    }
+  ],
+  "genreSpecificGames": [
+    {
+      "id": "g3",
+      "title": "Mass Jathara (Demo)",
+      "developer": "Local Devs",
+      "bannerImageUrl": "https://source.unsplash.com/random/304x348?game,festival,action",
+      "tags": ["Action", "Telugu", "Indie"],
+      "rating": 4.3,
+      "voteCount": "1.2k Votes"
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "g6",
+      "title": "Elder Scrolls VI",
+      "developer": "Bethesda Game Studios",
+      "bannerImageUrl": "https://source.unsplash.com/random/400x600?game,fantasy,dragon",
+      "tags": ["RPG", "Open World", "Fantasy"],
+      "rating": 0.0,
+      "voteCount": "Highly Anticipated",
+      "releaseDate": "To Be Announced"
+    }
+  ],
+  "community": [
+    {
+      "id": "cs1",
+      "title": "GTA VI Hub",
+      "developer": "Fan Community",
+      "bannerImageUrl": "https://source.unsplash.com/random/80x80?logo,gta",
+      "tags": [],
+      "rating": 0.0,
+      "voteCount": "",
+      "description": "Join the hype!",
+      "discordUrl": "https://discord.gg/gtavi"
+    },
+    {
+      "id": "cs2",
+      "title": "PUBG Mobile India",
+      "developer": "Krafton",
+      "bannerImageUrl": "https://source.unsplash.com/random/80x80?logo,pubg",
+      "tags": [],
+      "rating": 0.0,
+      "voteCount": "",
+      "description": "Official server.",
+      "discordUrl": "https://discord.gg/pubgmobilein"
+    }
+  ]
+}

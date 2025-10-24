@@ -1,0 +1,77 @@
+{
+  "featured": [
+    {
+      "id": "movie1",
+      "title": "Salaar: Cease Fire - Part 1",
+      "imageUrl": "https://source.unsplash.com/random/700x390?movie,action,epic",
+      "rating": 4.5,
+      "language": "Telugu",
+      "genres": ["Action", "Drama"],
+      "description": "A gang leader tries to keep a promise made to his dying friend and takes on the other criminal gangs."
+    },
+    {
+      "id": "movie2",
+      "title": "Animal",
+      "imageUrl": "https://source.unsplash.com/random/400x600?movie,drama,crime",
+      "rating": 4.2,
+      "language": "Hindi",
+      "genres": ["Action", "Crime", "Drama"],
+      "releaseDate": "Dec 1, 2023"
+    }
+  ],
+  "trending": [
+    {
+      "id": "movie3",
+      "title": "Animal",
+      "imageUrl": "https://source.unsplash.com/random/400x600?movie,drama,crime",
+      "rating": 4.2,
+      "language": "Hindi",
+      "genres": ["Action", "Crime", "Drama"],
+      "releaseDate": "Dec 1, 2023"
+    },
+    {
+      "id": "movie4",
+      "title": "Oppenheimer",
+      "imageUrl": "https://source.unsplash.com/random/400x600?movie,history,biography",
+      "rating": 4.8,
+      "language": "English",
+      "genres": ["Biography", "Drama", "History"]
+    }
+  ],
+  "upcoming": [
+    {
+      "id": "movie5",
+      "title": "Dune: Part Two",
+      "imageUrl": "https://source.unsplash.com/random/400x600?movie,scifi,adventure",
+      "rating": 0.0,
+      "language": "English",
+      "genres": ["Sci-Fi", "Adventure", "Drama"],
+      "releaseDate": "Mar 1, 2024"
+    },
+    {
+      "id": "movie6",
+      "title": "Dune: Part Two",
+      "imageUrl": "https://source.unsplash.com/random/400x600?movie,scifi,adventure",
+      "rating": 0.0,
+      "language": "English",
+      "genres": ["Sci-Fi", "Adventure", "Drama"],
+      "releaseDate": "Mar 1, 2024"
+    }
+  ],
+  "communities": [
+    {
+      "id": "com1",
+      "name": "Action Movie Fanatics",
+      "description": "Discuss the latest blockbusters!",
+      "imageUrl": "https://source.unsplash.com/random/80x80?logo,action",
+      "joinLink": "https://discord.gg/actionmovies"
+    },
+    {
+      "id": "com2",
+      "name": "Sci-Fi World Builders",
+      "description": "Explore new universes.",
+      "imageUrl": "https://source.unsplash.com/random/80x80?logo,scifi",
+      "joinLink": null
+    }
+  ]
+}
