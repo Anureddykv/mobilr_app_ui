@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenMovies.dart';
 
-// ✅ Your NotificationScreen (same code you shared)
 class NotificationItem {
   final String id;
   final String title;
@@ -24,9 +23,9 @@ const Color primaryTextColor = Colors.white;
 const Color dividerColor = Color(0xFF191919);
 
 class NotificationScreen extends StatelessWidget {
-   NotificationScreen({super.key});
+  NotificationScreen({super.key});
 
-  final List<NotificationItem> _notifications =  [
+  final List<NotificationItem> _notifications = [
     NotificationItem(
       id: 'Kingdom',
       title: 'Kingdom',
@@ -55,6 +54,34 @@ class NotificationScreen extends StatelessWidget {
       status: 'Watch new Trailer',
       imageUrl: 'https://placehold.co/56x56/8B54E0/FFFFFF?text=GTA',
     ),
+    NotificationItem(
+      id: 'GTA VI',
+      title: 'GTA VI',
+      subtitle: 'Rockstar Games',
+      status: 'Watch new Trailer',
+      imageUrl: 'https://placehold.co/56x56/8B54E0/FFFFFF?text=GTA',
+    ),
+    NotificationItem(
+      id: 'GTA VI',
+      title: 'GTA VI',
+      subtitle: 'Rockstar Games',
+      status: 'Watch new Trailer',
+      imageUrl: 'https://placehold.co/56x56/8B54E0/FFFFFF?text=GTA',
+    ),
+    NotificationItem(
+      id: 'GTA VI',
+      title: 'GTA VI',
+      subtitle: 'Rockstar Games',
+      status: 'Watch new Trailer',
+      imageUrl: 'https://placehold.co/56x56/8B54E0/FFFFFF?text=GTA',
+    ),
+    NotificationItem(
+      id: 'GTA VI',
+      title: 'GTA VI',
+      subtitle: 'Rockstar Games',
+      status: 'Watch new Trailer',
+      imageUrl: 'https://placehold.co/56x56/8B54E0/FFFFFF?text=GTA',
+    ),
   ];
 
   @override
@@ -66,88 +93,100 @@ class NotificationScreen extends StatelessWidget {
           'Notifications',
           style: TextStyle(
             color: primaryTextColor,
-            fontSize: 18,
+            fontSize: 14,
+            fontFamily: 'General Sans Variable',
             fontWeight: FontWeight.w600,
+              height: 0.72
           ),
         ),
         backgroundColor: darkBackgroundColor,
         centerTitle: true,
         elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: dividerColor,
+            height: 1.0,
+          ),
+        ),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         itemCount: _notifications.length,
         itemBuilder: (context, index) {
           final n = _notifications[index];
-          return GestureDetector(
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainReviewScreenMovies( movieId: n.id,),
-                ),
-              );
-            },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: ShapeDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(n.imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: dividerColor, width: 1),
+              ),
+            ),
+            child: ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainReviewScreenMovies(movieId: n.id),
+                  ),
+                );
+              },
+              leading: Container(
+                width: 56,
+                height: 56,
+                decoration: ShapeDecoration(
+                  color: Colors.grey,
+                  image: DecorationImage(
+                    image: NetworkImage(n.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      Text(
-                        n.title,
-                        style: const TextStyle(
-                          color: primaryTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        n.subtitle,
-                        style: const TextStyle(
-                          color: secondaryTextColor,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        n.status,
-                        style: const TextStyle(
-                          color: secondaryTextColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+              ),
+              title: Text(
+                n.title,
+                style: const TextStyle(
+                  color: primaryTextColor,
+                  fontSize: 16,
+                  fontFamily: 'General Sans Variable',
+                  fontWeight: FontWeight.w600,
+                  height: 0.72
                 ),
-              ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  Text(
+                    n.subtitle,
+                    style: const TextStyle(
+                      color: secondaryTextColor,
+                      fontSize: 10,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.50,
+                        height: 0.72
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    n.status,
+                    style: const TextStyle(
+                      color: secondaryTextColor,
+                      fontSize: 14,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w500,
+                        height: 0.72
+                    ),
+                  ),
+                ],
+              ),
+              contentPadding: EdgeInsets.zero, // Let the outer container handle padding
             ),
           );
         },
-        separatorBuilder: (_, __) => const Divider(
-          color: dividerColor,
-          height: 24,
-          thickness: 1,
-        ),
       ),
     );
   }

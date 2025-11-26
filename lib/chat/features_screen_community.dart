@@ -5,8 +5,12 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:mobilr_app_ui/home/bottomsheet/features_screen_community_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+
+// --- Message Type Enum ---
+enum MessageType { text, image, audio, file }
 
 // --- Colors ---
 const Color communityScreenBackgroundColor = Color(0xFF0B0B0B);
@@ -54,7 +58,6 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
   final ScrollController _scrollController = ScrollController();
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   bool _isRecording = false;
-
   final String currentUserId = "currentUser123";
   List<ChatMessage> _messages = [];
 
@@ -62,41 +65,80 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
   void initState() {
     super.initState();
     _loadPlaceholderMessages();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      }
-    });
+    // Rebuild the input field UI when text changes
+    _messageController.addListener(() => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  @override
+  void dispose() {
+    // Correctly remove the listener before disposing the controller
+    _messageController.removeListener(() => setState(() {}));
+    _messageController.dispose();
+    _scrollController.dispose();
+    _recorder.closeRecorder();
+    super.dispose();
   }
 
   void _loadPlaceholderMessages() {
     setState(() {
       _messages = [
         ChatMessage(
-            id: '1',
-            text: 'Blockbuster incoming',
-            userId: 'user1',
-            userName: 'Vamsi',
-            avatarUrl: "https://placehold.co/40x40/FFC0CB/000?text=V",
-            timestamp: DateTime.now().subtract(const Duration(minutes: 50)),
-            isMe: false),
+          id: '1',
+          type: MessageType.text, // Updated
+          text: 'Blockbuster incoming',
+          userId: 'user1',
+          userName: 'Vamsi',
+          avatarUrl: "https://placehold.co/40x40/FFC0CB/000?text=V",
+          timestamp: DateTime.now().subtract(const Duration(minutes: 50)),
+          isMe: false,
+        ),
         ChatMessage(
-            id: '2',
-            text: 'Pushpa records break chesthadhi',
-            userId: 'user2',
-            userName: 'Anu',
-            avatarUrl: "https://placehold.co/40x40/FFFFFF/000?text=A",
-            timestamp: DateTime.now().subtract(const Duration(minutes: 45)),
-            isMe: true),
+          id: '2',
+          type: MessageType.text, // Updated
+          text: 'Pushpa records break chesthadhi',
+          userId: 'user2',
+          userName: 'Anu',
+          avatarUrl: "https://placehold.co/40x40/FFFFFF/000?text=A",
+          timestamp: DateTime.now().subtract(const Duration(minutes: 45)),
+          isMe: true,
+        ),
       ];
     });
   }
 
-  void _sendMessage() {
+  /// Adds a message to the list and scrolls to the bottom.
+  void _addMessage(ChatMessage message) {
+    setState(() {
+      _messages.add(message);
+    });
+    // Use a post-frame callback to ensure the list has been updated
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom(animated: true));
+  }
+
+  /// Scrolls the chat list to the very bottom.
+  void _scrollToBottom({bool animated = false}) {
+    if (_scrollController.hasClients) {
+      final position = _scrollController.position.maxScrollExtent;
+      if (animated) {
+        _scrollController.animateTo(
+          position,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      } else {
+        _scrollController.jumpTo(position);
+      }
+    }
+  }
+
+  /// Creates and sends a text message.
+  void _sendTextMessage() {
     if (_messageController.text.trim().isEmpty) return;
 
     final newMessage = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
+      type: MessageType.text,
       text: _messageController.text.trim(),
       userId: currentUserId,
       userName: "You",
@@ -105,51 +147,50 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       isMe: true,
     );
 
-    setState(() {
-      _messages.add(newMessage);
-      _messageController.clear();
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+    _addMessage(newMessage);
+    _messageController.clear();
   }
 
-  // 📷 Open Camera
+  /// Creates and sends a message with a file (image, audio, or document).
+  void _sendFileMessage(String path, MessageType type) {
+    final newMessage = ChatMessage(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      type: type,
+      filePath: path,
+      userId: currentUserId,
+      userName: "You",
+      avatarUrl: "https://placehold.co/40x40/FFFFFF/000000?text=Y",
+      timestamp: DateTime.now(),
+      isMe: true,
+    );
+    _addMessage(newMessage);
+  }
+
+  // --- Media & File Handling ---
+
   Future<void> _openCamera() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
-      print("📷 Picked image: ${image.path}");
-      // Here you could send the image as message
+      _sendFileMessage(image.path, MessageType.image);
     }
   }
 
-  // 🖼️ Open Gallery
   Future<void> _openGallery() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      print("🖼️ Picked gallery image: ${image.path}");
+      _sendFileMessage(image.path, MessageType.image);
     }
   }
 
-  // 📁 Pick File
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.single.path != null) {
-      File file = File(result.files.single.path!);
-      print("📁 Picked file: ${file.path}");
+      _sendFileMessage(result.files.single.path!, MessageType.file);
     }
   }
 
-  // 🎤 Record Audio
   Future<void> _toggleRecording() async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
@@ -160,7 +201,6 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
     if (!_isRecording) {
       Directory tempDir = await getTemporaryDirectory();
       String filePath = '${tempDir.path}/audio_${DateTime.now().millisecondsSinceEpoch}.aac';
-
       await _recorder.openRecorder();
       await _recorder.startRecorder(toFile: filePath);
       setState(() => _isRecording = true);
@@ -168,11 +208,12 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       final path = await _recorder.stopRecorder();
       await _recorder.closeRecorder();
       setState(() => _isRecording = false);
-      print("🎤 Recorded audio: $path");
+      if (path != null) {
+        _sendFileMessage(path, MessageType.audio);
+      }
     }
   }
 
-  // ➕ Bottom Sheet for Attachments
   void _openAttachmentOptions() {
     showModalBottomSheet(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -226,34 +267,35 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.communityImageUrl),
-              radius: 20,
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.communityName, style: appBarTitleStyle),
-                const Text('8 Online', style: appBarSubtitleStyle),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {},
+        title: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: (){
+            Get.to(() => FeaturesScreenCommunityInfo(
+              communityName: widget.communityName,
+              communityImageUrl: widget.communityImageUrl,
+              memberCount: 1200,
+            ));
+          },
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(widget.communityImageUrl),
+                radius: 20,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.communityName, style: appBarTitleStyle),
+                  const Text('8 Online', style: appBarSubtitleStyle),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: appBarTopBorderColor,
-            height: 1.0,
-          ),
+          child: Container(color: appBarTopBorderColor, height: 1.0),
         ),
       ),
       body: Column(
@@ -265,8 +307,7 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final bool showHeader =
-                    index == 0 || _messages[index - 1].userId != message.userId;
+                final bool showHeader = index == 0 || _messages[index - 1].userId != message.userId;
                 return _MessageBubble(message: message, showHeader: showHeader);
               },
             ),
@@ -277,20 +318,36 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
     );
   }
 
+  Widget _buildCustomIconButton(String imagePath, {required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image.asset(
+          imagePath,
+          width: 24,
+          height: 24,
+          color: communitySecondaryTextColor,
+        ),
+      ),
+    );
+  }
+
   Widget _buildMessageInputField() {
+    final bool hasText = _messageController.text.trim().isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF141414).withOpacity(0.95),
-        border: const Border(
-          top: BorderSide(width: 0.8, color: appBarTopBorderColor),
-        ),
+        border: const Border(top: BorderSide(width: 0.8, color: appBarTopBorderColor)),
       ),
       child: SafeArea(
         top: false,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // 📝 Text input
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -317,29 +374,30 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
                     contentPadding: EdgeInsets.zero,
                   ),
                   keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  onSubmitted: (_) => _sendMessage(),
+                  maxLines: 5,
+                  minLines: 1,
+                  onSubmitted: (_) => _sendTextMessage(),
                 ),
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.camera_alt_outlined,
-                  color: communitySecondaryTextColor, size: 24),
-              onPressed: _openCamera,
-            ),
-            IconButton(
-              icon: Icon(
-                _isRecording ? Icons.stop_circle : Icons.mic_none_rounded,
-                color: _isRecording ? Colors.redAccent : communitySecondaryTextColor,
-                size: 24,
+            const SizedBox(width: 8),
+            // Conditionally show Send or Media buttons
+            if (hasText)
+              IconButton(
+                icon: const Icon(Icons.send, color: messageBubbleColorMe),
+                onPressed: _sendTextMessage,
+              )
+            else
+              Row(
+                children: [
+                  _buildCustomIconButton('assets/images/camera.png', onTap: _openCamera),
+                  _buildCustomIconButton(
+                    _isRecording ? 'assets/images/mice.png' : 'assets/images/mice.png',
+                    onTap: _toggleRecording,
+                  ),
+                  _buildCustomIconButton('assets/images/plus.png', onTap: _openAttachmentOptions),
+                ],
               ),
-              onPressed: _toggleRecording,
-            ),
-            IconButton(
-              icon: const Icon(Icons.add,
-                  color: communitySecondaryTextColor, size: 26),
-              onPressed: _openAttachmentOptions,
-            ),
           ],
         ),
       ),
@@ -349,7 +407,9 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
 
 class ChatMessage {
   final String id;
-  final String text;
+  final MessageType type;
+  final String? text;
+  final String? filePath;
   final String userId;
   final String userName;
   final String avatarUrl;
@@ -358,7 +418,9 @@ class ChatMessage {
 
   ChatMessage({
     required this.id,
-    required this.text,
+    required this.type,
+    this.text,
+    this.filePath,
     required this.userId,
     required this.userName,
     required this.avatarUrl,
@@ -373,46 +435,134 @@ class _MessageBubble extends StatelessWidget {
 
   const _MessageBubble({required this.message, required this.showHeader});
 
+  /// Builds the content of the bubble based on the message type.
+  Widget _buildBubbleContent() {
+    Color bubbleColor = message.isMe ? messageBubbleColorMe : messageBubbleColorOther;
+    Color textColor = message.isMe ? Colors.white : communityPrimaryTextColor;
+
+    switch (message.type) {
+      case MessageType.text:
+        return _TextBubble(
+          text: message.text ?? '',
+          timestamp: message.timestamp,
+          bubbleColor: bubbleColor,
+          textColor: textColor,
+          isMe: message.isMe,
+        );
+      case MessageType.image:
+        return _ImageBubble(
+          filePath: message.filePath!,
+          timestamp: message.timestamp,
+          isMe: message.isMe,
+        );
+      case MessageType.audio:
+      case MessageType.file:
+        return _FileBubble(
+          filePath: message.filePath!,
+          timestamp: message.timestamp,
+          bubbleColor: bubbleColor,
+          textColor: textColor,
+          isAudio: message.type == MessageType.audio,
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMe = message.isMe;
-
-    final bubbleContent = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: isMe ? messageBubbleColorMe : messageBubbleColorOther,
-        borderRadius: isMe
-            ? const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-          bottomLeft: Radius.circular(12),
-        )
-            : const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-          bottomRight: Radius.circular(12),
+    final messageHeader = showHeader
+        ? Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Text(
+        message.userName,
+        style: const TextStyle(
+          color: communitySecondaryTextColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'General Sans Variable',
         ),
       ),
+    )
+        : const SizedBox.shrink();
+
+    return Padding(
+      padding: EdgeInsets.only(top: showHeader ? 12.0 : 4.0),
+      child: Row(
+        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isMe && showHeader)
+            CircleAvatar(
+              backgroundImage: NetworkImage(message.avatarUrl),
+              radius: 16,
+            )
+          else if (!isMe && !showHeader)
+            const SizedBox(width: 32), // Spacer for alignment
+
+          if (!isMe) const SizedBox(width: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                if (!isMe && showHeader) messageHeader,
+                _buildBubbleContent(),
+              ],
+            ),
+          ),
+          if (isMe) const SizedBox(width: 8),
+          if (isMe && showHeader)
+            CircleAvatar(
+              backgroundImage: NetworkImage(message.avatarUrl),
+              radius: 16,
+            )
+          else if (isMe && !showHeader)
+            const SizedBox(width: 32), // Spacer
+        ],
+      ),
+    );
+  }
+}
+
+// --- Bubble Content Widgets ---
+
+class _TextBubble extends StatelessWidget {
+  final String text;
+  final DateTime timestamp;
+  final Color bubbleColor;
+  final Color textColor;
+  final bool isMe;
+
+  const _TextBubble({
+    required this.text,
+    required this.timestamp,
+    required this.bubbleColor,
+    required this.textColor,
+    required this.isMe,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: bubbleColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(
-        crossAxisAlignment:
-        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            message.text,
-            style: TextStyle(
-              color: isMe ? Colors.white : communityPrimaryTextColor,
-              fontSize: 14,
-              fontFamily: 'General Sans Variable',
-            ),
+            text,
+            style: TextStyle(color: textColor, fontSize: 14, fontFamily: 'General Sans Variable'),
           ),
           const SizedBox(height: 4),
           Text(
-            DateFormat('h:mm a').format(message.timestamp),
+            DateFormat('h:mm a').format(timestamp),
             style: TextStyle(
-              color: isMe
-                  ? Colors.white.withOpacity(0.7)
-                  : communitySecondaryTextColor,
+              color: isMe ? Colors.white.withOpacity(0.7) : communitySecondaryTextColor,
               fontSize: 10,
               fontFamily: 'General Sans Variable',
             ),
@@ -420,32 +570,95 @@ class _MessageBubble extends StatelessWidget {
         ],
       ),
     );
+  }
+}
 
-    return Padding(
-      padding: EdgeInsets.only(top: showHeader ? 18.0 : 8.0),
-      child: Row(
-        mainAxisAlignment:
-        isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (!isMe)
-            Opacity(
-              opacity: showHeader ? 1.0 : 0.0,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(message.avatarUrl),
-                radius: 14,
+class _ImageBubble extends StatelessWidget {
+  final String filePath;
+  final DateTime timestamp;
+  final bool isMe;
+
+  const _ImageBubble({required this.filePath, required this.timestamp, required this.isMe});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            Image.file(File(filePath)),
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  DateFormat('h:mm a').format(timestamp),
+                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                ),
               ),
             ),
-          if (!isMe) const SizedBox(width: 9),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FileBubble extends StatelessWidget {
+  final String filePath;
+  final DateTime timestamp;
+  final Color bubbleColor;
+  final Color textColor;
+  final bool isAudio;
+
+  const _FileBubble({
+    required this.filePath,
+    required this.timestamp,
+    required this.bubbleColor,
+    required this.textColor,
+    required this.isAudio,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fileName = filePath.split('/').last;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bubbleColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(isAudio ? Icons.graphic_eq : Icons.insert_drive_file, color: textColor, size: 28),
+          const SizedBox(width: 10),
           Flexible(
-            child: bubbleContent,
-          ),
-          if (isMe) const SizedBox(width: 9),
-          if (isMe)
-            CircleAvatar(
-              backgroundImage: NetworkImage(message.avatarUrl),
-              radius: 14,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  fileName,
+                  style: TextStyle(color: textColor, fontSize: 14, fontFamily: 'General Sans Variable'),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  DateFormat('h:mm a').format(timestamp),
+                  style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 10),
+                ),
+              ],
             ),
+          ),
         ],
       ),
     );

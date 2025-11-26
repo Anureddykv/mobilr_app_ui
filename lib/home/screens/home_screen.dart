@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:mobilr_app_ui/bottomnav/notification_screen.dart';
 import 'package:mobilr_app_ui/bottomnav/profile_screen.dart';
 import 'package:mobilr_app_ui/bottomnav/search_screen.dart';
+import 'package:mobilr_app_ui/home/bottomsheet/FeatureScreenJoinedCommunityList.dart';
+import 'package:mobilr_app_ui/home/bottomsheet/community_join_bottom_sheet.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/more_info_bottom_sheet.dart';
 import 'package:mobilr_app_ui/home/models/book_model.dart';
 import 'package:mobilr_app_ui/home/models/gadget_model.dart';
@@ -31,6 +33,7 @@ import 'package:mobilr_app_ui/review/add_edit_review_screen.dart';
 import 'package:tab_container/tab_container.dart';
 import '../controllers/home_controller.dart';
 import '../models/movie_model.dart'; // Ensure this path is correct
+import 'package:mobilr_app_ui/widgets/tinted_asset_image.dart';
 
 const Color movieAccentColor = Color(0xFF54B6E0);
 const Color darkBackgroundColor = Color(0xFF0B0B0B);
@@ -118,6 +121,14 @@ class _HomeScreenState extends State<HomeScreen>
       vsync: this,
     );
     _tabController.addListener(() {
+      final newIndex = _tabController.index;
+      if (newIndex >= 0 && newIndex < controller.categories.length) {// We get the new category based on the new index.
+        final newCategory = controller.categories[newIndex];
+        final newColor = controller.getAccentColorForCategory(newCategory);
+        if (controller.currentAccentColor.value != newColor) {
+          controller.currentAccentColor.value = newColor;
+        }
+      }
       if (!_tabController.indexIsChanging) {
         controller.changeCategory(controller.categories[_tabController.index]);
       }
@@ -136,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         child: _buildHomeContent(),
       ),
-      const AddContentScreen(),
+      FeatureScreenJoinedCommunityList(),
       const SearchScreen(),
       NotificationScreen(),
       const ProfileScreen(),
@@ -219,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen>
                     "assets/images/sd.png",
                     width: 14,
                     height: 14,
+                    color: movieAccentColor,
                   ),
                   accentColor: movieAccentColor,
                   onMoreInfo: () {
@@ -373,12 +385,14 @@ class _HomeScreenState extends State<HomeScreen>
           audienceVotes: movie["audienceVotes"] ?? "0 votes",
           ratingImage: Image.asset(
             "assets/images/sd.png",
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             color: movieAccentColor,
           ),
           exploreButtonImage: Image.asset(
-            "assets/images/sd.png",
+            "assets/images/ic_sd.png",
+            width: 14,
+            height: 14,
             color: Colors.white,
           ),
           exploreButtonImageColor: movieAccentColor,
@@ -456,12 +470,16 @@ class _HomeScreenState extends State<HomeScreen>
               color: movieAccentColor,
             ),
             notifyIcon: Image.asset(
-              "assets/images/Notify.png",
+              width: 14,
+              height: 14,
+              "assets/images/notification.png",
               color: Colors.white,
             ),
             notifiedIcon: Image.asset(
               "assets/images/notify_check.png",
               color: Colors.white,
+              width: 14,
+              height: 14,
             ),
           );
         });
@@ -503,15 +521,11 @@ class _HomeScreenState extends State<HomeScreen>
             accentColor: controller.currentAccentColor.value,
             onJoin: () {
               print("Joining community: ${community['name']}");
-              Get.to(
-                () => FeaturesScreenCommunity(
-                  communityId: community['id']!,
-                  communityName: community['name']!,
-                  communityImageUrl: community['imageUrl']!,
-                ),
-              );
+              _showCommunityJoinSheet(community);
             },
             buttonIcon: Image.asset(
+              width: 14,
+              height: 14,
               "assets/images/pepole.png",
               color: Colors.white,
             ),
@@ -533,16 +547,16 @@ class _HomeScreenState extends State<HomeScreen>
         SurveyOption(id: 'opt5', text: "Not Really"),
       ],
     );
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildSectionTitle('SURVEY'),
-          const SizedBox(height: 10),
-          Obx(
-            () => SurveyCard(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildSectionTitle('SURVEY'),
+        const SizedBox(height: 10),
+        Obx(
+          () => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SurveyCard(
               survey: movieSurvey,
               accentColor: controller.currentAccentColor.value,
               onSubmit: (String selectedOptionId) {
@@ -560,8 +574,8 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -748,12 +762,14 @@ class _HomeScreenState extends State<HomeScreen>
           audienceVotes: restaurant["audienceVotes"] ?? "0 votes",
           ratingImage: Image.asset(
             "assets/images/restaurants.png",
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             color: restaurantAccentColor,
           ),
           exploreButtonImage: Image.asset(
             "assets/images/restaurants.png",
+            width: 14,
+            height: 14,
             color: Colors.white,
           ),
           exploreButtonImageColor: restaurantAccentColor,
@@ -820,12 +836,16 @@ class _HomeScreenState extends State<HomeScreen>
               color: restaurantAccentColor,
             ),
             notifyIcon: Image.asset(
+              width: 14,
+              height: 14,
               "assets/images/foodicon.png",
               color: Colors.white,
             ),
             notifiedIcon: Image.asset(
-              "assets/images/foodfill.png",
+              "assets/images/food_check.png",
               color: Colors.white,
+              width: 14,
+              height: 14,
             ),
             notifyButtonText: "Reserve Table",
           );
@@ -871,6 +891,8 @@ class _HomeScreenState extends State<HomeScreen>
               );
             },
             buttonIcon: Image.asset(
+              width: 14,
+              height: 14,
               "assets/images/pepole.png",
               color: Colors.white,
             ),
@@ -1023,14 +1045,14 @@ class _HomeScreenState extends State<HomeScreen>
           audienceVotes: gadget.votes ?? "0 votes",
           ratingImage: Image.asset(
             "assets/images/gadget.png",
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             color: gadgetAccentColor,
           ),
           exploreButtonImage: Image.asset(
             "assets/images/gadget.png",
-            width: 16,
-            height: 17,
+            width: 14,
+            height: 14,
             color: Colors.white,
           ),
           exploreButtonImageColor: gadgetAccentColor,
@@ -1122,12 +1144,16 @@ class _HomeScreenState extends State<HomeScreen>
               color: gadgetAccentColor,
             ),
             notifyIcon: Image.asset(
-              "assets/images/Notify.png",
+              width: 14,
+              height: 14,
+              "assets/images/notification.png",
               color: Colors.white,
             ),
             notifiedIcon: Image.asset(
               "assets/images/notify_check.png",
               color: Colors.white,
+              width: 14,
+              height: 14,
             ),
           );
         });
@@ -1172,6 +1198,8 @@ class _HomeScreenState extends State<HomeScreen>
             );
           },
           buttonIcon: Image.asset(
+            width: 14,
+            height: 14,
             "assets/images/pepole.png",
             color: Colors.white,
           ),
@@ -1318,14 +1346,14 @@ class _HomeScreenState extends State<HomeScreen>
           audienceVotes: book.votes ?? "0 votes",
           ratingImage: Image.asset(
             "assets/images/book.png",
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             color: bookAccentColor,
           ),
           exploreButtonImage: Image.asset(
             "assets/images/book.png",
-            width: 16,
-            height: 17,
+            width: 14,
+            height: 14,
             color: Colors.white,
           ),
           exploreButtonImageColor: bookAccentColor,
@@ -1411,12 +1439,16 @@ class _HomeScreenState extends State<HomeScreen>
               color: bookAccentColor,
             ),
             notifyIcon: Image.asset(
-              "assets/images/Notify.png",
+              width: 14,
+              height: 14,
+              "assets/images/notification.png",
               color: Colors.white,
             ),
             notifiedIcon: Image.asset(
               "assets/images/notify_check.png",
               color: Colors.white,
+              width: 14,
+              height: 14,
             ),
           );
         });
@@ -1460,6 +1492,8 @@ class _HomeScreenState extends State<HomeScreen>
             );
           },
           buttonIcon: Image.asset(
+            width: 14,
+            height: 14,
             "assets/images/pepole.png",
             color: Colors.white,
           ),
@@ -1604,14 +1638,14 @@ class _HomeScreenState extends State<HomeScreen>
           audienceVotes: game.votes ?? "0",
           ratingImage: Image.asset(
             "assets/images/games.png",
-            width: 10,
-            height: 10,
+            width: 14,
+            height: 14,
             color: gameAccentColor,
           ),
           exploreButtonImage: Image.asset(
             "assets/images/games.png",
-            width: 17,
-            height: 17,
+            width: 14,
+            height: 14,
             color: Colors.white,
           ),
           exploreButtonImageColor: gameAccentColor,
@@ -1699,12 +1733,16 @@ class _HomeScreenState extends State<HomeScreen>
               color: gameAccentColor,
             ),
             notifyIcon: Image.asset(
-              "assets/images/Notify.png",
+              width: 14,
+              height: 14,
+              "assets/images/notification.png",
               color: Colors.white,
             ),
             notifiedIcon: Image.asset(
               "assets/images/notify_check.png",
               color: Colors.white,
+              width: 14,
+              height: 14,
             ),
           );
         });
@@ -1747,6 +1785,8 @@ class _HomeScreenState extends State<HomeScreen>
             );
           },
           buttonIcon: Image.asset(
+            width: 14,
+            height: 14,
             "assets/images/pepole.png",
             color: Colors.white,
           ),
@@ -1800,6 +1840,7 @@ class _HomeScreenState extends State<HomeScreen>
     int index, {
     double width = 24,
     double height = 24,
+    int? dominanceThreshold,
   }) {
     bool isSelected = controller.selectedBottomNavIndex.value == index;
     String currentAssetPath = isSelected ? selectedAssetPath : assetPath;
@@ -1808,11 +1849,13 @@ class _HomeScreenState extends State<HomeScreen>
         : controller.currentAccentColor.value;
 
     return BottomNavigationBarItem(
-      icon: Image.asset(
-        currentAssetPath,
+      icon: TintedAssetImage(
+        assetPath: currentAssetPath,
+        targetColor: iconColor,
+        dominanceThreshold: dominanceThreshold,
         width: width,
         height: height,
-        color: iconColor,
+        fit: BoxFit.contain,
       ),
       label: '',
     );
@@ -1929,7 +1972,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 )
               : null, // No AppBar on other bottom navigation screens.
- body: IndexedStack(
+            body: IndexedStack(
             index: controller.selectedBottomNavIndex.value,
             children: _pages,
           ),
@@ -1950,19 +1993,18 @@ class _HomeScreenState extends State<HomeScreen>
                 0,
               ),
               _buildIconNavItem(
-                "assets/images/add.png",
-                "assets/images/add_select.png", // Selected icon for Add
+                "assets/images/chat_unselect.png",
+                "assets/images/chat_select.png", // Selected icon for Add
                 1,
-                width: 34,
-                height: 34,
               ),
               _buildIconNavItem(
-                "assets/images/search.png",
-                "assets/images/search_select.png", // Selected icon for Search
+                "assets/images/search_ai_unselect.png",
+                "assets/images/search_ai_select.png", // Selected icon for Search
                 2,
+                dominanceThreshold: 30, // reduce threshold to recolor more pixels as blue
               ),
               _buildIconNavItem(
-                "assets/images/Notify.png",
+                "assets/images/notification.png",
                 "assets/images/notification_select.png", // Selected icon for Notify
                 3,
               ),
@@ -1977,6 +2019,31 @@ class _HomeScreenState extends State<HomeScreen>
       }),
     );
   }
+  void _showCommunityJoinSheet(Map<String, String> community) {
+    Get.bottomSheet(
+      CommunityJoinBottomSheet(
+        communityId: community['id']!,
+        communityName: community['name']!,
+        communityImageUrl: "https://placehold.co/375x180/1E1E1E/ffffff?text=${community['name']}",
+        communityDescription: community['desc']!,
+        memberCount: "1200+ Members", // This can be made dynamic if available
+        accentColor: controller.currentAccentColor.value,
+        onSendRequest: () {
+          Get.back();
+          print("Navigating to community: ${community['name']}");
+          Get.to(
+                () => FeaturesScreenCommunity(
+              communityId: community['id']!,
+              communityName: community['name']!,
+              communityImageUrl: community['imageUrl']!,
+            ),
+          );
+        },
+      ),
+      isScrollControlled: true,
+    );
+  }
+
 
   void _showMoreInfoBottomSheet({
     required String itemId, // Added required itemId
@@ -1990,10 +2057,6 @@ class _HomeScreenState extends State<HomeScreen>
     String? ratingIconAsset,
     String? primaryButtonText,
     VoidCallback? onPrimaryButtonTap,
-    // The following are removed as they are now handled by the Obx controller logic
-    // String? secondaryButtonText,
-    // String? secondaryButtonIconAsset,
-    // VoidCallback? onSecondaryButtonTap,
   }) {
     showModalBottomSheet(
       context: context,

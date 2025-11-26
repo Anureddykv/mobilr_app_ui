@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobilr_app_ui/settings/settings_screen.dart';
 
-// --- Re-using your app's color scheme for consistency ---
+// --- Color scheme for consistency ---
 const Color darkBackgroundColor = Color(0xFF0B0B0B);
 const Color cardBackgroundColor = Color(0xFF141414);
 const Color secondaryTextColor = Color(0xFF626365);
@@ -72,21 +72,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: primaryTextColor,
             fontFamily: 'General Sans Variable',
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 14,
+              height: 0.72
           ),
         ),
         backgroundColor: darkBackgroundColor,
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: primaryTextColor,
-            size: 20,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),      ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: Column(
@@ -118,7 +112,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         border: Border.all(color: dividerColor, width: 2),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Profile Avatar
@@ -127,17 +120,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 72,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.white, // Fallback color
               image: _userProfile.avatarUrl.isNotEmpty
                   ? DecorationImage(
                 image: NetworkImage(_userProfile.avatarUrl),
                 fit: BoxFit.cover,
               )
                   : null,
+              color: Colors.white, // Fallback color
             ),
           ),
           const SizedBox(width: 16),
-          // User Info (wrapped in Expanded to take available space)
+          // User Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,12 +140,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   '${_userProfile.firstName} ${_userProfile.lastName}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 14,
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w600,
+                      height: 0.72
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
                 Text(
                   _userProfile.email,
                   style: const TextStyle(
@@ -160,9 +154,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 14,
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w400,
+                      height: 0.72
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
                 Text(
                   interestsSummary,
                   style: const TextStyle(
@@ -170,6 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 10,
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w400,
+                      height: 0.72
                   ),
                 ),
               ],
@@ -178,12 +174,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Settings Icon
           InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
             },
             borderRadius: BorderRadius.circular(24),
             child: const Padding(
               padding: EdgeInsets.all(4.0),
-              child: Icon(Icons.settings, size: 24, color: Colors.white),
+              child: Icon(Icons.settings, size: 24, color: secondaryTextColor),
             ),
           ),
         ],
@@ -204,7 +202,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _buildInfoRow('First Name', _userProfile.firstName, hasDivider: true),
           _buildInfoRow('Last Name', _userProfile.lastName, hasDivider: true),
-          _buildInfoRow('Email', _userProfile.email, hasDivider: true),
+          _buildInfoRow('Email', _userProfile.email),
+          // Divider is part of the interests section now
           _buildInterestsSection(),
         ],
       ),
@@ -214,9 +213,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Helper for a single row in the account info card.
   Widget _buildInfoRow(String label, String value, {bool hasDivider = false}) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        border: hasDivider ? const Border(bottom: BorderSide(color: dividerColor, width: 1)) : null,
+        border: hasDivider
+            ? const Border(bottom: BorderSide(color: dividerColor, width: 1))
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,6 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 10,
               fontFamily: 'General Sans Variable',
               fontWeight: FontWeight.w600,
+                height: 0.72
             ),
           ),
           const SizedBox(height: 8),
@@ -238,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 14,
               fontFamily: 'General Sans Variable',
               fontWeight: FontWeight.w400,
+                height: 0.72
             ),
           ),
         ],
@@ -247,7 +251,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// Builds the 'Interest' section with categories and chips.
   Widget _buildInterestsSection() {
-    return Padding(
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: dividerColor, width: 1)),
+      ),
       padding: const EdgeInsets.all(14.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,6 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 10,
               fontFamily: 'General Sans Variable',
               fontWeight: FontWeight.w600,
+                height: 0.72
             ),
           ),
           const SizedBox(height: 16),
@@ -276,13 +284,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       fontSize: 14,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w400,
+                        height: 0.72
                     ),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: entry.value.map((interest) => _buildFilterChip(interest)).toList(),
+                    children: entry.value
+                        .map((interest) => _buildFilterChip(interest))
+                        .toList(),
                   )
                 ],
               ),
@@ -301,87 +312,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: cardBackgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'My Lists',
-              style: TextStyle(
-                color: secondaryTextColor,
-                fontSize: 10,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-              ),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'My Lists',
+            style: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 10,
+              fontFamily: 'General Sans Variable',
+              fontWeight: FontWeight.w600,
+                height: 0.72
             ),
-            const SizedBox(height: 16),
-            ..._userProfile.myLists.entries.map((entry) {
-              final category = entry.key;
-              final items = entry.value;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: 'General Sans Variable',
-                        fontWeight: FontWeight.w400,
-                      ),
+          ),
+          const SizedBox(height: 16),
+          ..._userProfile.myLists.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    entry.key, // Category name
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w400,
+                        height: 0.72
                     ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        ...items.map((itemUrl) {
-                          return Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: chipBackgroundColor,
-                              borderRadius: BorderRadius.circular(20),
-                              image: (itemUrl.isNotEmpty)
-                                  ? DecorationImage(
-                                image: NetworkImage(itemUrl),
-                                fit: BoxFit.cover,
-                              )
-                                  : null,
-                            ),
-                            child: (itemUrl.isEmpty)
-                                ? const Center(child: Icon(Icons.add_photo_alternate_outlined, color: secondaryTextColor))
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ...entry.value.map((itemUrl) {
+                        return Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: chipBackgroundColor,
+                            borderRadius: BorderRadius.circular(20),
+                            image: (itemUrl.isNotEmpty)
+                                ? DecorationImage(
+                              image: NetworkImage(itemUrl),
+                              fit: BoxFit.cover,
+                            )
                                 : null,
-                          );
-                        }).toList(),
-                        // Add the "+" button at the end of each list
-                        GestureDetector(
-                          onTap: () {
-                            print("Add new item to '$category' list");
-                          },
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: chipBackgroundColor,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.add, color: secondaryTextColor, size: 30),
-                            ),
+                          ),
+                          child: (itemUrl.isEmpty)
+                              ? const Center(
+                            child: Icon(Icons.add_photo_alternate_outlined,
+                                color: secondaryTextColor),
+                          )
+                              : null,
+                        );
+                      }).toList(),
+                      // "Add" button for each list
+                      GestureDetector(
+                        onTap: () {
+                          print("Add new item to '${entry.key}' list");
+                        },
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: chipBackgroundColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.add,
+                                color: secondaryTextColor, size: 30),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ],
-        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
       ),
     );
   }
@@ -389,7 +402,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Builds a single chip for the interests section.
   Widget _buildFilterChip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 13.12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 13.12, vertical: 8),
       decoration: BoxDecoration(
         color: chipBackgroundColor,
         borderRadius: BorderRadius.circular(6),
@@ -401,6 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           fontSize: 12,
           fontFamily: 'Product Sans',
           fontWeight: FontWeight.w700,
+            height: 0.72
         ),
       ),
     );
@@ -425,6 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 10,
               fontFamily: 'General Sans Variable',
               fontWeight: FontWeight.w600,
+                height: 0.72
             ),
           ),
           const SizedBox(height: 12),
@@ -455,34 +470,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: chipBackgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text('Add New Type', style: TextStyle(color: Colors.white)),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const Text('Add New Type',
+              style: TextStyle(color: Colors.white,height: 0.72)),
           content: TextField(
             controller: controller,
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
               hintText: 'Enter title type...',
-              hintStyle: TextStyle(color: secondaryTextColor),
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: secondaryTextColor)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+              hintStyle: TextStyle(color: secondaryTextColor,height: 0.72),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: secondaryTextColor)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white)),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+              child:
+              const Text('Cancel', style: TextStyle(color: Colors.white,height: 0.72)),
             ),
             TextButton(
               onPressed: () {
                 final newType = controller.text.trim();
-                if (newType.isNotEmpty && !_userProfile.myLists.containsKey(newType)) {
+                if (newType.isNotEmpty &&
+                    !_userProfile.myLists.containsKey(newType)) {
                   setState(() {
                     _userProfile.myLists[newType] = [];
                   });
                 }
                 Navigator.pop(context);
               },
-              child: const Text('Add', style: TextStyle(color: Colors.white)),
+              child: const Text('Add', style: TextStyle(color: Colors.white,height: 0.72)),
             ),
           ],
         );

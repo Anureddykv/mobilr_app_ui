@@ -80,7 +80,7 @@ class CommentsScreen extends StatelessWidget {
           ? const Center(
         child: Text(
           'No comments available.',
-          style: TextStyle(color: secondaryTextColor, fontSize: 14),
+          style: TextStyle(color: secondaryTextColor, fontSize: 14,fontFamily: 'General Sans Variable'),
         ),
       )
           : Padding(

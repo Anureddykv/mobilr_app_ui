@@ -8,9 +8,8 @@ const Color cardBackgroundColor = Color(0xFF141414);
 const Color secondaryTextColor = Color(0xFF626365);
 const Color primaryTextColor = Colors.white;
 
-// 1. Convert the StatelessWidget to a StatefulWidget
 class FeaturedContentCardLarge extends StatefulWidget {
-  final String itemId; // Use a generic ID
+  final String itemId;
   final String imageUrl;
   final String title;
   final List<String> infoItems;
@@ -23,7 +22,7 @@ class FeaturedContentCardLarge extends StatefulWidget {
 
   const FeaturedContentCardLarge({
     super.key,
-    required this.itemId, // Make ID a required parameter
+    required this.itemId,
     required this.imageUrl,
     required this.title,
     required this.infoItems,
@@ -40,7 +39,6 @@ class FeaturedContentCardLarge extends StatefulWidget {
 }
 
 class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
-  // 2. Get an instance of your HomeController to access the generic methods
   final HomeController controller = Get.find<HomeController>();
 
   Widget _dot() => Container(
@@ -55,10 +53,11 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate image height based on a standard aspect ratio
+    // Calculate image height based on a standard aspect ratio from Figma
     final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth = screenWidth * 0.92;
-    final imageHeight = cardWidth * (200 / 355);
+    // Card width is screen width minus horizontal margins (e.g., 12 on each side)
+    final cardWidth = screenWidth - 24;
+    final imageHeight = cardWidth * (170 / 355); // Aspect ratio from Figma
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -75,11 +74,12 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
             width: double.infinity,
             height: imageHeight,
             child: Image.network(
-              widget.imageUrl, // Use widget.property in StatefulWidget
+              widget.imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 color: Colors.grey[800],
-                child: const Icon(Icons.broken_image, color: Colors.white24, size: 60),
+                child: const Icon(Icons.broken_image,
+                    color: Colors.white24, size: 60),
               ),
             ),
           ),
@@ -101,18 +101,16 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
               ),
             ),
           ),
-          // Content
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
-            child: Container(
+            child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title, Info, and Rating Section
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,25 +118,30 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                       // Left side: Title and Info
                       Flexible(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              widget.title.toUpperCase(),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: primaryTextColor,
-                                fontSize: 18,
-                                fontFamily: 'General Sans Variable',
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 0.64,
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: Text(
+                                widget.title.toUpperCase(),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 20,
+                                  fontFamily: 'General Sans Variable',
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0.80,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 6),
-                            // Info Items
+                            // Info Items (Runtime, Rating, Language)
                             Row(
-                              children: widget.infoItems.asMap().entries.map((entry) {
+                              children: widget.infoItems
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 int idx = entry.key;
                                 String text = entry.value;
                                 return Flexible(
@@ -153,8 +156,10 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                           style: const TextStyle(
                                             color: secondaryTextColor,
                                             fontSize: 10,
-                                            fontFamily: 'General Sans Variable',
+                                            fontFamily:
+                                            'General Sans Variable',
                                             fontWeight: FontWeight.w600,
+                                            height: 0.72,
                                             letterSpacing: 0.50,
                                           ),
                                         ),
@@ -169,7 +174,6 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                       ),
                       // Right side: Rating and Votes
                       Column(
-                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Row(
@@ -182,13 +186,14 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                   fontSize: 20,
                                   fontFamily: 'General Sans Variable',
                                   fontWeight: FontWeight.w600,
+                                  height: 0.72,
                                 ),
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: 9),
                               widget.ratingIcon,
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 6),
                           if (widget.votes.isNotEmpty)
                             Text(
                               widget.votes,
@@ -197,6 +202,7 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                 fontSize: 8,
                                 fontFamily: 'General Sans Variable',
                                 fontWeight: FontWeight.w600,
+                                height: 0.72,
                                 letterSpacing: 0.40,
                               ),
                             ),
@@ -205,11 +211,11 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Buttons Section
+                  // Bottom Row: Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Left Buttons
+                      // Left Buttons: More Info, View All Reviews
                       Flexible(
                         child: Row(
                           children: [
@@ -219,46 +225,49 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                 widget.accentColor,
                                 image: Image.asset("assets/images/Union.png", width: 14, height: 14, color: widget.accentColor),
                                 onTap: widget.onMoreInfo,
-                                fontSize: 10,
+                                // Use smaller font size from Figma
+                                fontSize: 8,
                               ),
-                            if (widget.onMoreInfo != null && widget.onViewAllReviews != null)
+                            if (widget.onMoreInfo != null &&
+                                widget.onViewAllReviews != null)
                               const SizedBox(width: 12),
                             if (widget.onViewAllReviews != null)
                               filledButton(
                                 "View All Reviews",
                                 background: widget.accentColor,
                                 onTap: widget.onViewAllReviews,
-                                fontSize: 10,
+                                // Use smaller font size from Figma
+                                fontSize: 8,
                               ),
                           ],
                         ),
                       ),
- Obx(() {
-                        // Check the saved state using the controller and the item's unique ID
+                      // Right Button: Add/Saved
+                      Obx(() {
                         final isSaved = controller.isItemSaved(widget.itemId);
-
                         if (isSaved) {
-                          // If saved, show the "Saved" button
                           return filledButton(
                             "Saved",
                             background: widget.accentColor,
-                            fontSize: 10,
-                            image: Image.asset("assets/images/add_select.png", width: 14, height: 14, color: Colors.white),
+                            fontSize: 8, // Use smaller font size
+                            image: Image.asset("assets/images/add_select.png",
+                                width: 12, height: 12, color: Colors.white),
                             onTap: () {
-                              controller.toggleItemSaved(widget.itemId, itemName: widget.title);
+                              controller.toggleItemSaved(widget.itemId,
+                                  itemName: widget.title);
                             },
                           );
                         } else {
-                          // Otherwise, show the default "Add" button
                           return outlinedButton(
                             "Add",
                             widget.accentColor,
-                            fontSize: 10,
-                            image: Image.asset("assets/images/add.png", width: 14, height: 14, color: widget.accentColor),
+                            fontSize: 8, // Use smaller font size
+                            image: Image.asset("assets/images/add.png",
+                                width: 12, height: 12, color: widget.accentColor),
                             imageOnRight: true,
                             onTap: () {
-                              // On tap, call the same controller toggle method
-                              controller.toggleItemSaved(widget.itemId, itemName: widget.title);
+                              controller.toggleItemSaved(widget.itemId,
+                                  itemName: widget.title);
                             },
                           );
                         }

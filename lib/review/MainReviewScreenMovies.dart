@@ -200,12 +200,12 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: _buildRatingsSection(),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -327,7 +327,7 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
                       _movieDetails.overallRating.toStringAsFixed(1),
                       style: const TextStyle(
                         color: primaryTextColor,
-                        fontSize: 20,
+                        fontSize: 28,
                         fontFamily: 'General Sans Variable',
                         fontWeight: FontWeight.w600,
                       ),
@@ -335,8 +335,8 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
                     const SizedBox(width: 4),
                     Image.asset(
                       "assets/images/sd.png",
-                      width: 20,
-                      height: 20,
+                      width: 28,
+                      height: 28,
                       color: accentColor,
                     ),
                   ],
@@ -456,81 +456,82 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
     required String label,
     required String displayValue,
     required double progressValue,
-  }) {
-    final double ratingOutOfFive = progressValue * 5.0;
+  }) {  final double ratingOutOfFive = progressValue * 5.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: secondaryTextColor,
-            fontSize: 11,
-            fontFamily: 'General Sans Variable',
-            fontWeight: FontWeight.w600,
-          ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(
+          color: secondaryTextColor,
+          fontSize: 11,
+          fontFamily: 'General Sans Variable',
+          fontWeight: FontWeight.w600,
         ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          decoration: BoxDecoration(
-            color: ratingBarBackgroundColor,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Row(
-            children: [
-              Text(
-                displayValue,
-                style: const TextStyle(
-                  color: primaryTextColor,
-                  fontSize: 16,
-                  fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w600,
-                ),
+      ),
+      const SizedBox(height: 8),
+      Container(
+        padding: const EdgeInsets.only(top:  4,bottom: 4, left: 4, right: 0),
+        decoration: BoxDecoration(
+          color: ratingBarBackgroundColor,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: [
+            Text(
+              displayValue,
+              style: const TextStyle(
+                color: primaryTextColor,
+                fontSize: 16,
+                fontFamily: 'General Sans Variable',
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: List.generate(5, (i) {
-                    int fullStars = ratingOutOfFive.floor();
-                    double fraction = ratingOutOfFive - fullStars;
-                    Color filledStarColor = accentColor;
-                    Color emptyStarColor = Colors.grey[700]!;
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (i) {
+                  int fullStars = ratingOutOfFive.floor();
+                  double fraction = ratingOutOfFive - fullStars;
+                  Color filledStarColor = accentColor;
+                  Color emptyStarColor = Colors.grey[700]!;
 
-                    Widget star;
-                    if (i < fullStars) {
-                      star = Image.asset("assets/images/sd.png", width: 14, height: 14, color: filledStarColor);
-                    } else if (i == fullStars && fraction >= 0.25) {
-                      star = Stack(
-                        children: [
-                          Image.asset("assets/images/sd.png", width: 14, height: 14, color: emptyStarColor),
-                          ClipRect(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              widthFactor: fraction,
-                              child: Image.asset("assets/images/sd.png", width: 14, height: 14, color: filledStarColor),
-                            ),
+                  Widget star;
+                  if (i < fullStars) {
+                    star = Image.asset("assets/images/sd.png", width: 16, height: 16, color: filledStarColor);
+                  } else if (i == fullStars && fraction >= 0.25) {
+                    star = Stack(
+                      children: [
+                        Image.asset("assets/images/sd.png", width: 16, height: 16, color: emptyStarColor),
+                        ClipRect(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: fraction,
+                            child: Image.asset("assets/images/sd.png", width: 16, height: 16, color: filledStarColor),
                           ),
-                        ],
-                      );
-                    } else {
-                      star = Image.asset("assets/images/sd.png", width: 14, height: 14, color: emptyStarColor);
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 2.0),
-                      child: star,
+                        ),
+                      ],
                     );
-                  }),
-                ),
+                  } else {
+                    star = Image.asset("assets/images/sd.png", width: 16, height: 16, color: emptyStarColor);
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: star,
+                  );
+                }),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    );
+      ),
+    ],
+  );
   }
+
 
   Widget _buildSynopsisSection() {
     return Text(
@@ -618,11 +619,11 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
                 },
 
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 11.0),
                   child: Image.asset(
                     "assets/images/sd.png",
-                    width: 32,
-                    height: 32,
+                    width: 24,
+                    height: 24,
                     color: index < _userGivenRating ? accentColor : unselectedStarColor,
                   ),
                 ),
@@ -926,8 +927,8 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
             Image.asset(
               iconPath,
               color: iconAndTextColor,
-              width: 16,
-              height: 16,
+              width: 20,
+              height: 20,
             ),
             const SizedBox(width: 6),
             Text(

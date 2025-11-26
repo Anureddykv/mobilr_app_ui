@@ -9,7 +9,7 @@ class UpcomingContentCard extends StatelessWidget {
   final String details;
   final String releaseDate;
   final bool isNotified;
-  final VoidCallback onNotifyToggle; // Action for both states of the button
+  final VoidCallback onNotifyToggle;
   final VoidCallback? onExplore;
   final Color accentColor;
   final Widget? infoIcon;
@@ -36,53 +36,48 @@ class UpcomingContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // --- Card layout updated to match Figma design ---
-    return Container(
-      width: 200,
-      height: 300,
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        // The borderRadius from Figma is 26
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-      ),
-      child: Stack(
-        children: [
-          // Background Image
-          _buildBackgroundImage(imageUrl),
-          // Gradient Overlay
-          _buildGradientOverlay(),
-          // Main content column (Title, Details, Release Date)
-          Positioned(
-            left: 14,
-            right: 14,
-            top: 145, // Positioned from the top as per Figma
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTitleAndDetails(),
-                const SizedBox(height: 12),
-                _buildReleaseInfo(),
-              ],
+    // ✅ WRAPPED IN ASPECTRATIO FOR RESPONSIVENESS
+    // This maintains the card's shape while allowing it to scale.
+    return AspectRatio(
+      aspectRatio: 200 / 300,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+        ),
+        child: Stack(
+          fit: StackFit.expand, // Ensure stack children fill the container
+          children: [
+            _buildBackgroundImage(imageUrl),
+            _buildGradientOverlay(),
+            // ✅ REBUILT CONTENT LAYOUT FOR ACCURACY & RESPONSIVENESS
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Spacer to push content to the bottom half
+                  const Spacer(flex: 145), // Approximates the top: 145 position
+                  _buildTitleAndDetails(),
+                  const SizedBox(height: 12),
+                  _buildReleaseInfo(),
+                  const Spacer(flex: 20),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: isNotified
+                        ? _buildNotifiedStateButtons()
+                        : _buildInitialStateButton(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Buttons positioned at the bottom
-          Positioned(
-            left: 14,
-            right: 14,
-            bottom: 14, // Positioned from the bottom as per Figma
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: isNotified
-                  ? _buildNotifiedStateButtons()
-                  : _buildInitialStateButton(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
+  // --- Helper Widgets (Updated to match Figma styles) ---
 
   Widget _buildBackgroundImage(String url) {
     return Positioned.fill(
@@ -94,14 +89,14 @@ class UpcomingContentCard extends StatelessWidget {
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
             color: const Color(0xFF141414),
-            child: const Icon(Icons.broken_image,
+            child: const Icon(Icons.image_not_supported_outlined,
                 color: Colors.white24, size: 50),
           ),
         )
             : Container(
           color: const Color(0xFF141414),
-          child:
-          const Icon(Icons.movie, color: Colors.white24, size: 50),
+          child: const Icon(Icons.movie_creation_outlined,
+              color: Colors.white24, size: 50),
         ),
       ),
     );
@@ -112,14 +107,11 @@ class UpcomingContentCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26.0),
-          gradient: LinearGradient(
-            // Figma gradient starts higher up
-            begin: const Alignment(0.5, 0.0),
-            end: const Alignment(0.5, 1.0),
-            colors: [
-              const Color(0x00141414),
-              const Color(0xFF141414),
-            ],
+          gradient: const LinearGradient(
+            // ✅ GRADIENT MATCHES FIGMA
+            begin: Alignment(0.5, 0.0),
+            end: Alignment(0.5, 1.0),
+            colors: [Color(0x00141414), Color(0xFF141414)],
           ),
         ),
       ),
@@ -131,10 +123,12 @@ class UpcomingContentCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Title Row
+        // ✅ CORRECTED: Use a Row to include the infoIcon
         Row(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Title text should be flexible
             Expanded(
               child: Text(
                 title,
@@ -144,16 +138,19 @@ class UpcomingContentCard extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w500, // Figma uses 550 weight
-                  height: 1.0, // Tight line height for multi-line titles
+                  fontWeight: FontWeight.w500, // Figma uses w550
+                  height: 1.0,
                 ),
               ),
             ),
-            if (infoIcon != null) ...[const SizedBox(width: 4), ?infoIcon],
+            // Conditionally add the icon if it's provided
+            if (infoIcon != null) ...[
+              const SizedBox(width: 6),
+              infoIcon!,
+            ],
           ],
         ),
         const SizedBox(height: 6),
-        // Details Text
         Text(
           details,
           maxLines: 1,
@@ -162,7 +159,7 @@ class UpcomingContentCard extends StatelessWidget {
             color: Colors.white,
             fontSize: 12,
             fontFamily: 'General Sans Variable',
-            fontWeight: FontWeight.w400, // Figma uses 450 weight
+            fontWeight: FontWeight.w400, // Figma uses w450
           ),
         ),
       ],
@@ -180,17 +177,17 @@ class UpcomingContentCard extends StatelessWidget {
             color: Colors.white,
             fontSize: 10,
             fontFamily: 'General Sans Variable',
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w500, // Figma uses w550
           ),
         ),
-        const SizedBox(height: 4), // Adjusted for better visual balance
+        const SizedBox(height: 8),
         Text(
           releaseDate,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontFamily: 'General Sans Variable',
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w400, // Figma uses w450
           ),
         ),
       ],
@@ -198,7 +195,7 @@ class UpcomingContentCard extends StatelessWidget {
   }
 
   Widget _buildInitialStateButton() {
-    // This now uses the filledButton widget with the correct styling.
+    // ✅ BUTTON STYLES MATCH FIGMA
     return SizedBox(
       width: double.infinity,
       child: filledButton(
@@ -212,34 +209,35 @@ class UpcomingContentCard extends StatelessWidget {
   }
 
   Widget _buildNotifiedStateButtons() {
-    // This Row now contains the "Explore" and the icon-only notified button.
     return Row(
       children: [
         Expanded(
-
-          child: outlinedButton(
+          child: SizedBox(
+            height: 32, // Match height of the other button
+            child: outlinedButton(
               "Explore",
               accentColor,
               fontSize: 12,
               centerText: true,
               onTap: onExplore,
-            )
+            ),
+          ),
         ),
-        const SizedBox(width: 10), // Spacing from Figma
-        // The notified icon button
+        const SizedBox(width: 10),
         GestureDetector(
           onTap: onNotifyToggle,
           child: Container(
-            height: 42, // Match the height of the outlinedButton
-            width: 48,
+            height: 32, // Match height
+            width: 38,
             decoration: ShapeDecoration(
               color: accentColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
             ),
             child: Center(
-                child: notifiedIcon ??
-                    const Icon(Icons.check, color: Colors.white, size: 24)),
+              child: notifiedIcon ??
+                  const Icon(Icons.check, color: Colors.white, size: 20),
+            ),
           ),
         ),
       ],

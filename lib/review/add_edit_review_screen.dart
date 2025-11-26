@@ -86,7 +86,7 @@ class _AddEditReviewScreenState extends State<AddEditReviewScreen> {
           circleColor: const Color(0xFF9DD870),
           backgroundColor: screenBackgroundColor,
           headerImageUrl: "https://placehold.co/375x48",
-          icon: const Icon(Icons.check, size: 48, color: Colors.white),
+          icon: const Icon(Icons.check, size: 48, color: Colors.black),
           nextPage: const HomeScreen(),
         ),
       ),
@@ -116,110 +116,104 @@ class _AddEditReviewScreenState extends State<AddEditReviewScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          decoration: BoxDecoration(
-            color: cardBgColor,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- Rating Header ---
-              Text(
-                'Rate this ${widget.itemType}',
-                style: const TextStyle(
-                  color: primaryTextColor,
-                  fontSize: 14,
-                  fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Tell us what you think about this ${widget.itemType}',
-                style: const TextStyle(
-                  color: secondaryTextColor,
-                  fontSize: 10,
-                  fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    bool isSelected = index < _currentRating;
-                    return IconButton(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      visualDensity: VisualDensity.compact,
-                      icon: Image.asset(
-                        widget.ratingAssetPath,
-                        width: 42,
-                        height: 42,
-                        color: isSelected ? widget.accentColor : Color(0xFFCCCCCC),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _currentRating = index + 1.0;
-                        });
-                      },
-                    );
-                  }),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-              const Divider(color: Color(0xFF191919)),
-              const SizedBox(height: 24),
-
-              // --- Text Input Fields ---
-              _buildTextField(
-                controller: _titleController,
-                hintText: 'Title your review (optional)',
-              ),
-              const SizedBox(height: 16),
-              _buildTextField(
-                controller: _reviewController,
-                hintText: 'Describe your view...',
-                maxLines: 5,
-              ),
-              const SizedBox(height: 32),
-
-              // --- NEW: Conditional Submit Button ---
-              // AnimatedOpacity provides a smooth fade-in/fade-out effect
-              AnimatedOpacity(
-                opacity: _showSubmitButton ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 300),
-                child: _showSubmitButton
-                    ? Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: widget.accentColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: _submitReview,
-                    child: const Text(
-                      "Submit Review",
-                      style: TextStyle(
-                        color: primaryTextColor,
-                        fontSize: 14,
-                        fontFamily: 'General Sans Variable',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            decoration: BoxDecoration(
+              color: cardBgColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rate this ${widget.itemType}',
+                  style: const TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 14,
+                    fontFamily: 'General Sans Variable',
+                    fontWeight: FontWeight.w500,
                   ),
-                )
-                    : const SizedBox.shrink(), // Takes no space when hidden
-              ),
-            ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Tell us what you think about this ${widget.itemType}',
+                  style: const TextStyle(
+                    color: secondaryTextColor,
+                    fontSize: 10,
+                    fontFamily: 'General Sans Variable',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      bool isSelected = index < _currentRating;
+                      return IconButton(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        visualDensity: VisualDensity.compact,
+                        icon: Image.asset(
+                          widget.ratingAssetPath,
+                          width: 24,
+                          height: 24,
+                          color: isSelected ? widget.accentColor : Color(0xFFCCCCCC),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _currentRating = index + 1.0;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+                const Divider(color: Color(0xFF191919)),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _reviewController,
+                  hintText: 'Describe your view...',
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 32),
+                AnimatedOpacity(
+                  opacity: _showSubmitButton ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: _showSubmitButton
+                      ? Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.accentColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: _submitReview,
+                      child: const Text(
+                        "Submit Review",
+                        style: TextStyle(
+                          color: primaryTextColor,
+                          fontSize: 14,
+                          fontFamily: 'General Sans Variable',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  )
+                      : const SizedBox.shrink(), // Takes no space when hidden
+                ),
+              ],
+            ),
           ),
         ),
       ),

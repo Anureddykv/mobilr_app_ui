@@ -38,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_back,
             color: primaryTextColor,
             size: 20,
           ),
@@ -48,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'Settings',
           style: TextStyle(
             color: primaryTextColor,
-            fontSize: 16, // Figma has a slightly different title style
+            fontSize: 14, // Figma has a slightly different title style
             fontFamily: 'General Sans Variable',
             fontWeight: FontWeight.w600,
           ),
@@ -64,8 +64,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               print("Navigate to Profile Screen");
             }),
             const SizedBox(height: 20),
-            _buildAppearanceCard(),
-            const SizedBox(height: 20),
+           // _buildAppearanceCard(),
+            //const SizedBox(height: 20),
             _buildNotificationsCard(),
             const SizedBox(height: 20),
             _buildLegalPoliciesCard(),
@@ -110,6 +110,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontSize: 16,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w600,
+                      height: 0.72,
                     ),
                   ),
                   SizedBox(height: 6), // Figma has 10px, but 6 looks better with this font
@@ -120,6 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontSize: 14,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w600,
+                      height: 0.72,
                     ),
                   ),
                 ],
@@ -181,7 +183,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-
   // --- NOTIFICATIONS CARD ---
   Widget _buildNotificationsCard() {
     return _buildSettingsCard(
@@ -191,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'Push Notification',
           _pushNotifications,
               (value) => setState(() => _pushNotifications = value),
-          leading: Image.asset("assets/images/lock.png", color: primaryTextColor, width: 14, height: 14),
+          leading: Image.asset("assets/images/inapp.png", color: primaryTextColor, width: 14, height: 14),
         ),
         _buildSwitchRow(
           'Email Notification',
@@ -215,7 +216,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             child: Row(
               children: [
-                Image.asset("assets/images/licenseinfo.png", color: primaryTextColor, width: 14, height: 14),
+                Image.asset("assets/images/inapp.png", color: primaryTextColor, width: 14, height: 14),
                 const SizedBox(width: 8),
                 const Expanded(
                   child: Text(
@@ -225,6 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontSize: 14,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w400,
+                      height: 0.72,
                     ),
                   ),
                 ),
@@ -248,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'Do not Disturb',
           _doNotDisturb,
               (value) => setState(() => _doNotDisturb = value),
-          leading: Image.asset("assets/images/community.png", color: primaryTextColor, width: 14, height: 14),
+          leading: Text(""),
           hasDivider: false,
         ),
       ],
@@ -268,12 +270,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _buildInfoRow(
           'Terms & Condition',
           onTap: () => print("Terms tapped"),
-          leading: Image.asset("assets/images/email.png", color: primaryTextColor, width: 14, height: 14),
+          leading: Image.asset("assets/images/terms.png", color: primaryTextColor, width: 14, height: 14),
         ),
         _buildInfoRow(
           'Cookies Policy',
           onTap: () => print("Cookies tapped"),
-          leading: Image.asset("assets/images/inapp.png", color: primaryTextColor, width: 14, height: 14),
+          leading: Image.asset("assets/images/cookies.png", color: primaryTextColor, width: 14, height: 14),
         ),
         _buildInfoRow(
           'Content Ownership & Licensing Info',
@@ -283,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _buildInfoRow(
           'Community Guidelines',
           onTap: () => print("Community Guidelines tapped"),
-          leading: Image.asset("assets/images/community.png", color: primaryTextColor, width: 14, height: 14),
+            leading: Image.asset("assets/images/community.png", color: primaryTextColor, width: 14, height: 14),
           hasDivider: false,
         ),
       ],
@@ -328,6 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.50,
+                    height: 0.72,
                   ),
                 ),
                 if (showInfoIcon)
@@ -372,6 +375,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 14,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w400,
+                  height: 0.72,
                 ),
               ),
             ),
@@ -409,6 +413,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 14,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w400,
+                  height: 0.72,
                 ),
               ),
             ),
@@ -449,14 +454,14 @@ class _NotificationPreferencesListState extends State<NotificationPreferencesLis
           label: "Likes on my Reviews",
           value: likes,
           onChanged: (v) => setState(() => likes = v),
-          iconPath: "assets/images/thum_up.png",
+          iconPath: "assets/images/thum_up_notfill.png",
         ),
         _buildDivider(),
         _buildPreferenceRow(
           label: "Replies / Comments",
           value: replies,
           onChanged: (v) => setState(() => replies = v),
-          iconPath: "assets/images/inapp.png",
+          iconPath: "assets/images/comments.png",
         ),
         _buildDivider(),
         _buildPreferenceRow(
@@ -470,7 +475,7 @@ class _NotificationPreferencesListState extends State<NotificationPreferencesLis
           label: "New content in my Interests",
           value: interests,
           onChanged: (v) => setState(() => interests = v),
-          iconPath: "assets/images/email.png",
+          iconPath: "assets/images/terms.png",
         ),
       ],
     );
@@ -500,6 +505,7 @@ class _NotificationPreferencesListState extends State<NotificationPreferencesLis
                   fontSize: 14,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w400,
+                  height: 0.72,
                 ),
               ),
             ),
@@ -538,7 +544,7 @@ class _CustomSwitch extends StatelessWidget {
             color: value ? switchActiveColor : darkBackgroundColor,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-                color: value ? Colors.transparent : switchInactiveHandle,
+                color: value ? Colors.transparent : cardBackgroundColor,
                 width: 1.5
             )
         ),

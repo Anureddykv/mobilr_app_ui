@@ -5,7 +5,7 @@ import '../../../bottomnav/profile_screen.dart';
 Widget filledButton(
     String text, {
       required Color background,
-      double fontSize = 10,
+      double fontSize = 8,
       VoidCallback? onTap,
       Widget? image,
       bool imageOnRight = false,

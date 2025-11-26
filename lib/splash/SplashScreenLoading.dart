@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
+import 'package:mobilr_app_ui/onbording/onboarding_interests_screen.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSignin.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,7 +53,9 @@ class _SplashScreenState extends State<SplashScreen>
         child: RotationTransition(
           turns: _controller,
           child: Image.asset(
-            'assets/images/logo.png',
+            height: 172,
+            width: 121,
+            'assets/images/ic_logo_1.png',
           ),
         ),
       ),

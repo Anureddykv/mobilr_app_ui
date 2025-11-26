@@ -61,7 +61,7 @@ class FeaturedContentCard extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 12),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,9 +88,10 @@ class FeaturedContentCard extends StatelessWidget {
                           fontSize: 10,
                           fontFamily: 'General Sans Variable',
                           fontWeight: FontWeight.w600,
+                          height: 0.72
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       _buildRatingDisplay(
                         controller,
                         ratingValue: ratingValue,
@@ -133,72 +134,81 @@ class FeaturedContentCard extends StatelessWidget {
     final Color finalActiveColor = activeColor ?? controller.currentAccentColor.value;
     final Color finalInactiveColor = inactiveColor ?? Colors.grey[700]!;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (ratingValue > 0) ...[
-          Text(
-            ratingValue.toStringAsFixed(1),
-            style: const TextStyle(
-              color: primaryTextColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(width: 6),
-        ],
-        Row(
-          children: List.generate(5, (index) {
-            Widget starWidget;
-            int fullStars = ratingValue.floor();
-            double decimalPart = ratingValue - fullStars;
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: ShapeDecoration(
+        color: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
 
-            if (index < fullStars) {
-              // 1. Full Star
-              starWidget = Image.asset(
-                iconAsset,
-                width: 14,
-                height: 14,
-                color: finalActiveColor,
-              );
-            } else if (index == fullStars && decimalPart > 0) {
-              // 2. Partially Filled Star
-              starWidget = Stack(
-                children: [
-                  Image.asset(
-                    iconAsset,
-                    width: 14,
-                    height: 14,
-                    color: finalInactiveColor,
-                  ),
-                  ClipRect(
-                    clipper: _FractionalClipper(clipFactor: decimalPart),
-                    child: Image.asset(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (ratingValue > 0) ...[
+            Text(
+              ratingValue.toStringAsFixed(1),
+              style: const TextStyle(
+                color: primaryTextColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 6),
+          ],
+          Row(
+            children: List.generate(5, (index) {
+              Widget starWidget;
+              int fullStars = ratingValue.floor();
+              double decimalPart = ratingValue - fullStars;
+
+              if (index < fullStars) {
+                // 1. Full Star
+                starWidget = Image.asset(
+                  iconAsset,
+                  width: 14,
+                  height: 14,
+                  color: finalActiveColor,
+                );
+              } else if (index == fullStars && decimalPart > 0) {
+                // 2. Partially Filled Star
+                starWidget = Stack(
+                  children: [
+                    Image.asset(
                       iconAsset,
                       width: 14,
                       height: 14,
-                      color: finalActiveColor,
+                      color: finalInactiveColor,
                     ),
-                  ),
-                ],
-              );
-            } else {
-              // 3. Empty Star
-              starWidget = Image.asset(
-                iconAsset,
-                width: 14,
-                height: 14,
-                color: finalInactiveColor,
-              );
-            }
+                    ClipRect(
+                      clipper: _FractionalClipper(clipFactor: decimalPart),
+                      child: Image.asset(
+                        iconAsset,
+                        width: 14,
+                        height: 14,
+                        color: finalActiveColor,
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                // 3. Empty Star
+                starWidget = Image.asset(
+                  iconAsset,
+                  width: 14,
+                  height: 14,
+                  color: finalInactiveColor,
+                );
+              }
 
-            return Padding(
-              padding: const EdgeInsets.only(right: 2.0),
-              child: starWidget,
-            );
-          }),
-        ),
-      ],
+              return Padding(
+                padding: const EdgeInsets.only(right: 2.0),
+                child: starWidget,
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 }

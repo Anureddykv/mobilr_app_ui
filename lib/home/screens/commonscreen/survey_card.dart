@@ -60,7 +60,7 @@ class _SurveyCardState extends State<SurveyCard> {
   @override
   Widget build(BuildContext context) {
     // Consistent color and text styling based on the reference.
-    const Color cardBackgroundColor = Color(0xFF1F2026); // Corrected background color
+    const Color cardBackgroundColor =  Color(0xFF141414); // Corrected background color
     const Color primaryTextColor = Colors.white;
     const Color secondaryTextColor = Colors.white70;
 

@@ -31,6 +31,7 @@ class PollWidget extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
+                fontFamily: 'General Sans Variable',
               ),
             ),
             const SizedBox(height: 12),

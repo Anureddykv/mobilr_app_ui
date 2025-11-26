@@ -29,54 +29,56 @@ class CommunityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // --- Layout refactored to match Figma design ---
-    return Container(
-      width: 200,
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: cardBackgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(26),
+    return Flexible(
+      child: Container(
+        width: 200,
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          color: cardBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // The column takes up minimum vertical space.
-        mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the bottom.
-        children: [
-          // Top section with Icon, Name, and Description
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: const ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                // Subtle border from Figma to separate sections.
-                side: BorderSide(width: 1, color: Color(0xFF191919)),
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildCommunityIcon(imageUrl),
-                const SizedBox(width: 10),
-                _buildNameAndDescription(),
-              ],
-            ),
-          ),
-          // Bottom section with the "Join Community" button
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-            // --- FIX: Removed the SizedBox with a fixed height ---
-            child: SizedBox(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // The column takes up minimum vertical space.
+          mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the bottom.
+          children: [
+            // Top section with Icon, Name, and Description
+            Container(
               width: double.infinity,
-              child: filledButton(
-                buttonText,
-                image: buttonIcon,
-                background: accentColor,
-                fontSize: 14,
-                onTap: onJoin,
+              padding: const EdgeInsets.only(top:14, left: 14, right: 14,),
+              decoration: const ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  // Subtle border from Figma to separate sections.
+                  side: BorderSide(width: 1, color: Color(0xFF191919)),
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildCommunityIcon(imageUrl),
+                  const SizedBox(width: 10),
+                  _buildNameAndDescription(),
+                ],
               ),
             ),
-          ),
-        ],
+            // Bottom section with the "Join Community" button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              // --- FIX: Removed the SizedBox with a fixed height ---
+              child: SizedBox(
+                width: double.infinity,
+                child: filledButton(
+                  buttonText,
+                  image: buttonIcon,
+                  background: accentColor,
+                  fontSize: 14,
+                  onTap: onJoin,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

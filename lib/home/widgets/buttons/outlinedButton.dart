@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 Widget outlinedButton(
     String text,
     Color color, {
-      double fontSize = 10,
+      double fontSize = 8,
       Widget? image,
       bool imageOnRight = false,
       bool centerText = false,
@@ -11,7 +11,7 @@ Widget outlinedButton(
     }) {
   return GestureDetector(onTap: onTap,
     child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           side: BorderSide(width: 1, color: color),

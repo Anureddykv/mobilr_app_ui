@@ -85,9 +85,10 @@ You may:
           'Privacy Policy',
           style: TextStyle(
             color: primaryTextColor,
-            fontSize: 20,
+            fontSize: 14,
             fontFamily: 'General Sans Variable',
             fontWeight: FontWeight.w600,
+            height: 0.72,
           ),
         ),
         backgroundColor: const Color(0xFF1E1E1E),
@@ -140,6 +141,7 @@ You may:
               fontSize: 16,
               fontFamily: 'General Sans Variable',
               fontWeight: FontWeight.w600,
+              height: 0.72
             ),
           ),
           const SizedBox(height: 12),

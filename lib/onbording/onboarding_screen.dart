@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'onboarding_controller.dart';
@@ -108,3 +109,4 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 }
+*/

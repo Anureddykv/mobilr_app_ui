@@ -19,6 +19,14 @@ const Color bookAccentColor = Color(0xFFCDBBE9);
 const Color gameAccentColor = Color(0xFF90BE6D);
 const Color defaultAccentColor = Colors.teal; // Fallback
 
+// ✅ Color constants for the new snackbars
+const Color snackbarBackgroundColor = Color(0xFF141414);
+const Color snackbarSuccessColor = Color(0xFF9DD870);
+const Color snackbarWarningColor = Colors.orange;
+const Color snackbarInfoColor = Color(0xFF54B6E0);
+const Color snackbarNeutralColor = Color(0xFF626365);
+
+
 class HomeController extends GetxController {
   var selectedCategory = "Movies".obs;
   var categories = <String>['Movies', 'Restaurants', 'Gadgets', 'Books', 'Games'].obs;
@@ -42,31 +50,45 @@ class HomeController extends GetxController {
   bool isItemSaved(String itemId) {
     return savedItemIds.contains(itemId);
   }
+
+  // This method is already correct from our previous conversation
   void toggleItemSaved(String itemId, {String itemName = 'Item'}) {
+    final String itemDisplayName = itemName.length > 20 ? '${itemName.substring(0, 20)}...' : itemName;
+
     if (isItemSaved(itemId)) {
       savedItemIds.remove(itemId);
       print("$itemName with ID $itemId unsaved.");
-      Get.snackbar(
-        "Removed from Watchlist",
-        "$itemName has been removed from your watchlist.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 8,
-      );
+
+      // Show the "Removed" custom snackbar with neutral colors
+      Get.showSnackbar(GetSnackBar(
+        messageText: const _CustomSnackbarWidget(
+          message: 'Removed from your list.',
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.remove,
+          iconColor: snackbarNeutralColor,
+          textColor: snackbarNeutralColor,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
     } else {
       savedItemIds.add(itemId);
       print("$itemName with ID $itemId saved.");
-      Get.snackbar(
-        "Added to Watchlist!",
-        "$itemName has been added to your watchlist.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: currentAccentColor.value, // Uses the current category's color
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 8,
-      );
+
+      // Show the "Added" custom snackbar with dynamic accent colors
+      Get.showSnackbar(GetSnackBar(
+        messageText: _CustomSnackbarWidget(
+          message: '$itemDisplayName added to your list!',
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.check,
+          iconColor: currentAccentColor.value,
+          textColor: currentAccentColor.value,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
     }
   }
 
@@ -121,61 +143,96 @@ class HomeController extends GetxController {
       selectedSurveyOption.value = option;
     }
   }
+
+  // ✅ UPDATED: submitSurvey now uses the custom snackbar
   void submitSurvey() {
     if (selectedSurveyOption.value.isNotEmpty && !hasSubmittedSurvey.value) {
-      // In a real app, you would send selectedSurveyOption.value to a backend here.
       print("Survey Submitted: ${selectedSurveyOption.value}");
-      hasSubmittedSurvey.value = true; // Mark as submitted
+      hasSubmittedSurvey.value = true;
 
-      // Optional: Provide feedback to the user
-      Get.snackbar(
-        "Survey Submitted",
-        "You selected: ${selectedSurveyOption.value}",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green, // Or use controller.currentAccentColor.value
-        colorText: Colors.white,
-      );
+      Get.showSnackbar(GetSnackBar(
+        messageText: _CustomSnackbarWidget(
+          message: "You selected: ${selectedSurveyOption.value}",
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.check,
+          iconColor: currentAccentColor.value,
+          textColor: currentAccentColor.value,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
+
     } else if (hasSubmittedSurvey.value) {
-      Get.snackbar(
-        "Survey Information",
-        "You have already submitted your response for this survey.",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.showSnackbar(GetSnackBar(
+        messageText: const _CustomSnackbarWidget(
+          message: "You have already submitted your response.",
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.info_outline,
+          iconColor: snackbarInfoColor,
+          textColor: snackbarInfoColor,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
+
     } else {
-      Get.snackbar(
-        "Survey Incomplete",
-        "Please select an option before submitting.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      Get.showSnackbar(GetSnackBar(
+        messageText: const _CustomSnackbarWidget(
+          message: "Please select an option before submitting.",
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.warning_amber_rounded,
+          iconColor: snackbarWarningColor,
+          textColor: snackbarWarningColor,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
     }
   }
+
   void resetSurveyState() {
     selectedSurveyOption.value = "";
     hasSubmittedSurvey.value = false;
   }
+
+  // ✅ UPDATED: toggleUpcomingMovieNotification now uses the custom snackbar
   void toggleUpcomingMovieNotification(String movieIdOrTitle) {
     if (notifiedUpcomingMovies.contains(movieIdOrTitle)) {
-      notifiedUpcomingMovies.remove(movieIdOrTitle); // Remove to toggle off
+      notifiedUpcomingMovies.remove(movieIdOrTitle);
       print("Notifications OFF for: $movieIdOrTitle");
-      Get.snackbar(
-        "Notifications Off",
-        "We won't notify you about $movieIdOrTitle anymore.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.grey[700],
-        colorText: Colors.white,
-      );
+
+      Get.showSnackbar(GetSnackBar(
+        messageText: _CustomSnackbarWidget(
+          message: "No more notifications for $movieIdOrTitle.",
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.notifications_off_outlined,
+          iconColor: snackbarNeutralColor,
+          textColor: snackbarNeutralColor,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
+
     } else {
-      notifiedUpcomingMovies.add(movieIdOrTitle); // Add to toggle on
+      notifiedUpcomingMovies.add(movieIdOrTitle);
       print("Notifications ON for: $movieIdOrTitle");
-      Get.snackbar(
-        "Notifications On",
-        "We'll notify you about $movieIdOrTitle!",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: currentAccentColor.value,
-        colorText: Colors.white,
-      );
+
+      Get.showSnackbar(GetSnackBar(
+        messageText: _CustomSnackbarWidget(
+          message: "We'll notify you about $movieIdOrTitle!",
+          backgroundColor: snackbarBackgroundColor,
+          icon: Icons.notifications_active_outlined,
+          iconColor: currentAccentColor.value,
+          textColor: currentAccentColor.value,
+        ),
+        backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ));
     }
   }
 
@@ -229,8 +286,7 @@ class HomeController extends GetxController {
       final data = json.decode(response);
       movieData.value = MovieDataModel.fromJson(data);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load movie data: ${e.toString()}");
-      // print("Error fetching movie data: $e");
+      print("Error fetching movie data: $e");
     } finally {
       isLoadingMovies.value = false;
     }
@@ -245,7 +301,7 @@ class HomeController extends GetxController {
       final data = json.decode(response);
       restaurantData.value = RestaurantDataModel.fromJson(data);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load restaurant data: ${e.toString()}");
+      print("Error fetching restaurant data: $e");
     } finally {
       isLoadingRestaurants.value = false;
     }
@@ -260,7 +316,7 @@ class HomeController extends GetxController {
       final data = json.decode(response);
       gadgetData.value = GadgetDataModel.fromJson(data);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load gadget data: ${e.toString()}");
+      print("Error fetching gadget data: $e");
     } finally {
       isLoadingGadgets.value = false;
     }
@@ -275,7 +331,7 @@ class HomeController extends GetxController {
       final data = json.decode(response);
       bookData.value = BookDataModel.fromJson(data);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load book data: ${e.toString()}");
+      print("Error fetching book data: $e");
     } finally {
       isLoadingBooks.value = false;
     }
@@ -290,9 +346,90 @@ class HomeController extends GetxController {
       final data = json.decode(response);
       gameData.value = GameDataModel.fromJson(data);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load game data: ${e.toString()}");
+      print("Error fetching game data: $e");
     } finally {
       isLoadingGames.value = false;
     }
+  }
+
+  Color getAccentColorForCategory(String category) {
+    switch (category) {
+      case "Movies":
+        return const Color(0xFF54B6E0);
+      case "Restaurants":
+        return const Color(0xFFF28500);
+      case "Gadgets":
+        return const Color(0xFFE45659);
+      case "Books":
+        return const Color(0xFFCDBBE9);
+      case "Games":
+        return const Color(0xFF90BE6D);
+      default:
+        return const Color(0xFF54B6E0);
+    }
+  }
+}
+
+
+class _CustomSnackbarWidget extends StatelessWidget {
+  final String message;
+  final Color backgroundColor;
+  final IconData icon;
+  final Color iconColor;
+  final Color textColor;
+
+  const _CustomSnackbarWidget({
+    required this.message,
+    required this.backgroundColor,
+    required this.icon,
+    required this.iconColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      decoration: ShapeDecoration(
+        color: backgroundColor,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            width: 2,
+            color: textColor,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: ShapeDecoration(
+              color: iconColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            ),
+            child: Icon(icon, color: backgroundColor, size: 14),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 14,
+                fontFamily: 'General Sans Variable',
+                fontWeight: FontWeight.w400,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

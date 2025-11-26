@@ -285,11 +285,18 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(_gadgetDetails.category, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
-                      _buildDotSeparator(),
-                      Text(_gadgetDetails.materials, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
-                      _buildDotSeparator(),
-                      Text(_gadgetDetails.connectivity, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
+                      Flexible(
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(_gadgetDetails.category, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
+                            _buildDotSeparator(),
+                            Text(_gadgetDetails.materials, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
+                            _buildDotSeparator(),
+                            Text(_gadgetDetails.connectivity, style: const TextStyle(color: secondaryTextColor, fontSize: 11, fontFamily: 'General Sans Variable', fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -305,7 +312,7 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
                       _gadgetDetails.overallRating.toStringAsFixed(1),
                       style: const TextStyle(
                         color: primaryTextColor,
-                        fontSize: 20,
+                        fontSize: 28,
                         fontFamily: 'General Sans Variable',
                         fontWeight: FontWeight.w600,
                       ),
@@ -313,8 +320,8 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
                     const SizedBox(width: 4),
                     Image.asset(
                       "assets/images/gadget.png",
-                      width: 20,
-                      height: 20,
+                      width: 28,
+                      height: 28,
                       color: accentColor,
                     ),
                   ],
@@ -390,7 +397,7 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: const EdgeInsets.only(left: 8, top: 4, bottom: 4, right: 0),
           decoration: BoxDecoration(
             color: ratingBarBackgroundColor,
             borderRadius: BorderRadius.circular(6),
@@ -418,22 +425,22 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
 
                     Widget star;
                     if (i < fullStars) {
-                      star = Image.asset("assets/images/gadget.png", width: 14, height: 14, color: filledStarColor);
+                      star = Image.asset("assets/images/gadget.png", width: 16, height: 16, color: filledStarColor);
                     } else if (i == fullStars && fraction >= 0.25) {
                       star = Stack(
                         children: [
-                          Image.asset("assets/images/gadget.png", width: 14, height: 14, color: emptyStarColor),
+                          Image.asset("assets/images/gadget.png", width: 16, height: 16, color: emptyStarColor),
                           ClipRect(
                             child: Align(
                               alignment: Alignment.centerLeft,
                               widthFactor: fraction,
-                              child: Image.asset("assets/images/gadget.png", width: 14, height: 14, color: filledStarColor),
+                              child: Image.asset("assets/images/gadget.png", width: 16, height: 16, color: filledStarColor),
                             ),
                           ),
                         ],
                       );
                     } else {
-                      star = Image.asset("assets/images/gadget.png", width: 14, height: 14, color: emptyStarColor);
+                      star = Image.asset("assets/images/gadget.png", width: 16, height: 16, color: emptyStarColor);
                     }
                     return Padding(
                       padding: const EdgeInsets.only(right: 2.0),
@@ -535,11 +542,11 @@ class _MainReviewScreenGadgetsState extends State<MainReviewScreenGadgets> {
                   ));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 11.0),
                   child: Image.asset(
                     "assets/images/gadget.png",
-                    width: 32,
-                    height: 32,
+                    width: 24,
+                    height: 24,
                     color: index < _userGivenRating ? accentColor : unselectedStarColor,
                   ),
                 ),

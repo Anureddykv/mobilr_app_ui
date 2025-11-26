@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
+import 'package:get/get.dart';import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
 import 'package:mobilr_app_ui/home/widgets/buttons/filledButton.dart';
 import 'package:mobilr_app_ui/home/widgets/buttons/outlinedButton.dart';
 
@@ -44,29 +43,28 @@ class TrendingCard extends StatelessWidget {
     final HomeController controller = Get.find();
 
     return Container(
-      width: 355,
-      height: 184, // Explicit height for the card
       decoration: ShapeDecoration(
         color: cardBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-      child: Stack(
-        children: [
-          _buildCardImage(imageUrl),
-          Positioned(
-            left: 129,
-            top: 12,
-            right: 12,
-            bottom: 12,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Top section: Title, Details, Ratings
-                Column(
+      // ✅ ADDED: IntrinsicHeight allows the Row's children to size correctly.
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Left part: Image with gradient
+            AspectRatio(
+              aspectRatio: 121 / 184, // Maintain the image's aspect ratio
+              child: _buildCardImage(imageUrl),
+            ),
+            // Right part: Content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Top section: Title, Details, Ratings
                     Text(
                       title.toUpperCase(),
                       maxLines: 1,
@@ -76,10 +74,11 @@ class TrendingCard extends StatelessWidget {
                         fontSize: 20,
                         fontFamily: 'General Sans Variable',
                         fontWeight: FontWeight.w600,
+                        height: 0.72
                       ),
                     ),
                     const SizedBox(height: 6),
-                    _buildDetailsRow(details), // Use helper to build the details row
+                    _buildDetailsRow(details),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,46 +101,46 @@ class TrendingCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    // ✅ ADDED: Spacer pushes the buttons to the bottom
+                    const Spacer(),
+                    // Buttons at the bottom
+                    Obx(
+                          () => Row(
+                        children: [
+                          // ✅ CORRECTED: Use Expanded to allow buttons to fill space
+                          Expanded(
+                            child: outlinedButton(
+                              "Write a Review",
+                              controller.currentAccentColor.value,
+                              image: Image.asset(
+                                "assets/images/pen.png",
+                                color: controller.currentAccentColor.value,
+                                width: 14,
+                                height: 14,
+                              ),
+                              fontSize: 8,
+                              onTap: onWriteReview,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: filledButton(
+                              "Explore Ratings",
+                              background: controller.currentAccentColor.value,
+                              image: exploreButtonImage,
+                              fontSize: 8,
+                              onTap: onExplore,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-
-                // Bottom section: Action Buttons
-                Obx(
-                      () => Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: outlinedButton(
-                          "Write a Review",
-                          controller.currentAccentColor.value,
-                          image: Image.asset(
-                            "assets/images/pen.png",
-                            color: controller.currentAccentColor.value,
-                            width: 12,
-                            height: 12,
-                          ),
-                          fontSize: 8,
-                          onTap: onWriteReview,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 6,
-                        child: filledButton(
-                          "Explore Ratings",
-                          background: controller.currentAccentColor.value,
-                          image: exploreButtonImage,
-                          fontSize: 8,
-                          onTap: onExplore,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -149,13 +148,11 @@ class TrendingCard extends StatelessWidget {
   // Helper for the card image with a proper gradient
   Widget _buildCardImage(String imageUrl) {
     return Container(
-      width: 121,
-      height: 184,
       decoration: ShapeDecoration(
         image: imageUrl.isNotEmpty
             ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)
             : null,
-        color: imageUrl.isEmpty ? Colors.grey[850] : null,
+        color: imageUrl.isEmpty ? Colors.grey[850] : Colors.grey,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
@@ -170,7 +167,7 @@ class TrendingCard extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [Colors.transparent, cardBackgroundColor],
-            stops: const [0.3, 1.0], // Adjust stops for desired fade effect
+            stops: const [0.3, 1.0],
           ),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
