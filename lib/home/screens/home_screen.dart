@@ -2002,7 +2002,7 @@ class _HomeScreenState extends State<HomeScreen>
               decoration: const BoxDecoration(
                 color: Color(0xFF0B0B0B),
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
+                  topLeft: Radius.circular(17),
                   topRight: Radius.circular(20),
                 ),
               ),
@@ -2146,7 +2146,7 @@ class _BubblePainter extends BoxPainter {
     const double concaveRadius = 10.0;
 
     // Change this value to add horizontal space inside the tab bubble
-    const double paddingX = 7.0;
+    const double paddingX = 6.0;
 
     // We expand the rect slightly downwards to cover any gap between the tab
     // and the body container, and expand horizontally by paddingX.
