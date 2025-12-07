@@ -22,7 +22,6 @@ import 'package:mobilr_app_ui/home/widgets/HorizontalCardList.dart';
 import 'package:mobilr_app_ui/home/widgets/ReusableCarousel.dart';
 import 'package:mobilr_app_ui/home/widgets/buttons/buildSectionTitle.dart';
 import 'package:mobilr_app_ui/home/widgets/buttons/filledButton.dart';
-import 'package:mobilr_app_ui/home/widgets/buttons/outlinedButton.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenBooks.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenGadgets.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenGames.dart';
@@ -30,10 +29,11 @@ import 'package:mobilr_app_ui/review/MainReviewScreenMovies.dart';
 import 'package:mobilr_app_ui/chat/features_screen_community.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenRestaurants.dart';
 import 'package:mobilr_app_ui/review/add_edit_review_screen.dart';
-import 'package:tab_container/tab_container.dart';
 import '../controllers/home_controller.dart';
 import '../models/movie_model.dart'; // Ensure this path is correct
 import 'package:mobilr_app_ui/widgets/tinted_asset_image.dart';
+
+import 'discord_section.dart';
 
 const Color movieAccentColor = Color(0xFF54B6E0);
 const Color darkBackgroundColor = Color(0xFF0B0B0B);
@@ -137,16 +137,7 @@ class _HomeScreenState extends State<HomeScreen>
     _trendingScrollController.addListener(_trendingScrollListener);
 
     _pages = [
-      Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF0B0B0B),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(28),
-            topRight: Radius.circular(28),
-          ),
-        ),
-        child: _buildHomeContent(),
-      ),
+      _buildHomeContent(),
       FeatureScreenJoinedCommunityList(),
       const SearchScreen(),
       NotificationScreen(),
@@ -204,11 +195,11 @@ class _HomeScreenState extends State<HomeScreen>
         );
       }
       final EdgeInsets listViewPadding = const EdgeInsets.only(
-        top: 12,
+        top: 10,
         bottom: 12,
       );
       return ListView(
-        padding: listViewPadding,
+      //  padding: listViewPadding,
         children: [
           if (movieData.featured.isNotEmpty)
             ReusableCarousel<MovieModel>(
@@ -456,6 +447,7 @@ class _HomeScreenState extends State<HomeScreen>
             releaseDate: movie['releaseDate']!,
             isNotified: isNotified,
             accentColor: controller.currentAccentColor.value,
+
             onNotifyToggle: () {
               controller.toggleUpcomingMovieNotification(movieId);
               print("Notify toggled for ${movie['title']}");
@@ -594,12 +586,12 @@ class _HomeScreenState extends State<HomeScreen>
       }
 
       final EdgeInsets listViewPadding = const EdgeInsets.only(
-        top: 12,
+        top: 10,
         bottom: 12,
       );
 
       return ListView(
-        padding: listViewPadding,
+      //  padding: listViewPadding,
         children: [
           if (restaurantsData.featured.isNotEmpty)
             ReusableCarousel<RestaurantModel>(
@@ -959,7 +951,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
 
       return ListView(
-        padding: const EdgeInsets.only(top: 12, bottom: 24),
+       // padding: const EdgeInsets.only(top: 12, bottom: 24),
         children: [
           if (gadgetData.featured.isNotEmpty)
             ReusableCarousel<GadgetModel>(
@@ -1264,7 +1256,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
 
       return ListView(
-        padding: const EdgeInsets.only(top: 12, bottom: 24),
+       // padding: const EdgeInsets.only(top: 12, bottom: 24),
         children: [
           if (bookData.featured.isNotEmpty)
             ReusableCarousel<BookModel>(
@@ -1557,7 +1549,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
 
       return ListView(
-        padding: const EdgeInsets.only(top: 12, bottom: 24),
+       // padding: const EdgeInsets.only(top: 12, bottom: 24),
         children: [
           if (gameData.featured.isNotEmpty)
             ReusableCarousel<GameModel>(
@@ -1608,10 +1600,41 @@ class _HomeScreenState extends State<HomeScreen>
           _buildUpcomingGamesSection(),
           _buildGamingClansSection(),
           _buildGameSurveySection(),
+          _buildDiscordServersSection(),
           const SizedBox(height: 20),
         ],
       );
     });
+  }
+  Widget _buildDiscordServersSection() {
+    final List<Map<String, String>> discordServers = [
+      {
+        "id": "ds1",
+        "name": "GTA VI",
+        "desc": "Official GTA Community",
+        "imageUrl": "https://placehold.co/40x40/141414/ffffff?text=GTA",
+      },
+      {
+        "id": "ds2",
+        "name": "PUBG Mobile",
+        "desc": "Rank push squad",
+        "imageUrl": "https://placehold.co/40x40/141414/ffffff?text=PUBG",
+      },
+      {
+        "id": "ds3",
+        "name": "Warzone",
+        "desc": "Call of Duty updates",
+        "imageUrl": "https://placehold.co/40x40/141414/ffffff?text=COD",
+      },
+      {
+        "id": "ds4",
+        "name": "Minecraft",
+        "desc": "Survival & Creative",
+        "imageUrl": "https://placehold.co/40x40/141414/ffffff?text=MC",
+      },
+    ];
+
+    return DiscordSection(servers: discordServers);
   }
 
   Widget _buildTrendingGamesSection(List<GameModel> trendingGames) {
@@ -1649,6 +1672,8 @@ class _HomeScreenState extends State<HomeScreen>
             color: Colors.white,
           ),
           exploreButtonImageColor: gameAccentColor,
+          tvbutton1: "Review",
+          tvbutton2: "Details",
           onExplore: () {
             print("Explore tapped for ${game.title}");
             Get.to(() => MainReviewScreenGames(gameId: game.id));
@@ -1907,12 +1932,12 @@ class _HomeScreenState extends State<HomeScreen>
         final Color currentAccentColor = controller.currentAccentColor.value;
 
         return Scaffold(
-          backgroundColor: isHomeScreen ? darkBackgroundColor : Colors.white,
+          backgroundColor: isHomeScreen ? currentAccentColor : Colors.white,
           appBar: isHomeScreen
               ? AppBar(
                   backgroundColor: currentAccentColor,
                   elevation: 0,
-                  titleSpacing: 16.0, // Use standard title spacing.
+                  titleSpacing: 16.0,
                   title: Row(
                     children: [
                       Image.asset(
@@ -1941,14 +1966,14 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ],
                   bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(
-                      48.0,
-                    ), // Keep a reasonable height for the area
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    preferredSize: const Size.fromHeight(48),
+                    child: Container(
+                      clipBehavior: Clip.none,
+                      padding: const EdgeInsets.only(left: 10, right: 10, ),
                       child: TabBar(
                         controller: _tabController,
                         isScrollable: true,
+                        indicatorPadding:  EdgeInsets.zero,
                         tabAlignment: TabAlignment.start,
                         indicator: const BubbleTabIndicator(),
                         dividerColor: Colors.transparent,
@@ -1965,17 +1990,26 @@ class _HomeScreenState extends State<HomeScreen>
                           fontWeight: FontWeight.w500,
                         ),
                         tabs: controller.categories
-                            .map((category) => Tab(text: category, height: 32))
+                            .map((category) => Tab(text: category, height: 28))
                             .toList(),
                       ),
                     ),
                   ),
                 )
-              : null, // No AppBar on other bottom navigation screens.
-            body: IndexedStack(
-            index: controller.selectedBottomNavIndex.value,
-            children: _pages,
-          ),
+              : null,
+            body: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(
+                color: Color(0xFF0B0B0B),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: IndexedStack(
+              index: controller.selectedBottomNavIndex.value,
+              children: _pages,),
+            ),
 
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: cardBackgroundColor,
@@ -2087,9 +2121,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
-
 class BubbleTabIndicator extends Decoration {
   const BubbleTabIndicator();
+
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _BubblePainter(this);
@@ -2098,40 +2132,74 @@ class BubbleTabIndicator extends Decoration {
 
 class _BubblePainter extends BoxPainter {
   final BubbleTabIndicator decoration;
+
   _BubblePainter(this.decoration);
+
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
-    final Rect rect = offset & cfg.size!;
+    final Rect baseRect = offset & cfg.size!;
     final Paint paint = Paint()
       ..color = const Color(0xFF0B0B0B)
       ..style = PaintingStyle.fill;
-    const double horizontalPadding = 16.0;
-    const double topPadding = -0.0;
-    final RRect bubble = RRect.fromRectAndCorners(
-      Rect.fromLTWH(
-        rect.left - horizontalPadding,
-        rect.top + topPadding,
-        rect.width + (horizontalPadding * 2),
-        rect.height + 40,
-      ),
-      topLeft: const Radius.circular(14),
-      topRight: const Radius.circular(14),
-      bottomLeft: const Radius.circular(14),
-      bottomRight: const Radius.circular(14),
-    );
-    canvas.drawRRect(bubble, paint);
-  }
-}
 
-class AddContentScreen extends StatelessWidget {
-  const AddContentScreen({super.key});
+    const double topRadius = 10.0;
+    const double concaveRadius = 10.0;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Add Content')),
-      body: const Center(child: Text('Add Content Screen')),
+    // Change this value to add horizontal space inside the tab bubble
+    const double paddingX = 10.0;
+
+    // We expand the rect slightly downwards to cover any gap between the tab
+    // and the body container, and expand horizontally by paddingX.
+    final Rect rect = Rect.fromLTRB(
+      baseRect.left - paddingX,
+      baseRect.top,
+      baseRect.right + paddingX,
+      baseRect.bottom + 2.0,
     );
+
+    final Path path = Path();
+
+    // 1. Start at bottom-left, outside the tab
+    path.moveTo(rect.left - concaveRadius, rect.bottom);
+
+    // 2. Draw the concave curve (bottom-left corner smoothing)
+    path.quadraticBezierTo(
+      rect.left, rect.bottom,
+      rect.left, rect.bottom - concaveRadius,
+    );
+
+    // 3. Draw line up to top-left roundness
+    path.lineTo(rect.left, rect.top + topRadius);
+
+    // 4. Draw top-left rounded corner
+    path.quadraticBezierTo(
+      rect.left, rect.top,
+      rect.left + topRadius, rect.top,
+    );
+
+    // 5. Draw top horizontal line
+    path.lineTo(rect.right - topRadius, rect.top);
+
+    // 6. Draw top-right rounded corner
+    path.quadraticBezierTo(
+      rect.right, rect.top,
+      rect.right, rect.top + topRadius,
+    );
+
+    // 7. Draw line down to bottom-right curve start
+    path.lineTo(rect.right, rect.bottom - concaveRadius);
+
+    // 8. Draw the concave curve (bottom-right corner smoothing)
+    path.quadraticBezierTo(
+      rect.right, rect.bottom,
+      rect.right + concaveRadius, rect.bottom,
+    );
+
+    // 9. Close the shape at the bottom
+    path.lineTo(rect.left - concaveRadius, rect.bottom);
+
+    path.close();
+    canvas.drawPath(path, paint);
   }
 }
 

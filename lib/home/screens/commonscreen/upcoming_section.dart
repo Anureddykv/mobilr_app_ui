@@ -204,6 +204,7 @@ class UpcomingContentCard extends StatelessWidget {
         background: accentColor,
         fontSize: 14,
         onTap: onNotifyToggle,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
       ),
     );
   }

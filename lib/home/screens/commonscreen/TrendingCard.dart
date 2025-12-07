@@ -13,6 +13,8 @@ const Color ratingPillColor = Color(0xFF1F1F1F);
 class TrendingCard extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final String? tvbutton1;
+  final String? tvbutton2;
   final String details; // e.g., "2h 35m, U/A, Telugu"
   final String starnestRating;
   final String audienceRating;
@@ -36,6 +38,8 @@ class TrendingCard extends StatelessWidget {
     this.ratingImage,
     this.exploreButtonImage,
     this.exploreButtonImageColor,
+    this.tvbutton1="Review",
+    this.tvbutton2 ="Explore",
   });
 
   @override
@@ -110,7 +114,7 @@ class TrendingCard extends StatelessWidget {
                           // ✅ CORRECTED: Use Expanded to allow buttons to fill space
                           Expanded(
                             child: outlinedButton(
-                              "Write a Review",
+                             tvbutton1 ??"Write a Review",
                               controller.currentAccentColor.value,
                               image: Image.asset(
                                 "assets/images/pen.png",
@@ -118,17 +122,17 @@ class TrendingCard extends StatelessWidget {
                                 width: 14,
                                 height: 14,
                               ),
-                              fontSize: 8,
+                              fontSize: 10,
                               onTap: onWriteReview,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: filledButton(
-                              "Explore Ratings",
+                              tvbutton2 ??"Explore Ratings",
                               background: controller.currentAccentColor.value,
                               image: exploreButtonImage,
-                              fontSize: 8,
+                              fontSize: 10,
                               onTap: onExplore,
                             ),
                           ),

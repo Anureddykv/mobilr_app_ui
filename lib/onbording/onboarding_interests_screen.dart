@@ -24,70 +24,72 @@ class OnboardingInterestsScreen extends StatelessWidget {
       {'name': 'Games', 'color': const Color(0xFF90BE6D)},
     ];
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0B0B0B),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 120),
-            const Text(
-              'Let\'s Get Started!',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'General Sans Variable',
-                height: 0.72
-              ),
-            ),
-            const SizedBox(height: 16),
-            const SizedBox(
-              child: Text(
-                'Tell us what you\'re into! Select the categories that spark your interest, and we\'ll help you explore more of what you love.',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0B0B0B),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 120),
+              const Text(
+                'Let\'s Get Started!',
                 style: TextStyle(
-                  color: Color(0xFFE6EAED),
-                  fontSize: 12,
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
                   fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w400,
+                  height: 0.72
                 ),
               ),
-            ),
-            const SizedBox(height: 56),
-            const Text(
-              'Choose Your Interests',
-              style: TextStyle(
-                color: Color(0xFFE6EAED),
-                fontSize: 18,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w500,
-                  height: 0.72
+              const SizedBox(height: 16),
+              const SizedBox(
+                child: Text(
+                  'Tell us what you\'re into! Select the categories that spark your interest, and we\'ll help you explore more of what you love.',
+                  style: TextStyle(
+                    color: Color(0xFFE6EAED),
+                    fontSize: 12,
+                    fontFamily: 'General Sans Variable',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Wrap(
-                spacing: 12.0,
-                runSpacing: 12.0,
-                children: interests.map((interest) {
-                  return Obx(() {
-                    final bool isSelected = controller.selectedMainInterests.contains(interest['name']);
-                    return GestureDetector(
-                      onTap: () => controller.toggleMainInterest(interest['name']!),
-                      child: _InterestChip(
-                        label: interest['name']!,
-                        color: interest['color']!,
-                        isSelected: isSelected,
-                      ),
-                    );
-                  });
-                }).toList(),
+              const SizedBox(height: 56),
+              const Text(
+                'Choose Your Interests',
+                style: TextStyle(
+                  color: Color(0xFFE6EAED),
+                  fontSize: 18,
+                  fontFamily: 'General Sans Variable',
+                  fontWeight: FontWeight.w500,
+                    height: 0.72
+                ),
               ),
-            ),
-            _buildNavigationButtons(),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: Wrap(
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  children: interests.map((interest) {
+                    return Obx(() {
+                      final bool isSelected = controller.selectedMainInterests.contains(interest['name']);
+                      return GestureDetector(
+                        onTap: () => controller.toggleMainInterest(interest['name']!),
+                        child: _InterestChip(
+                          label: interest['name']!,
+                          color: interest['color']!,
+                          isSelected: isSelected,
+                        ),
+                      );
+                    });
+                  }).toList(),
+                ),
+              ),
+              _buildNavigationButtons(),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

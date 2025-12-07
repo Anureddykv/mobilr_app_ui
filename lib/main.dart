@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/splash/SplashScreenLoading.dart';
 
+import 'home/screens/home_screen.dart';
+
 Future<void> main() async {
  /* await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }
