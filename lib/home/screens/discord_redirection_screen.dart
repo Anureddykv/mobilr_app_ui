@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobilr_app_ui/home/screens/home_screen.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSignup.dart';
 
 class DiscordRedirectionScreen extends StatelessWidget {
@@ -15,14 +16,7 @@ class DiscordRedirectionScreen extends StatelessWidget {
   });
 
   void _launchDiscord(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (_) => CredentialScreenSignup(),
-    ),
-        (route) => false,
-  );
-
+    Get.offAll(() => HomeScreen());
   print("Navigating to Signup...");
   }
 
@@ -39,8 +33,11 @@ class DiscordRedirectionScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Navigator.maybePop(context);
+          },
         ),
+
       ),
       body: SafeArea(
         child: SizedBox(

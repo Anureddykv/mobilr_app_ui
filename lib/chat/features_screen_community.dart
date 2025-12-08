@@ -265,8 +265,11 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Navigator.maybePop(context); 
+          },
         ),
+
         title: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: (){

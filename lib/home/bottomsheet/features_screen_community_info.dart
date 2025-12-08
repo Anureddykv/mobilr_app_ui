@@ -66,7 +66,9 @@ class _FeaturesScreenCommunityInfoState
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Navigator.maybePop(context); // This safely tries to go back, but won't crash if it can't
+          },
         ),
         title: const Text(
           "Community Info",
@@ -506,18 +508,62 @@ class _FeaturesScreenCommunityInfoState
     return ListTile(
       title: Text(title, style: bodyStyle.copyWith(color: dangerColor)),
       onTap: () {
-        // TODO: Implement action (e.g., show confirmation dialog)
         Get.defaultDialog(
           title: "Confirm Action",
           middleText: "Are you sure you want to '$title'?",
           backgroundColor: cardBackgroundColor,
           titleStyle: const TextStyle(color: Colors.white),
           middleTextStyle: const TextStyle(color: communityPrimaryTextColor),
-          textConfirm: "Yes",
+          radius: 10,
+
+          // --- Cancel Action ---
           textCancel: "No",
-          confirmTextColor: Colors.white,
           cancelTextColor: Colors.white,
+          onCancel: () {
+            // Usually textCancel closes it automatically, but if you define onCancel,
+            // it's safer to ensure it closes explicitly if it wasn't working.
+            // Get.back(); // Uncomment if "No" still doesn't work
+          },
+
+          // --- Confirm Action ---
+          textConfirm: "Yes",
+          confirmTextColor: Colors.white,
           buttonColor: dangerColor,
+          onConfirm: () {
+            // 1. Close the dialog FIRST using Get.back()
+            Get.back();
+
+            // 2. Perform the specific action
+            switch (title) {
+              case 'Clear Chat':
+                Get.snackbar("Success", "Chat history cleared",
+                    colorText: Colors.white, backgroundColor: Colors.black54);
+                break;
+
+              case 'Exit Community':
+              // We need to go back one more time to leave the screen
+              // (The first Get.back closed the dialog, this one closes the screen)
+                Get.back();
+                Get.snackbar("Left Community", "You have successfully left.",
+                    colorText: Colors.white, backgroundColor: Colors.black54);
+                break;
+
+              case 'Report Community':
+              // Note: You had Get.back() here in your code, which would close the screen.
+              // If you only want to show a snackbar, remove Get.back().
+              // If you want to leave the screen after reporting, keep it.
+              // Get.back();
+                Get.snackbar("Report Community", "You have successfully reported.",
+                    colorText: Colors.white, backgroundColor: Colors.black54);
+                break;
+
+              case 'Report Member':
+              // Get.back(); // Same logic as above
+                Get.snackbar("Report Member", "You have successfully reported member.",
+                    colorText: Colors.white, backgroundColor: Colors.black54);
+                break;
+            }
+          },
         );
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 14),

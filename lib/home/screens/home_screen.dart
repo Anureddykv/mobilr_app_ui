@@ -580,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen>
           restaurantsData.featured.isEmpty) {
         return const Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF9C74F)),
           ),
         );
       }
@@ -2063,7 +2063,7 @@ class _HomeScreenState extends State<HomeScreen>
         memberCount: "1200+ Members", // This can be made dynamic if available
         accentColor: controller.currentAccentColor.value,
         onSendRequest: () {
-          Get.back();
+          Navigator.of(context).pop;
           print("Navigating to community: ${community['name']}");
           Get.to(
                 () => FeaturesScreenCommunity(
