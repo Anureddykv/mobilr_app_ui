@@ -6,11 +6,13 @@ Widget outlinedButton(
       double fontSize = 8,
       Widget? image,
       bool imageOnRight = false,
-      bool centerText = false,
+      bool centerText = true,
       VoidCallback? onTap,
     }) {
-  return GestureDetector(onTap: onTap,
+  return GestureDetector(
+    onTap: onTap,
     child: Container(
+      alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
@@ -20,45 +22,23 @@ Widget outlinedButton(
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: centerText && image == null
-            ? MainAxisAlignment
-            .center // Center Row content if only text and centerText is true
-            : MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (!imageOnRight && image != null) ...[
             image,
             const SizedBox(width: 6),
           ],
-          if (centerText &&
-              image != null)
-            Expanded(
-              child: Center(
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: fontSize,
-                    fontFamily: 'General Sans Variable',
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.40,
-                  ),
-                ),
-              ),
-            )
-          else
-            Text(
-              text,
-              textAlign: centerText
-                  ? TextAlign.center
-                  : TextAlign.start,
-              style: TextStyle(
-                color: color,
-                fontSize: fontSize,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.40,
-              ),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: color,
+              fontSize: fontSize,
+              fontFamily: 'General Sans Variable',
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.40,
             ),
+          ),
           if (imageOnRight && image != null) ...[
             const SizedBox(width: 6),
             image,

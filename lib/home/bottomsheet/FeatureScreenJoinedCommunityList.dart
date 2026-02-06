@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/chat/features_screen_community.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/features_screen_community_info.dart';
+import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
 
 // Your existing Community and NavItem models are unchanged.
 class Community {
@@ -77,9 +78,17 @@ class FeatureScreenJoinedCommunityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
+
     return Scaffold(
       backgroundColor: const Color(0xFF0B0B0B),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            homeController.selectedBottomNavIndex.value = 0;
+          },
+        ),
         title: const Text(
           'Communities',
           style: TextStyle(

@@ -114,7 +114,7 @@ class TrendingCard extends StatelessWidget {
                           // ✅ CORRECTED: Use Expanded to allow buttons to fill space
                           Expanded(
                             child: outlinedButton(
-                             tvbutton1 ??"Write a Review",
+                             tvbutton1 ??"Review",
                               controller.currentAccentColor.value,
                               image: Image.asset(
                                 "assets/images/pen.png",
@@ -122,17 +122,18 @@ class TrendingCard extends StatelessWidget {
                                 width: 14,
                                 height: 14,
                               ),
-                              fontSize: 10,
+                              fontSize: 12,
+                              centerText: true,
                               onTap: onWriteReview,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: filledButton(
-                              tvbutton2 ??"Explore Ratings",
+                              tvbutton2 ??"Explore",
                               background: controller.currentAccentColor.value,
                               image: exploreButtonImage,
-                              fontSize: 10,
+                              fontSize: 12,
                               onTap: onExplore,
                             ),
                           ),

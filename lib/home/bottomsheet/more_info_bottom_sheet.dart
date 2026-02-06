@@ -211,7 +211,7 @@ class _MoreInfoBottomSheetState extends State<MoreInfoBottomSheet> {
         filledButton(
           widget.primaryButtonText,
           background: widget.accentColor,
-          fontSize: 8,
+          fontSize: 10,
           onTap: widget.onPrimaryButtonTap,
         ),
         // Obx widget for the dynamic "Add"/"Saved" button
@@ -221,7 +221,7 @@ class _MoreInfoBottomSheetState extends State<MoreInfoBottomSheet> {
             return filledButton(
               "Saved",
               background: widget.accentColor,
-              fontSize: 8,
+              fontSize: 10,
               image: Image.asset("assets/images/add_select.png", width: 12, height: 12, color: Colors.white),
               onTap: () {
                 controller.toggleItemSaved(widget.itemId, itemName: widget.title);
@@ -231,7 +231,7 @@ class _MoreInfoBottomSheetState extends State<MoreInfoBottomSheet> {
             return outlinedButton(
               "Add",
               widget.accentColor,
-              fontSize: 8,
+              fontSize: 10,
               image: Image.asset("assets/images/add.png", width: 12, height: 12, color: widget.accentColor),
               imageOnRight: true,
               onTap: () {

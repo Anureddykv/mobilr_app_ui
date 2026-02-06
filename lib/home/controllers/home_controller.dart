@@ -256,31 +256,13 @@ class HomeController extends GetxController {
   }
 
   void _updateAccentColor(String category) {
-    switch (category) {
-      case "Movies":
-        currentAccentColor.value = movieAccentColor;
-        break;
-      case "Restaurants":
-        currentAccentColor.value = restaurantAccentColor;
-        break;
-      case "Gadgets":
-        currentAccentColor.value = gadgetAccentColor;
-        break;
-      case "Books":
-        currentAccentColor.value = bookAccentColor;
-        break;
-      case "Games":
-        currentAccentColor.value = gameAccentColor;
-        break;
-      default:
-        currentAccentColor.value = defaultAccentColor;
-    }
+    currentAccentColor.value = getAccentColorForCategory(category);
   }
 
   Future<void> fetchMovieData() async {
     try {
       isLoadingMovies.value = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Removed Artificial Delay
       final String response =
       await rootBundle.loadString('assets/json/sample_movie_data.json');
       final data = json.decode(response);
@@ -295,7 +277,7 @@ class HomeController extends GetxController {
   Future<void> fetchRestaurantData() async {
     try {
       isLoadingRestaurants.value = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Removed Artificial Delay
       final String response = await rootBundle
           .loadString('assets/json/sample_restaurant_data.json');
       final data = json.decode(response);
@@ -310,7 +292,7 @@ class HomeController extends GetxController {
   Future<void> fetchGadgetData() async {
     try {
       isLoadingGadgets.value = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Removed Artificial Delay
       final String response =
       await rootBundle.loadString('assets/json/sample_gadget_data.json');
       final data = json.decode(response);
@@ -325,7 +307,7 @@ class HomeController extends GetxController {
   Future<void> fetchBookData() async {
     try {
       isLoadingBooks.value = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Removed Artificial Delay
       final String response =
       await rootBundle.loadString('assets/json/sample_book_data.json');
       final data = json.decode(response);
@@ -340,7 +322,7 @@ class HomeController extends GetxController {
   Future<void> fetchGameData() async {
     try {
       isLoadingGames.value = true;
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Removed Artificial Delay
       final String response =
       await rootBundle.loadString('assets/json/sample_game_data.json');
       final data = json.decode(response);
@@ -355,17 +337,17 @@ class HomeController extends GetxController {
   Color getAccentColorForCategory(String category) {
     switch (category) {
       case "Movies":
-        return const Color(0xFF54B6E0);
+        return movieAccentColor;
       case "Restaurants":
-        return const Color(0xFFF28500);
+        return restaurantAccentColor;
       case "Gadgets":
-        return const Color(0xFFE45659);
+        return gadgetAccentColor;
       case "Books":
-        return const Color(0xFFCDBBE9);
+        return bookAccentColor;
       case "Games":
-        return const Color(0xFF90BE6D);
+        return gameAccentColor;
       default:
-        return const Color(0xFF54B6E0);
+        return movieAccentColor;
     }
   }
 }

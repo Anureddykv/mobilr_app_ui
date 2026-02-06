@@ -201,6 +201,7 @@ class UpcomingContentCard extends StatelessWidget {
       child: filledButton(
         notifyButtonText ?? "Notify Me",
         image: notifyIcon,
+        imageOnRight: false, // Icon on Left, Text on Right
         background: accentColor,
         fontSize: 14,
         onTap: onNotifyToggle,

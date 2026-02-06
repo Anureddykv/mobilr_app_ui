@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
+import 'package:mobilr_app_ui/settings/admin_screen_adding_new_title.dart';
 import 'package:mobilr_app_ui/settings/settings_screen.dart';
 
 // --- Color scheme for consistency ---
@@ -36,6 +39,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final HomeController homeController = Get.find<HomeController>();
+
   // Mock data initialized here
   final UserProfile _userProfile = UserProfile(
     firstName: "Rohit",
@@ -66,6 +71,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: darkBackgroundColor,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            homeController.selectedBottomNavIndex.value = 0;
+          },
+        ),
         title: const Text(
           'Profile',
           style: TextStyle(
@@ -78,7 +89,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: darkBackgroundColor,
         elevation: 0,
-        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -444,7 +454,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 12),
           GestureDetector(
-            onTap: () => _showAddTypeDialog(context),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminScreenAddingNewTitle()),
+              );
+            },
             child: Container(
               height: 40,
               decoration: BoxDecoration(

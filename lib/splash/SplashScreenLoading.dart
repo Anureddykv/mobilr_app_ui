@@ -50,13 +50,10 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF83445),
       body: Center(
-        child: RotationTransition(
-          turns: _controller,
-          child: Image.asset(
-            height: 172,
-            width: 121,
-            'assets/images/ic_logo_1.png',
-          ),
+        child: Image.asset(
+          height: 172,
+          width: 121,
+          'assets/images/ic_logo_1.png',
         ),
       ),
     );

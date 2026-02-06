@@ -8,6 +8,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/features_screen_community_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
 
 // --- Message Type Enum ---
 enum MessageType { text, image, audio, file }
@@ -85,7 +86,7 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       _messages = [
         ChatMessage(
           id: '1',
-          type: MessageType.text, // Updated
+          type: MessageType.text,
           text: 'Blockbuster incoming',
           userId: 'user1',
           userName: 'Vamsi',
@@ -95,7 +96,7 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
         ),
         ChatMessage(
           id: '2',
-          type: MessageType.text, // Updated
+          type: MessageType.text,
           text: 'Pushpa records break chesthadhi',
           userId: 'user2',
           userName: 'Anu',
@@ -194,7 +195,7 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
   Future<void> _toggleRecording() async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
-      Get.snackbar("Permission Denied", "Microphone permission is required");
+      SnackBarUtils.showTopSnackBar(context, "Microphone permission is required", isError: true);
       return;
     }
 
@@ -266,7 +267,7 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.maybePop(context); 
+            Get.back(); 
           },
         ),
 

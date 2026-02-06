@@ -14,6 +14,7 @@ Widget filledButton(
     GestureDetector(
       onTap: onTap,
       child: Container(
+        //alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: ShapeDecoration(
           color: background,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/settings/privacy_policy_screen.dart' hide dividerColor;
+import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
 
 import '../../bottomnav/notification_screen.dart' hide dividerColor, primaryTextColor, darkBackgroundColor;
 import '../../settings/settings_screen.dart' hide darkBackgroundColor, primaryTextColor;
@@ -273,7 +274,7 @@ class _FeaturesScreenCommunityInfoState
           'Do not Disturb',
           _doNotDisturb,
               (value) => setState(() => _doNotDisturb = value),
-          leading: Text(""),
+          leading: const SizedBox(width: 14),
           hasDivider: false,
         ),
       ],
@@ -334,7 +335,7 @@ class _FeaturesScreenCommunityInfoState
             padding: const EdgeInsets.all(14),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: dividerColor),
+                side: const BorderSide(width: 1, color: dividerColor),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -418,7 +419,7 @@ class _FeaturesScreenCommunityInfoState
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
         decoration: BoxDecoration(
           border: hasDivider
-              ? Border(bottom: BorderSide(color: dividerColor, width: 1))
+              ? const Border(bottom: BorderSide(color: dividerColor, width: 1))
               : null,
         ),
         child: Row(
@@ -494,8 +495,7 @@ class _FeaturesScreenCommunityInfoState
       title: Text(title, style: bodyStyle),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
       onTap: () {
-        // TODO: Implement navigation
-        Get.snackbar('Navigate', 'Tapped on $title');
+        SnackBarUtils.showTopSnackBar(context, 'Tapped on $title');
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 14),
       shape: Border(
@@ -520,9 +520,6 @@ class _FeaturesScreenCommunityInfoState
           textCancel: "No",
           cancelTextColor: Colors.white,
           onCancel: () {
-            // Usually textCancel closes it automatically, but if you define onCancel,
-            // it's safer to ensure it closes explicitly if it wasn't working.
-            // Get.back(); // Uncomment if "No" still doesn't work
           },
 
           // --- Confirm Action ---
@@ -536,31 +533,20 @@ class _FeaturesScreenCommunityInfoState
             // 2. Perform the specific action
             switch (title) {
               case 'Clear Chat':
-                Get.snackbar("Success", "Chat history cleared",
-                    colorText: Colors.white, backgroundColor: Colors.black54);
+                SnackBarUtils.showTopSnackBar(context, "Chat history cleared");
                 break;
 
               case 'Exit Community':
-              // We need to go back one more time to leave the screen
-              // (The first Get.back closed the dialog, this one closes the screen)
                 Get.back();
-                Get.snackbar("Left Community", "You have successfully left.",
-                    colorText: Colors.white, backgroundColor: Colors.black54);
+                SnackBarUtils.showTopSnackBar(context, "You have successfully left community.");
                 break;
 
               case 'Report Community':
-              // Note: You had Get.back() here in your code, which would close the screen.
-              // If you only want to show a snackbar, remove Get.back().
-              // If you want to leave the screen after reporting, keep it.
-              // Get.back();
-                Get.snackbar("Report Community", "You have successfully reported.",
-                    colorText: Colors.white, backgroundColor: Colors.black54);
+                SnackBarUtils.showTopSnackBar(context, "You have successfully reported community.");
                 break;
 
               case 'Report Member':
-              // Get.back(); // Same logic as above
-                Get.snackbar("Report Member", "You have successfully reported member.",
-                    colorText: Colors.white, backgroundColor: Colors.black54);
+                SnackBarUtils.showTopSnackBar(context, "You have successfully reported member.");
                 break;
             }
           },
@@ -631,7 +617,7 @@ class _CustomSwitch extends StatelessWidget {
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: value ? 0.0 : 1.0,
-                child:  Text(
+                child:  const Text(
                   'OFF',
                   style: TextStyle(
                     color: primaryTextColor,
@@ -665,4 +651,3 @@ class _CustomSwitch extends StatelessWidget {
     );
   }
 }
-

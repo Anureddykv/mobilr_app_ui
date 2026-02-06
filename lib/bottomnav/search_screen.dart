@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../review/MainReviewScreenBooks.dart';
+import '../review/MainReviewScreenMovies.dart';
+import '../review/MainReviewScreenGames.dart';
+import '../review/MainReviewScreenGadgets.dart';
+import '../review/MainReviewScreenRestaurants.dart';
 
 const Color darkBackgroundColor = Color(0xFF0B0B0B);
 const Color cardBackgroundColor = Color(0xFF141414);
@@ -10,6 +14,7 @@ const Color secondaryTextColor = Color(0xFF626365);
 const Color faintTextColor = Color(0xFF3F3F3F);
 const Color primaryTextColor = Colors.white;
 const Color accentColor = Color(0xFF54B6E0);
+const Color ratingBarBackgroundColor = Color(0xFF1E1E1E);
 
 
 class SearchResult {
@@ -63,11 +68,23 @@ class _SearchScreenState extends State<SearchScreen> {
     "Finance",
   ];
   // --- MOCK DATA ---
-  final List<String> _mockRecentData = [
-    "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
-    "https://image.tmdb.org/t/p/w500/8Y4u2Qut2jI8t33fF2gIeG2xT5A.jpg",
-    "https://image.tmdb.org/t/p/w500/r9oTE27Lptp0I1b5y2Q2I6L52iM.jpg",
-    "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Ya0GGW8iq.jpg",
+  final List<Map<String, String>> _mockRecentData = [
+    {
+      "url": "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
+      "title": "Kalki 2898 AD"
+    },
+    {
+      "url": "https://image.tmdb.org/t/p/w500/8Y4u2Qut2jI8t33fF2gIeG2xT5A.jpg",
+      "title": "Salaar"
+    },
+    {
+      "url": "https://image.tmdb.org/t/p/w500/r9oTE27Lptp0I1b5y2Q2I6L52iM.jpg",
+      "title": "RRR"
+    },
+    {
+      "url": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Ya0GGW8iq.jpg",
+      "title": "Dune: Part Two"
+    },
   ];
 
   final List<String> _suggestions = [
@@ -88,17 +105,6 @@ class _SearchScreenState extends State<SearchScreen> {
       description: "Oscar Winning Action Film",
       tags: ["Action", "South Indian", "Telugu", "Adventure"],
       rating: 0.8, // Corresponds to 4 stars
-    ),
-    SearchResult(
-      id: "movie_kalki",
-      title: "Kalki 2898 AD",
-      imageUrl: "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
-      subtitle1: "3h 1m",
-      subtitle2: "U/A",
-      subtitle3: "Sci-Fi",
-      description: "A modern-day avatar of Vishnu",
-      tags: ["Sci-Fi", "Action", "South Indian"],
-      rating: 0.85, // Added rating
     ),
     SearchResult(
       id: "movie_kalki",
@@ -254,6 +260,29 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  void _navigateToReviewScreen(SearchResult result) {
+    Widget targetScreen;
+    if (result.id.startsWith("movie_")) {
+      targetScreen = MainReviewScreenMovies(movieId: result.id);
+    } else if (result.id.startsWith("book_")) {
+      targetScreen = MainReviewScreenBooks(bookId: result.id);
+    } else if (result.id.startsWith("game_")) {
+      targetScreen = MainReviewScreenGames(gameId: result.id);
+    } else if (result.id.startsWith("gadget_")) {
+      targetScreen = MainReviewScreenGadgets(gadgetId: result.id);
+    } else if (result.id.startsWith("restaurant_")) {
+      targetScreen = RestaurantReviewScreen(itemId: result.id);
+    } else {
+      // Default to movies if type unknown
+      targetScreen = MainReviewScreenMovies(movieId: result.id);
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => targetScreen),
+    );
+  }
+
   // ==========================
   // UI BUILD
   // ==========================
@@ -324,10 +353,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 fontFamily: 'General Sans Variable',
                 fontWeight: FontWeight.w600,
                 height: 0.72)),
-        const SizedBox(height: 8),
+        const SizedBox(height: 14),
         _buildSuggestionChips(),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         const Text('Recents',
             style: TextStyle(
                 color: faintTextColor,
@@ -335,7 +364,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 fontFamily: 'General Sans Variable',
                 fontWeight: FontWeight.w600,
                 height: 0.72)),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _isLoading ? _buildRecentsShimmer() : _buildRecentMovies(),
       ],
     );
@@ -513,62 +542,65 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildEmbeddedResultCard(SearchResult result) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: ShapeDecoration(
-            image: DecorationImage(
-                image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-        ),
-        const SizedBox(width: 17),
-        Expanded(
-          child: SizedBox(
+    return GestureDetector(
+      onTap: () => _navigateToReviewScreen(result),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 80,
             height: 80,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      result.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'General Sans Variable',
-                        fontWeight: FontWeight.w600,
-                          height: 0.72
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        _buildSubtitleText(result.subtitle1),
-                        _buildDotSeparator(),
-                        _buildSubtitleText(result.subtitle2),
-                        _buildDotSeparator(),
-                        _buildSubtitleText(result.subtitle3),
-                      ],
-                    ),
-                  ],
-                ),
-                _buildRatingBar(
-                  displayValue: (result.rating * 5).toStringAsFixed(1),
-                  progressValue: result.rating,
-                ),
-              ],
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 17),
+          Expanded(
+            child: SizedBox(
+              height: 80,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        result.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'General Sans Variable',
+                          fontWeight: FontWeight.w600,
+                            height: 0.72
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          _buildSubtitleText(result.subtitle1),
+                          _buildDotSeparator(),
+                          _buildSubtitleText(result.subtitle2),
+                          _buildDotSeparator(),
+                          _buildSubtitleText(result.subtitle3),
+                        ],
+                      ),
+                    ],
+                  ),
+                  _buildRatingBar(
+                    displayValue: (result.rating * 5).toStringAsFixed(1),
+                    progressValue: result.rating,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -688,44 +720,58 @@ class _SearchScreenState extends State<SearchScreen> {
               topRight: Radius.circular(8),
             ),
           ),
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+          padding: const EdgeInsets.fromLTRB(0, 10, 14, 10),
           child: GestureDetector(
             onTap: () => setState(() => _showFilters = !_showFilters),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 1.0),
+                border: Border.all(color: secondaryTextColor, width: 1.0),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
-                'Filters',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.40,
-                    height: 0.72
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Filters',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0.40,
+                        height: 0.72
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    _showFilters ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ],
               ),
             ),
           ),
         ),
-        const SizedBox(width: 10),
         // The selected items, which can cause this row to grow.
         Flexible(
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _selectedFilters
-                  .map((filter) => _buildFilterChip(
-                label: filter,
-                isSelected: true,
-                onTap: () => _toggleFilter(filter),
-              ))
-                  .toList(),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _selectedFilters
+                    .map((filter) => Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: _buildFilterChip(
+                        label: filter,
+                        isSelected: true,
+                        onTap: () => _toggleFilter(filter),
+                      ),
+                    ))
+                    .toList(),
+              ),
             ),
           ),
         ),
@@ -776,6 +822,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ? Colors.white.withOpacity(0.15)
               : Colors.white.withOpacity(0.08),
           borderRadius: BorderRadius.circular(10),
+          border: isSelected ? Border.all(color: Colors.white.withOpacity(0.3), width: 1) : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -787,9 +834,9 @@ class _SearchScreenState extends State<SearchScreen> {
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.9),
+                color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
                 fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 fontFamily: 'General Sans Variable',
                 letterSpacing: 0.3,
                   height: 0.72
@@ -803,216 +850,222 @@ class _SearchScreenState extends State<SearchScreen> {
 
 
   Widget _buildNumberedSearchResultItem(SearchResult result, int number) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0), // Add padding to align with title
-            child: Text(
-              '$number.',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                  height: 0.72
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            width: 80, // Increased size to better match example
-            height: 80,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Softer corners
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Use Flexible to allow the column to take available space and prevent overflow
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  result.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'General Sans Variable',
-                      fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    _buildSubtitleText(result.subtitle1),
-                    _buildDotSeparator(),
-                    _buildSubtitleText(result.subtitle2),
-                    _buildDotSeparator(),
-                    _buildSubtitleText(result.subtitle3),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  result.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: secondaryTextColor, // Use secondary color for description
-                    fontSize: 12,
-                    fontFamily: 'General Sans Variable',
-                    fontWeight: FontWeight.w500,
-                      height: 0.72
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Rating on the far right
-          // Rating on the far right
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Add the star icon here
-              Image.asset(
-                "assets/images/sd.png", // Make sure this path is correct
-                width: 16,
-                height: 16,
-                color: accentColor, // Use your accent color for the star
-              ),
-              const SizedBox(height: 6), // Spacing between star and number
-              Text(
-                (result.rating * 5).toStringAsFixed(1), // Use actual rating data
-                textAlign: TextAlign.right,
+    return GestureDetector(
+      onTap: () => _navigateToReviewScreen(result),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0), // Add padding to align with title
+              child: Text(
+                '$number.',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w600,
                     height: 0.72
                 ),
               ),
-            ],
-          )
-
-        ],
+            ),
+            const SizedBox(width: 12),
+            Container(
+              width: 80, // Increased size to better match example
+              height: 80,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Softer corners
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Use Flexible to allow the column to take available space and prevent overflow
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    result.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'General Sans Variable',
+                        fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      _buildSubtitleText(result.subtitle1),
+                      _buildDotSeparator(),
+                      _buildSubtitleText(result.subtitle2),
+                      _buildDotSeparator(),
+                      _buildSubtitleText(result.subtitle3),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    result.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: secondaryTextColor, // Use secondary color for description
+                      fontSize: 12,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w500,
+                        height: 0.72
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Rating on the far right
+            // Rating on the far right
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Add the star icon here
+                Image.asset(
+                  "assets/images/sd.png", // Make sure this path is correct
+                  width: 16,
+                  height: 16,
+                  color: accentColor, // Use your accent color for the star
+                ),
+                const SizedBox(height: 6), // Spacing between star and number
+                Text(
+                  (result.rating * 5).toStringAsFixed(1), // Use actual rating data
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: 'General Sans Variable',
+                    fontWeight: FontWeight.w600,
+                      height: 0.72
+                  ),
+                ),
+              ],
+            )
+      
+          ],
+        ),
       ),
     );
   }
 
 
   Widget _buildSearchResultItem(SearchResult result, int number) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
-        children: [
-          // Number
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0), // Add padding to align with title
-            child: Text(
-              '$number.',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                  height: 0.72
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Image
-          Container(
-            width: 80, // Match the size from the other widget
-            height: 80,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Softer corners
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Use Flexible for the main content column
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  result.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'General Sans Variable',
-                      fontWeight: FontWeight.w600,
-                      height: 0.72),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    _buildSubtitleText(result.subtitle1),
-                    _buildDotSeparator(),
-                    _buildSubtitleText(result.subtitle2),
-                    _buildDotSeparator(),
-                    _buildSubtitleText(result.subtitle3),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  result.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: secondaryTextColor, // Use secondary color
-                    fontSize: 12,
-                    fontFamily: 'General Sans Variable',
-                    fontWeight: FontWeight.w500,
-                      height: 0.72
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8), // Add spacing before the rating
-
-          // Rating on the far right
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Star icon
-              Image.asset(
-                "assets/images/sd.png", // Make sure this path is correct
-                width: 16,
-                height: 16,
-                color: accentColor, // Use your accent color
-              ),
-              const SizedBox(height: 6), // Spacing between star and number
-              Text(
-                (result.rating * 5).toStringAsFixed(1), // Use actual rating data
-                textAlign: TextAlign.right,
+    return GestureDetector(
+      onTap: () => _navigateToReviewScreen(result),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
+          children: [
+            // Number
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0), // Add padding to align with title
+              child: Text(
+                '$number.',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w600,
                     height: 0.72
                 ),
               ),
-            ],
-          )
-        ],
+            ),
+            const SizedBox(width: 12),
+      
+            // Image
+            Container(
+              width: 80, // Match the size from the other widget
+              height: 80,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Softer corners
+              ),
+            ),
+            const SizedBox(width: 12),
+      
+            // Use Flexible for the main content column
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    result.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'General Sans Variable',
+                        fontWeight: FontWeight.w600,
+                        height: 0.72),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      _buildSubtitleText(result.subtitle1),
+                      _buildDotSeparator(),
+                      _buildSubtitleText(result.subtitle2),
+                      _buildDotSeparator(),
+                      _buildSubtitleText(result.subtitle3),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    result.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: secondaryTextColor, // Use secondary color
+                      fontSize: 12,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w500,
+                        height: 0.72
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8), // Add spacing before the rating
+      
+            // Rating on the far right
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Star icon
+                Image.asset(
+                  "assets/images/sd.png", // Make sure this path is correct
+                  width: 16,
+                  height: 16,
+                  color: accentColor, // Use your accent color
+                ),
+                const SizedBox(height: 6), // Spacing between star and number
+                Text(
+                  (result.rating * 5).toStringAsFixed(1), // Use actual rating data
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: 'General Sans Variable',
+                    fontWeight: FontWeight.w600,
+                      height: 0.72
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -1025,15 +1078,19 @@ class _SearchScreenState extends State<SearchScreen> {
         itemCount: _mockRecentData.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          return AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              decoration: ShapeDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(_mockRecentData[index]),
-                    fit: BoxFit.cover),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+          final movie = _mockRecentData[index];
+          return GestureDetector(
+            onTap: () => _setSearchToSuggestion(movie['title']!),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: ShapeDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(movie['url']!),
+                      fit: BoxFit.cover),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                ),
               ),
             ),
           );
@@ -1051,6 +1108,10 @@ class _SearchScreenState extends State<SearchScreen> {
           child: GestureDetector(
             onTap: () => _setSearchToSuggestion(suggestion),
             child: Chip(
+              visualDensity: VisualDensity.compact,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
               label: Text('“$suggestion”'),
               backgroundColor: chipBackgroundColor,
               labelStyle: const TextStyle(
@@ -1058,7 +1119,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 12,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w500,
-                  height: 0.72),
+                  height: 1.1),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6)),
               side: BorderSide.none,
@@ -1111,22 +1172,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
-class StarClipper extends CustomClipper<Rect> {
-  final double fraction;
-
-  StarClipper({required this.fraction});
-
-  @override
-  Rect getClip(Size size) {
-    // Clips the rectangle from the left to the right based on the fraction
-    return Rect.fromLTWH(0.0, 0.0, size.width * fraction, size.height);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    // Only re-clip if the fraction value changes
-    return oldClipper is StarClipper && oldClipper.fraction != fraction;
-  }
-}
-

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
 import 'package:mobilr_app_ui/review/MainReviewScreenMovies.dart';
 
 class NotificationItem {
@@ -24,6 +26,8 @@ const Color dividerColor = Color(0xFF191919);
 
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
+
+  final HomeController homeController = Get.find<HomeController>();
 
   final List<NotificationItem> _notifications = [
     NotificationItem(
@@ -89,6 +93,12 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: darkBackgroundColor,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            homeController.selectedBottomNavIndex.value = 0;
+          },
+        ),
         title: const Text(
           'Notifications',
           style: TextStyle(

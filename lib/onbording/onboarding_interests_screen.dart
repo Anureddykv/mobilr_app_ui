@@ -5,6 +5,7 @@ import 'package:mobilr_app_ui/onbording/onboarding_interests_screen_books.dart';
 import 'package:mobilr_app_ui/onbording/onboarding_interests_screen_gadgets.dart';
 import 'package:mobilr_app_ui/onbording/onboarding_interests_screen_games.dart';
 import 'package:mobilr_app_ui/onbording/onboarding_interests_screen_restaurants.dart';
+import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
 import 'onboarding_controller.dart';
 import 'onboarding_interests_screen_movies.dart';
 
@@ -86,7 +87,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                   }).toList(),
                 ),
               ),
-              _buildNavigationButtons(),
+              _buildNavigationButtons(context),
               const SizedBox(height: 20),
             ],
           ),
@@ -95,7 +96,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationButtons() {
+  Widget _buildNavigationButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -130,19 +131,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                 controller.startSubInterestFlow();
                 Get.to(() => OnboardingSubInterestsRouter());
               } else {
-                Get.showSnackbar(GetSnackBar(
-                  messageText:CustomSnackbarWidget(
-                    title: "No Selection",
-                    message: 'Please select at least one interest to continue.',
-                    backgroundColor: snackbarBackgroundColor,
-                    icon: Icons.remove,
-                    iconColor: snackbarWarningColor,
-                    textColor: snackbarWarningColor,
-                  ),
-                  backgroundColor: Colors.transparent,
-                  duration: const Duration(seconds: 2),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ));
+                SnackBarUtils.showTopSnackBar(context, 'Please select atleast 1 Interest', isError: true);
               }
             },
             style: ElevatedButton.styleFrom(

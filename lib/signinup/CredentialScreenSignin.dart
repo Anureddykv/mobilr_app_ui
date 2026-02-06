@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilr_app_ui/signinup/CredentialScreenSigninStarnest.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSignup.dart';
 import 'package:mobilr_app_ui/splash/SplashMessageScreen.dart';
 
@@ -93,10 +94,10 @@ class CredentialScreenSignin extends StatelessWidget {
           text: "Login with Starnest",
           prefix: Image.asset("assets/images/logo.png", height: 24, width: 24),
           onTap: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) =>  CredentialScreenSignup(),
+                builder: (_) =>  const CredentialScreenSigninStarnest(),
               ),
             );
           },

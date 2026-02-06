@@ -454,7 +454,8 @@ class _HomeScreenState extends State<HomeScreen>
             },
             onExplore: () {
               print("Explore tapped for ${movie['title']}");
-              // Example: Get.to(() => MovieDetailsScreen(movieId: movieId));
+              // ✅ FIXED: Added navigation to Movie Review Screen
+              Get.to(() => MainReviewScreenMovies(movieId: movieId));
             },
             infoIcon: const Icon(
               Icons.info_outline,
@@ -1751,7 +1752,11 @@ class _HomeScreenState extends State<HomeScreen>
             accentColor: gameAccentColor, // Use correct color
             onNotifyToggle: () =>
                 controller.toggleUpcomingMovieNotification(itemId),
-            onExplore: () => print("Explore tapped for ${item['title']}"),
+            onExplore: () {
+              print("Explore tapped for ${item['title']}");
+              // ✅ FIXED: Added navigation to Game Review Screen
+              Get.to(() => MainReviewScreenGames(gameId: itemId));
+            },
             infoIcon: const Icon(
               Icons.info_outline,
               size: 16,

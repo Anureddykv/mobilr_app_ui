@@ -225,8 +225,8 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                 widget.accentColor,
                                 image: Image.asset("assets/images/Union.png", width: 14, height: 14, color: widget.accentColor),
                                 onTap: widget.onMoreInfo,
-                                // Use smaller font size from Figma
-                                fontSize: 8,
+                                // Increased font size as per request
+                                fontSize: 10,
                               ),
                             if (widget.onMoreInfo != null &&
                                 widget.onViewAllReviews != null)
@@ -236,8 +236,8 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                                 "View All Reviews",
                                 background: widget.accentColor,
                                 onTap: widget.onViewAllReviews,
-                                // Use smaller font size from Figma
-                                fontSize: 8,
+                                // Increased font size as per request
+                                fontSize: 10,
                               ),
                           ],
                         ),
@@ -249,7 +249,7 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                           return filledButton(
                             "Saved",
                             background: widget.accentColor,
-                            fontSize: 8, // Use smaller font size
+                            fontSize: 10, // Increased font size
                             image: Image.asset("assets/images/add_select.png",
                                 width: 12, height: 12, color: Colors.white),
                             onTap: () {
@@ -261,7 +261,7 @@ class _FeaturedContentCardLargeState extends State<FeaturedContentCardLarge> {
                           return outlinedButton(
                             "Add",
                             widget.accentColor,
-                            fontSize: 8, // Use smaller font size
+                            fontSize: 10, // Increased font size
                             image: Image.asset("assets/images/add.png",
                                 width: 12, height: 12, color: widget.accentColor),
                             imageOnRight: true,
