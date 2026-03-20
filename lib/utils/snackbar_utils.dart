@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../onbording/onboarding_controller.dart';
+import '../presentation/onbording/onboarding_controller.dart';
 
 class SnackBarUtils {
   static void showTopSnackBar(BuildContext context, String message, {bool isError = false}) {

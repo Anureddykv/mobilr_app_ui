@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobilr_app_ui/splash/SplashScreenLoading.dart';
+import 'package:mobilr_app_ui/presentation/splash/SplashScreenLoading.dart';
 
-import 'home/screens/home_screen.dart';
+import 'presentation/home/screens/home_screen.dart';
 
 Future<void> main() async {
  /* await Firebase.initializeApp(
