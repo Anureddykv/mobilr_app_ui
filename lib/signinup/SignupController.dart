@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../core/api_service.dart';
 
 class SignupController extends GetxController {
   final firstNameController = TextEditingController();
@@ -9,6 +10,7 @@ class SignupController extends GetxController {
   final passwordController = TextEditingController();
 
   var isButtonEnabled = false.obs;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -28,6 +30,20 @@ class SignupController extends GetxController {
         _validatePassword(passwordController.text) == null;
 
     isButtonEnabled.value = isValid;
+  }
+
+  Future<bool> registerUser() async {
+    isLoading.value = true;
+    final api = ApiService();
+    final result = await api.signup({
+      "firstName": firstNameController.text,
+      "lastName": lastNameController.text,
+      "email": emailController.text,
+      "phone": phoneController.text,
+      "password": passwordController.text,
+    });
+    isLoading.value = false;
+    return result != null;
   }
 
   String? validateField(String label, String? value) {

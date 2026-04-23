@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
 import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
+import '../core/api_service.dart';
 
 class CredentialScreenSigninStarnest extends StatefulWidget {
   const CredentialScreenSigninStarnest({super.key});
@@ -14,6 +15,7 @@ class _CredentialScreenSigninStarnestState extends State<CredentialScreenSigninS
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -130,7 +132,7 @@ class _CredentialScreenSigninStarnestState extends State<CredentialScreenSigninS
 
   Widget _buildLoginButton() {
     return GestureDetector(
-      onTap: () {
+      onTap: _isLoading ? null : () async {
         String errorMessage = "";
         if (_usernameController.text.isEmpty && _passwordController.text.isEmpty) {
           errorMessage = "Please enter Username and Password";
@@ -141,7 +143,20 @@ class _CredentialScreenSigninStarnestState extends State<CredentialScreenSigninS
         }
 
         if (errorMessage.isEmpty) {
-          Get.offAll(() => const HomeScreen());
+          setState(() {
+            _isLoading = true;
+          });
+          final api = ApiService();
+          final result = await api.login(_usernameController.text, _passwordController.text);
+          setState(() {
+            _isLoading = false;
+          });
+          
+          if (result != null) {
+            Get.offAll(() => const HomeScreen());
+          } else {
+            SnackBarUtils.showTopSnackBar(context, "Invalid username or password", isError: true);
+          }
         } else {
           SnackBarUtils.showTopSnackBar(context, errorMessage, isError: true);
         }
@@ -150,11 +165,17 @@ class _CredentialScreenSigninStarnestState extends State<CredentialScreenSigninS
         height: 56,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFE6EAED),
+          color: _isLoading ? Colors.grey[800] : const Color(0xFFE6EAED),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Center(
-          child: Text(
+        child: Center(
+          child: _isLoading 
+            ? const SizedBox(
+                width: 24, 
+                height: 24, 
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+              )
+            : const Text(
             "Login",
             style: TextStyle(
               fontSize: 16,

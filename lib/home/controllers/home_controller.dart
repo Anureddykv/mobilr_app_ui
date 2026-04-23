@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:mobilr_app_ui/core/api_service.dart';
 
 // Assuming your models are in a 'models' directory relative to this file
 // Adjust the path if your project structure is different.
@@ -260,19 +263,49 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchMovieData() async {
-    try {
-      isLoadingMovies.value = true;
-      // Removed Artificial Delay
-      final String response =
-      await rootBundle.loadString('assets/json/sample_movie_data.json');
-      final data = json.decode(response);
-      movieData.value = MovieDataModel.fromJson(data);
-    } catch (e) {
-      print("Error fetching movie data: $e");
-    } finally {
-      isLoadingMovies.value = false;
-    }
+  try {
+    isLoadingMovies.value = true;
+
+    final api = ApiService();
+
+    final featuredResponse =
+        await api.fetchList('/api/movies/featured');
+
+    final trendingResponse =
+        await api.fetchList('/api/movies/trending');
+
+    log("===== FEATURED MOVIES API =====");
+    log(featuredResponse.toString());
+
+    log("===== TRENDING MOVIES API =====");
+    log(trendingResponse.toString());
+
+    // 10 Movies for carousel from featured
+    final featuredMovies = featuredResponse
+        .map((e) => MovieModel.fromApi(e))
+        .take(10)
+        .toList();
+
+    final trendingMovies = trendingResponse
+        .map((e) => MovieModel.fromApi(e))
+        .toList();
+
+    movieData.value = MovieDataModel(
+      featured: featuredMovies,
+      trending: trendingMovies,
+      upcoming: [],
+      communities: [],
+    );
+
+    log("Featured Count: ${featuredMovies.length}");
+    log("Trending Count: ${trendingMovies.length}");
+
+  } catch (e) {
+    log("Movie API Error: $e");
+  } finally {
+    isLoadingMovies.value = false;
   }
+}
 
   Future<void> fetchRestaurantData() async {
     try {

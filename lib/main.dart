@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobilr_app_ui/splash/SplashScreenLoading.dart';
 
 import 'home/screens/home_screen.dart';
 
 Future<void> main() async {
- /* await Firebase.initializeApp(
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/.env");
+  /* await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );*/
   runApp(const MyApp());

@@ -3,6 +3,7 @@ import 'package:get/get.dart'; // For Get.snackbar (optional)
 import 'package:intl/intl.dart';
 import 'package:mobilr_app_ui/chat/comments_screen.dart';
 import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
+import 'package:mobilr_app_ui/home/models/movie_model.dart';
 import 'package:mobilr_app_ui/review/add_edit_review_screen.dart';
 
 // --- Data Models (Ideally in separate files) ---
@@ -108,37 +109,115 @@ class _MainReviewScreenMoviesState extends State<MainReviewScreenMovies> {
   }
 
   Future<void> _fetchMovieReviewDetails() async {
-    await Future.delayed(const Duration(milliseconds: 1500));
-    setState(() {
-      _movieDetails = MovieReviewDetails(
-        id: widget.movieId,
-        title: 'SALAAR',
-        imageUrl: "https://image.tmdb.org/t/p/w500/vJL6OaZp2225T1PLa2L4A2I2V5.jpg",
-        duration: "2h 35m",
-        certification: "U/A",
-        language: "Telugu",
-        overallRating: 4.5,
-        totalVotes: "4.6k Votes",
-        starnestRatingDisplay: "4.5",
-        starnestRatingValue: 4.5 / 5.0,
-        audienceRatingDisplay: "4.3",
-        audienceRatingValue: 4.3 / 5.0,
-        synopsis: "In Salaar, a fierce warrior rises against a tyrannical regime to protect his friend and reclaim justice through violence. This is a longer text to test wrapping and layout in the synopsis section.",
-        genres: ["Action", "Thriller", "Suspense", "Adventure", "Drama", "Epic"],
-        photoUrls: [
-          "https://image.tmdb.org/t/p/w500/18aKk5hB03vETQ2sN2iE9ESd92w.jpg",
-          "https://image.tmdb.org/t/p/w500/kSVKwZ21mML3M1gK3y2S0iB0k0j.jpg",
-          "https://image.tmdb.org/t/p/w500/zN3gPSB2n4TjL2yICf2g2a1zTNA.jpg",
-        ],
-        userReviews: [
-          UserReview(id: 'r1', userName: 'Rohit Sharma', date: DateTime.now().subtract(const Duration(days: 1)), ratingGiven: 4.3, reviewTitle: 'Amazing Visuals & Action!', reviewText: 'Lorem ipsum sagittis blandit metus nec ultrices tempus neque sit aliquam amet nisi aenean non tristique id ac in lectus laoreet interdum aliquam a donec interdum cursus condimentum massa sed.', likes: 115, dislikes: 4, avatarUrl: "https://placehold.co/40x40/FFC0CB/000?text=RS"),
-          UserReview(id: 'r2', userName: 'Priya Kumari', date: DateTime.now().subtract(const Duration(days: 2)), ratingGiven: 5.0, reviewTitle: 'A Must Watch Blockbuster!', reviewText: 'A masterpiece of storytelling and action. The performances were outstanding and the plot kept me on the edge of my seat throughout the entire film. Highly recommended for all movie lovers seeking an adrenaline rush!', likes: 250, dislikes: 1, avatarUrl: "https://placehold.co/40x40/ADD8E6/000?text=PK"),
-          UserReview(id: 'r3', userName: 'Anonymous User', date: DateTime.now().subtract(const Duration(days: 5)), ratingGiven: 3.5, reviewTitle: 'Decent, but a bit long', reviewText: 'The movie had its moments, but it felt dragged out in certain parts. The visuals were good, though. Worth a one-time watch perhaps.', likes: 45, dislikes: 12),
-        ],
+  await Future.delayed(const Duration(milliseconds: 300));
+
+  final homeController = Get.find<HomeController>();
+
+  MovieModel? selectedMovie;
+
+  // Search in featured list
+  try {
+    selectedMovie = homeController.movieData.value.featured.firstWhere(
+      (movie) => movie.id == widget.movieId,
+    );
+  } catch (_) {}
+
+  // Search in trending list if not found
+  if (selectedMovie == null) {
+    try {
+      selectedMovie = homeController.movieData.value.trending.firstWhere(
+        (movie) => movie.id == widget.movieId,
       );
-      _isLoading = false;
-    });
+    } catch (_) {}
   }
+
+  // fallback
+  selectedMovie ??= MovieModel(
+    id: widget.movieId,
+    title: "Unknown Movie",
+    imageUrl: "",
+    rating: 0,
+    votes: "0",
+    language: "N/A",
+    duration: "N/A",
+    certification: "N/A",
+    genres: [],
+    description: "No description available.",
+  );
+
+  setState(() {
+    _movieDetails = MovieReviewDetails(
+      id: selectedMovie!.id,
+      title: selectedMovie.title,
+      imageUrl: selectedMovie.imageUrl,
+      duration: selectedMovie.duration,
+      certification: selectedMovie.certification,
+      language: selectedMovie.language,
+      overallRating: selectedMovie.rating,
+      totalVotes: "${selectedMovie.votes} Votes",
+
+      starnestRatingDisplay:
+          selectedMovie.rating.toStringAsFixed(1),
+
+      starnestRatingValue:
+          selectedMovie.rating / 5.0,
+
+      audienceRatingDisplay:
+          selectedMovie.rating.toStringAsFixed(1),
+
+      audienceRatingValue:
+          selectedMovie.rating / 5.0,
+
+      synopsis:
+          selectedMovie.description ??
+          "No description available.",
+
+      genres: selectedMovie.genres,
+
+      photoUrls: [
+        selectedMovie.imageUrl,
+        selectedMovie.imageUrl,
+        selectedMovie.imageUrl,
+      ],
+
+      // Static reviews for now
+      userReviews: [
+        UserReview(
+          id: 'r1',
+          userName: 'Rohit Sharma',
+          date: DateTime.now().subtract(
+            const Duration(days: 1),
+          ),
+          ratingGiven: 4.3,
+          reviewTitle: 'Amazing Movie!',
+          reviewText:
+              'Great experience. Loved action scenes and story.',
+          likes: 115,
+          dislikes: 4,
+          avatarUrl:
+              "https://placehold.co/40x40/FFC0CB/000?text=RS",
+        ),
+        UserReview(
+          id: 'r2',
+          userName: 'Priya Kumari',
+          date: DateTime.now().subtract(
+            const Duration(days: 2),
+          ),
+          ratingGiven: 5.0,
+          reviewTitle: 'Must Watch',
+          reviewText:
+              'Fantastic movie with amazing screenplay.',
+          likes: 250,
+          dislikes: 1,
+          avatarUrl:
+              "https://placehold.co/40x40/ADD8E6/000?text=PK",
+        ),
+      ],
+    );
+
+    _isLoading = false;
+  });
+}
 
   // NEW: Method to handle like/dislike logic
   void _handleReviewInteraction(String reviewId, bool isLikeButton) {

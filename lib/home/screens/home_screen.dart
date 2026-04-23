@@ -194,10 +194,6 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         );
       }
-      final EdgeInsets listViewPadding = const EdgeInsets.only(
-        top: 10,
-        bottom: 12,
-      );
       return ListView(
       //  padding: listViewPadding,
         children: [
@@ -274,106 +270,62 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildFeaturedTeluguSection() {
-    final List<Map<String, String>> featuredMovies = [
-      {
-        "id": "coolie_01",
-        "title": "Coolie",
-        "rating": "4.3",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Coolie&font=sans",
-      },
-      {
-        "id": "kingdom_02",
-        "title": "Kingdom",
-        "rating": "4.5",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Kingdom&font=sans",
-      },
-      {
-        "id": "3bhk_03",
-        "title": "3 BHK",
-        "rating": "4.3",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=3+BHK&font=sans",
-      },
-      {
-        "id": "mahavatar_04",
-        "title": "Mahavatar\nNarasimha",
-        "rating": "4.6",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Mahavatar&font=sans",
-      },
-    ];
-    return HorizontalCardList<Map<String, String>>(
-      title: 'FEATURED TELUGU',
+  return Obx(() {
+    final featuredMovies = controller.movieData.value.featured;
+
+    if (featuredMovies.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return HorizontalCardList<MovieModel>(
+      title: 'FEATURED MOVIES',
       items: featuredMovies,
       cardBuilder: (context, movie) {
         return FeaturedContentCard(
-          imageUrl: movie['imageUrl']!,
-          title: movie['title']!,
-          rating: movie['rating'],
+          imageUrl: movie.imageUrl,
+          title: movie.title,
+          rating: movie.rating.toStringAsFixed(1),
           ratingIconAsset: "assets/images/sd.png",
           activeRatingIconColor: movieAccentColor,
           inactiveRatingIconColor: Colors.white,
           onTap: () {
-            Get.to(() => MainReviewScreenMovies(movieId: movie['id']!));
-            print("Explore tapped for ${movie['title']}");
+            Get.to(
+              () => MainReviewScreenMovies(
+                movieId: movie.id,
+              ),
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildNewTrendingSection() {
-    final List<Map<String, dynamic>> _placeholderTrendingMovies = [
-      {
-        "movieId": "movie1",
-        "title": "Kalki 2898 AD",
-        "duration": "3h 1m",
-        "certification": "U/A",
-        "language": "Telugu",
-        "starnestRating": "4.5",
-        "audienceRating": "4.8",
-        "audienceVotes": "15k",
-        "imageUrl":
-            "https://placehold.co/355x184/141414/626365?text=Kalki&font=sans",
-      },
-      {
-        "movieId": "movie2",
-        "title": "Pushpa 2: The Rule",
-        "duration": "2h 50m",
-        "certification": "U/A",
-        "language": "Telugu",
-        "starnestRating": "4.9",
-        "audienceRating": "4.9",
-        "audienceVotes": "25k",
-        "imageUrl":
-            "https://placehold.co/355x184/141414/626365?text=Pushpa+2&font=sans",
-      },
-    ];
+  return Obx(() {
+    final trendingMovies = controller.movieData.value.trending;
 
-    // Convert the list to a reactive RxList for the carousel
-    final RxList<Map<String, dynamic>> trendingMovies =
-        _placeholderTrendingMovies.obs;
+    if (trendingMovies.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-    return TrendingCarousel<Map<String, dynamic>>(
-      context: context, // Pass context directly to the carousel
-      items: trendingMovies,
+    return TrendingCarousel<MovieModel>(
+      context: context,
+      items: trendingMovies.obs,
       cardBuilder: (movie) {
-        // cardBuilder now only takes the item
         final details = [
-          movie["duration"] ?? "N/A",
-          movie["certification"] ?? "N/A",
-          movie["language"] ?? "N/A",
+          movie.duration,
+          movie.certification,
+          movie.language,
         ].join(' • ');
 
         return TrendingCard(
-          imageUrl: movie["imageUrl"] ?? "",
-          title: movie["title"] ?? "Unknown Title",
+          imageUrl: movie.imageUrl,
+          title: movie.title,
           details: details,
-          starnestRating: movie["starnestRating"] ?? "0.0",
-          audienceRating: movie["audienceRating"] ?? "0.0",
-          audienceVotes: movie["audienceVotes"] ?? "0 votes",
+          starnestRating: movie.rating.toStringAsFixed(1),
+          audienceRating: movie.rating.toStringAsFixed(1),
+          audienceVotes: "${movie.votes} Votes",
           ratingImage: Image.asset(
             "assets/images/sd.png",
             width: 14,
@@ -387,15 +339,19 @@ class _HomeScreenState extends State<HomeScreen>
             color: Colors.white,
           ),
           exploreButtonImageColor: movieAccentColor,
+
           onExplore: () {
-            print("Explore tapped for ${movie['title']}");
-            Get.to(() => MainReviewScreenMovies(movieId: movie["movieId"]));
+            Get.to(
+              () => MainReviewScreenMovies(
+                movieId: movie.id,
+              ),
+            );
           },
+
           onWriteReview: () {
-            print("Write a Review for ${movie['title']}");
             Get.to(
               () => AddEditReviewScreen(
-                itemName: movie['title'] ?? "this Movie",
+                itemName: movie.title,
                 itemType: "Movie",
                 accentColor: movieAccentColor,
                 ratingAssetPath: "assets/images/sd.png",
@@ -405,7 +361,8 @@ class _HomeScreenState extends State<HomeScreen>
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildUpcomingReleasesSection() {
     final List<Map<String, String>> upcomingMovies = [
