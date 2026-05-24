@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
 import 'package:mobilr_app_ui/onbording/onboarding_interests_screen.dart';
@@ -29,7 +30,14 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(const Duration(seconds: 3), () async {
       await _controller.animateTo(1.0);
       _controller.value = 0.0;
-
+      ///Debug Mode only 
+      if(kDebugMode){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+        return;
+      }
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushReplacement(
           context,
