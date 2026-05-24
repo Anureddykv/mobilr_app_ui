@@ -35,6 +35,63 @@ class GadgetModel {
       description: json['description'] as String?,
     );
   }
+  factory GadgetModel.fromApi(Map<String, dynamic> json) {
+  final ratingData = json['rating'];
+  final specsData = json['specs'];
+
+  return GadgetModel(
+    id: json['_id']?.toString() ??
+        json['id']?.toString() ??
+        DateTime.now().millisecondsSinceEpoch.toString(),
+
+    name: json['name']?.toString() ??
+        json['title']?.toString() ??
+        'Unknown Gadget',
+
+    // ✅ Better Brand/Type Handling
+    brand: json['brand']?.toString() ??
+        json['company']?.toString() ??
+        json['type']?.toString() ??
+        'Unknown Brand',
+
+    // ✅ Better Image Handling
+    imageUrl:
+        (json['gallery'] is List &&
+                (json['gallery'] as List).isNotEmpty)
+            ? json['gallery'][0].toString()
+            : json['imageUrl']?.toString() ??
+                json['poster']?.toString() ??
+                json['thumbnail']?.toString() ??
+                'https://via.placeholder.com/200x300?text=No+Image',
+
+    // ✅ Safe Rating Parsing
+    rating: ratingData is Map
+        ? (ratingData['star'] as num?)?.toDouble()
+        : (ratingData as num?)?.toDouble(),
+
+    // ✅ Safe Votes Parsing
+    votes: ratingData is Map
+        ? ratingData['votes']?.toString()
+        : null,
+
+    // ✅ Specs → Feature List
+    keyFeatures: specsData is Map<String, dynamic>
+        ? specsData.entries
+            .map((e) => "${e.key}: ${e.value}")
+            .toList()
+        : [],
+
+    // ✅ Release Date
+    releaseDate:
+        json['createdAt']?.toString() ??
+        json['releaseDate']?.toString(),
+
+    // ✅ Description
+    description:
+        json['description']?.toString() ??
+        "No description available.",
+  );
+}
 }
 
 class GadgetDataModel {

@@ -105,6 +105,11 @@ class HomeController extends GetxController {
     communities: [],
   ).obs;
   var isLoadingRestaurants = true.obs;
+  final RxBool hasLoadedMovies = false.obs;
+  final RxBool hasLoadedRestaurants = false.obs;
+final RxBool hasLoadedGadgets = false.obs;
+final RxBool hasLoadedBooks = false.obs;
+final RxBool hasLoadedGames = false.obs;
 
   var gadgetData = GadgetDataModel(
     featured: [],
@@ -136,7 +141,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _updateAccentColor(selectedCategory.value);
-    fetchAllData();
+    fetchMovieData();
   }
   final RxString selectedSurveyOption = "".obs; // Holds the currently selected option
   final RxBool hasSubmittedSurvey = false.obs; // Tracks if the survey has been submitted
@@ -243,46 +248,76 @@ class HomeController extends GetxController {
     return notifiedUpcomingMovies.contains(movieIdOrTitle);
   }
 
-  void fetchAllData() {
-    fetchMovieData();
-    fetchRestaurantData();
-    fetchGadgetData();
-    fetchBookData();
-    fetchGameData();
-  }
+void changeCategory(String category) {
+  if (selectedCategory.value != category) {
+    selectedCategory.value = category;
+    _updateAccentColor(category);
 
-  void changeCategory(String category) {
-    if (selectedCategory.value != category) {
-      selectedCategory.value = category;
-      _updateAccentColor(category);
+    switch (category) {
+      case "Movies":
+        if (!hasLoadedMovies.value) {
+          fetchMovieData();
+        }
+        break;
+
+      case "Restaurants":
+        if (!hasLoadedRestaurants.value) {
+          fetchRestaurantData();
+        }
+        break;
+
+      case "Gadgets":
+        if (!hasLoadedGadgets.value) {
+          fetchGadgetData();
+        }
+        break;
+
+      case "Books":
+        if (!hasLoadedBooks.value) {
+          fetchBookData();
+        }
+        break;
+
+      case "Games":
+        if (!hasLoadedGames.value) {
+          fetchGameData();
+        }
+        break;
     }
   }
+}
 
   void _updateAccentColor(String category) {
     currentAccentColor.value = getAccentColorForCategory(category);
   }
 
   Future<void> fetchMovieData() async {
+  if (hasLoadedMovies.value) return;
+
   try {
+    log("🎬 fetchMovieData STARTED");
+
     isLoadingMovies.value = true;
 
     final api = ApiService();
 
+    log("📡 Fetching Featured Movies...");
     final featuredResponse =
         await api.fetchList('/api/movies/featured');
 
+    log("✅ Featured Movies Loaded");
+
+    log("📡 Fetching Trending Movies...");
     final trendingResponse =
         await api.fetchList('/api/movies/trending');
 
-    log("===== FEATURED MOVIES API =====");
-    log(featuredResponse.toString());
+    log("✅ Trending Movies Loaded");
 
-    log("===== TRENDING MOVIES API =====");
-    log(trendingResponse.toString());
-
-    // 10 Movies for carousel from featured
     final featuredMovies = featuredResponse
-        .map((e) => MovieModel.fromApi(e))
+        .map((e) {
+          log("🍔 Featured Movies Parsed: ${e.toString()}");
+          return MovieModel.fromApi(e);
+        })
         .take(10)
         .toList();
 
@@ -297,75 +332,210 @@ class HomeController extends GetxController {
       communities: [],
     );
 
-    log("Featured Count: ${featuredMovies.length}");
-    log("Trending Count: ${trendingMovies.length}");
+    hasLoadedMovies.value = true;
 
-  } catch (e) {
-    log("Movie API Error: $e");
+    log("✅ Movie Data Assigned");
+
+  } catch (e, stackTrace) {
+    log("❌ Movie API Error: $e");
+    log("🧨 StackTrace: $stackTrace");
   } finally {
     isLoadingMovies.value = false;
+    log("🏁 fetchMovieData FINISHED");
   }
 }
 
   Future<void> fetchRestaurantData() async {
-    try {
-      isLoadingRestaurants.value = true;
-      // Removed Artificial Delay
-      final String response = await rootBundle
-          .loadString('assets/json/sample_restaurant_data.json');
-      final data = json.decode(response);
-      restaurantData.value = RestaurantDataModel.fromJson(data);
-    } catch (e) {
-      print("Error fetching restaurant data: $e");
-    } finally {
-      isLoadingRestaurants.value = false;
-    }
+  if (hasLoadedRestaurants.value) {
+    log("⛔ Restaurants already loaded. Skipping API call.");
+    return;
   }
+
+  try {
+    log("🍽 fetchRestaurantData STARTED");
+
+    isLoadingRestaurants.value = true;
+
+    final api = ApiService();
+
+    log("📡 Fetching Featured Restaurants...");
+    final featuredResponse =
+        await api.fetchList('/api/restaurants/featured');
+
+    log("✅ Featured Restaurants Loaded");
+
+    log("📡 Fetching Trending Restaurants...");
+    final trendingResponse =
+        await api.fetchList('/api/restaurants/trending');
+
+    log("✅ Trending Restaurants Loaded");
+
+    log("📦 Featured Response Count: ${featuredResponse.length}");
+    log("📦 Trending Response Count: ${trendingResponse.length}");
+
+    final featuredRestaurants = featuredResponse
+        .map((e) {
+          log("🍔 Featured Restaurant Parsed: ${e.toString()}");
+          return RestaurantModel.fromApi(e);
+        })
+        .take(10)
+        .toList();
+
+    final trendingRestaurants = trendingResponse
+        .map((e) {
+          log("🔥 Trending Restaurant Parsed: ${e.toString()}");
+          return RestaurantModel.fromApi(e);
+        })
+        .toList();
+
+    log("🍽 Featured Restaurants Final Count: ${featuredRestaurants.length}");
+    log("🍽 Trending Restaurants Final Count: ${trendingRestaurants.length}");
+
+    restaurantData.value = RestaurantDataModel(
+      featured: featuredRestaurants,
+      trending: trendingRestaurants,
+      upcoming: [],
+      communities: [],
+    );
+
+    log("✅ restaurantData assigned successfully");
+
+    hasLoadedRestaurants.value = true;
+
+    log("✅ hasLoadedRestaurants set TRUE");
+
+  } catch (e, stackTrace) {
+    log("❌ Restaurant API Error: $e");
+    log("🧨 StackTrace: $stackTrace");
+  } finally {
+    isLoadingRestaurants.value = false;
+    log("🏁 fetchRestaurantData FINISHED");
+  }
+}
 
   Future<void> fetchGadgetData() async {
-    try {
-      isLoadingGadgets.value = true;
-      // Removed Artificial Delay
-      final String response =
-      await rootBundle.loadString('assets/json/sample_gadget_data.json');
-      final data = json.decode(response);
-      gadgetData.value = GadgetDataModel.fromJson(data);
-    } catch (e) {
-      print("Error fetching gadget data: $e");
-    } finally {
-      isLoadingGadgets.value = false;
-    }
+  if (hasLoadedGadgets.value) return;
+
+  try {
+    isLoadingGadgets.value = true;
+
+    final api = ApiService();
+
+    final responses = await Future.wait([
+      api.fetchList('/api/gadgets/featured'),
+      api.fetchList('/api/gadgets/trending'),
+    ]);
+
+    final featuredResponse = responses[0];
+    final trendingResponse = responses[1];
+
+    final featuredGadgets = featuredResponse
+        .map((e) => GadgetModel.fromApi(e))
+        .take(10)
+        .toList();
+
+    final trendingGadgets = trendingResponse
+        .map((e) => GadgetModel.fromApi(e))
+        .toList();
+
+    gadgetData.value = GadgetDataModel(
+      featured: featuredGadgets,
+      trending: trendingGadgets,
+      upcoming: [],
+      communities: [],
+    );
+
+    hasLoadedGadgets.value = true;
+
+  } catch (e) {
+    log("Gadget API Error: $e");
+  } finally {
+    isLoadingGadgets.value = false;
   }
+}
 
   Future<void> fetchBookData() async {
-    try {
-      isLoadingBooks.value = true;
-      // Removed Artificial Delay
-      final String response =
-      await rootBundle.loadString('assets/json/sample_book_data.json');
-      final data = json.decode(response);
-      bookData.value = BookDataModel.fromJson(data);
-    } catch (e) {
-      print("Error fetching book data: $e");
-    } finally {
-      isLoadingBooks.value = false;
-    }
-  }
+  if (hasLoadedBooks.value) return;
 
-  Future<void> fetchGameData() async {
-    try {
-      isLoadingGames.value = true;
-      // Removed Artificial Delay
-      final String response =
-      await rootBundle.loadString('assets/json/sample_game_data.json');
-      final data = json.decode(response);
-      gameData.value = GameDataModel.fromJson(data);
-    } catch (e) {
-      print("Error fetching game data: $e");
-    } finally {
-      isLoadingGames.value = false;
-    }
+  try {
+    isLoadingBooks.value = true;
+
+    final api = ApiService();
+
+    final responses = await Future.wait([
+      api.fetchList('/api/books/featured'),
+      api.fetchList('/api/books/trending'),
+    ]);
+
+    final featuredResponse = responses[0];
+    final trendingResponse = responses[1];
+
+    final featuredBooks = featuredResponse
+        .map((e) => BookModel.fromApi(e))
+        .take(10)
+        .toList();
+
+    final trendingBooks = trendingResponse
+        .map((e) => BookModel.fromApi(e))
+        .toList();
+
+    bookData.value = BookDataModel(
+      featured: featuredBooks,
+      trending: trendingBooks,
+      upcoming: [],
+      communities: [],
+    );
+
+    hasLoadedBooks.value = true;
+
+  } catch (e) {
+    log("Book API Error: $e");
+  } finally {
+    isLoadingBooks.value = false;
   }
+}
+
+Future<void> fetchGameData() async {
+  if (hasLoadedGames.value) return;
+
+  try {
+    isLoadingGames.value = true;
+
+    final api = ApiService();
+
+    final responses = await Future.wait([
+      api.fetchList('/api/games/featured'),
+      api.fetchList('/api/games/trending'),
+    ]);
+
+    final featuredResponse = responses[0];
+    final trendingResponse = responses[1];
+
+    final featuredGames = featuredResponse
+        .map((e) => GameModel.fromApi(e))
+        .take(10)
+        .toList();
+
+    final trendingGames = trendingResponse
+        .map((e) => GameModel.fromApi(e))
+        .toList();
+
+    gameData.value = GameDataModel(
+      featured: featuredGames,
+      trending: trendingGames,
+      upcoming: [],
+      communities: [],
+      discordServers: [],
+    );
+
+    hasLoadedGames.value = true;
+
+  } catch (e) {
+    log("Game API Error: $e");
+  } finally {
+    isLoadingGames.value = false;
+  }
+}
 
   Color getAccentColorForCategory(String category) {
     switch (category) {

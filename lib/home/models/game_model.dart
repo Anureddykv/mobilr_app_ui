@@ -27,16 +27,84 @@ class GameModel {
 
   factory GameModel.fromJson(Map<String, dynamic> json) {
     return GameModel(
-      id: json['id'] as String? ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id:
+          json['id'] as String? ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
       title: json['title'] as String? ?? 'Unknown Title',
       developer: json['developer'] as String? ?? 'Unknown Developer',
-      imageUrl: json['imageUrl'] as String? ?? 'https://via.placeholder.com/200x300?text=No+Art',
+      imageUrl:
+          json['imageUrl'] as String? ??
+          'https://via.placeholder.com/200x300?text=No+Art',
       rating: (json['rating'] as num?)?.toDouble(),
       votes: json['votes'] as String?,
       genres: List<String>.from(json['genres'] as List? ?? []),
       platforms: List<String>.from(json['platforms'] as List? ?? []),
       releaseDate: json['releaseDate'] as String?,
       description: json['description'] as String?,
+    );
+  }
+
+  factory GameModel.fromApi(Map<String, dynamic> json) {
+    final ratingData = json['rating'];
+
+    return GameModel(
+      id:
+          json['_id']?.toString() ??
+          json['id']?.toString() ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
+
+      // ✅ Name / Title
+      title:
+          json['title']?.toString() ??
+          json['name']?.toString() ??
+          'Unknown Title',
+
+      // ✅ Developer / Studio
+      developer:
+          json['developer']?.toString() ??
+          json['studio']?.toString() ??
+          'Unknown Developer',
+
+      // ✅ Gallery Image Support
+      imageUrl:
+          (json['gallery'] is List && (json['gallery'] as List).isNotEmpty)
+          ? json['gallery'][0].toString()
+          : json['imageUrl']?.toString() ??
+                json['poster']?.toString() ??
+                json['thumbnail']?.toString() ??
+                'https://via.placeholder.com/200x300?text=No+Art',
+
+      // ✅ Rating Object Support
+      rating: ratingData is Map
+          ? (ratingData['star'] as num?)?.toDouble()
+          : (ratingData as num?)?.toDouble(),
+
+      // ✅ Votes
+      votes: ratingData is Map
+          ? ratingData['votes']?.toString()
+          : json['votes']?.toString(),
+
+      // ✅ Genre Support
+      genres: json['genres'] is List
+          ? (json['genres'] as List).map((e) => e.toString()).toList()
+          : json['genre'] != null
+          ? [json['genre'].toString()]
+          : [],
+
+      // ✅ Platform Support
+      platforms: json['platforms'] is List
+          ? (json['platforms'] as List).map((e) => e.toString()).toList()
+          : json['platform'] is List
+          ? (json['platform'] as List).map((e) => e.toString()).toList()
+          : [],
+
+      // ✅ Release Date
+      releaseDate:
+          json['releaseDate']?.toString() ?? json['createdAt']?.toString(),
+
+      // ✅ Description
+      description:
+          json['description']?.toString() ?? "No description available.",
     );
   }
 }

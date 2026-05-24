@@ -625,125 +625,123 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildFeaturedRestaurantsSection() {
-    final List<Map<String, String>> featuredRestaurants = [
-      {
-        "id": "paradise456",
-        "title": "Paradise",
-        "rating": "4.5",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Paradise&font=sans",
-      },
-      {
-        "id": "bawarchi123",
-        "title": "Bawarchi",
-        "rating": "4.6",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Bawarchi&font=sans",
-      },
-      {
-        "id": "kritunga789",
-        "title": "Kritunga",
-        "rating": "4.2",
-        "imageUrl":
-            "https://placehold.co/152x174/141414/626365?text=Kritunga&font=sans",
-      },
-    ];
-    return HorizontalCardList<Map<String, String>>(
+  return Obx(() {
+    final featuredRestaurants =
+        controller.restaurantData.value.featured;
+
+    if (featuredRestaurants.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return HorizontalCardList<RestaurantModel>(
       title: 'FEATURED RESTAURANTS',
       items: featuredRestaurants,
       cardBuilder: (context, restaurant) {
         return FeaturedContentCard(
-          imageUrl: restaurant['imageUrl']!,
-          title: restaurant['title']!,
-          rating: restaurant['rating'],
+          imageUrl: restaurant.imageUrl,
+          title: restaurant.name,
+          rating: restaurant.rating.toStringAsFixed(1),
           ratingIconAsset: "assets/images/restaurants.png",
           activeRatingIconColor: restaurantAccentColor,
           inactiveRatingIconColor: Colors.white,
           onTap: () {
-            print("Explore tapped for ${restaurant['title']}");
-            Get.to(() => RestaurantReviewScreen(itemId: restaurant['id']!));
+            print("Explore tapped for ${restaurant.name}");
+
+            Get.to(
+              () => RestaurantReviewScreen(
+                itemId: restaurant.id,
+              ),
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildTrendingRestaurantsSection() {
-    // Convert the static list to a reactive list (RxList) for the carousel
-    final RxList<Map<String, dynamic>> trendingRestaurants = [
-      {
-        "restaurantId": "r1",
-        "title": "Mehfil",
-        "cuisine": "Indian, Hyderabadi",
-        "area": "Gachibowli",
-        "starnestRating": "4.8",
-        "audienceRating": "4.7",
-        "audienceVotes": "3.5k",
-        "imageUrl":
-            "https://placehold.co/355x184/141414/626365?text=Mehfil&font=sans",
-      },
-      {
-        "restaurantId": "r2",
-        "title": "Olive Garden",
-        "cuisine": "Italian",
-        "area": "Jubilee Hills",
-        "starnestRating": "4.6",
-        "audienceRating": "4.5",
-        "audienceVotes": "1.8k",
-        "imageUrl":
-            "https://placehold.co/355x184/141414/626365?text=Olive+Garden&font=sans",
-      },
-    ].obs; // Use .obs to make the list reactive
+  return Obx(() {
+    final trendingRestaurants =
+        controller.restaurantData.value.trending;
 
-    // Use the corrected TrendingCarousel widget
-    return TrendingCarousel<Map<String, dynamic>>(
-      context: context, // Pass context directly to the carousel
-      items: trendingRestaurants,
+    if (trendingRestaurants.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return TrendingCarousel<RestaurantModel>(
+      context: context,
+      items: trendingRestaurants.obs,
+
       cardBuilder: (restaurant) {
-        // cardBuilder now only takes the item
-        final details = "${restaurant["cuisine"]}, ${restaurant["area"]}";
+        final details = [
+          restaurant.cuisineType,
+          restaurant.address,
+        ]
+            .where((e) => e != null && e.isNotEmpty)
+            .join(' • ');
 
         return TrendingCard(
-          imageUrl: restaurant["imageUrl"] ?? "",
-          title: restaurant["title"] ?? "Unknown Title",
+          imageUrl: restaurant.imageUrl,
+          title: restaurant.name,
           details: details,
-          starnestRating: restaurant["starnestRating"] ?? "0.0",
-          audienceRating: restaurant["audienceRating"] ?? "0.0",
-          audienceVotes: restaurant["audienceVotes"] ?? "0 votes",
+
+          starnestRating:
+              restaurant.rating.toStringAsFixed(1),
+
+          audienceRating:
+              restaurant.rating.toStringAsFixed(1),
+
+          audienceVotes: "Popular",
+
           ratingImage: Image.asset(
             "assets/images/restaurants.png",
             width: 14,
             height: 14,
             color: restaurantAccentColor,
           ),
+
           exploreButtonImage: Image.asset(
             "assets/images/restaurants.png",
             width: 14,
             height: 14,
             color: Colors.white,
           ),
-          exploreButtonImageColor: restaurantAccentColor,
+
+          exploreButtonImageColor:
+              restaurantAccentColor,
+
           onExplore: () {
-            print("Explore tapped for ${restaurant['title']}");
+            print(
+              "Explore tapped for ${restaurant.name}",
+            );
+
             Get.to(
-              () => RestaurantReviewScreen(itemId: restaurant["restaurantId"]),
+              () => RestaurantReviewScreen(
+                itemId: restaurant.id,
+              ),
             );
           },
+
           onWriteReview: () {
             Get.to(
               () => AddEditReviewScreen(
-                itemName: restaurant['title'] ?? "this Restaurant",
+                itemName: restaurant.name,
                 itemType: "Restaurant",
                 accentColor: restaurantAccentColor,
-                ratingAssetPath: "assets/images/restaurants.png",
+                ratingAssetPath:
+                    "assets/images/restaurants.png",
               ),
             );
-            print("Write a Review for ${restaurant['title']}");
+
+            print(
+              "Write Review for ${restaurant.name}",
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildUpcomingRestaurantsSection() {
     final List<Map<String, String>> upcomingItems = [
@@ -897,157 +895,276 @@ class _HomeScreenState extends State<HomeScreen>
 
   /// --------------------------------------
 
-  Widget buildGadgetsTab() {
-    return Obx(() {
-      final gadgetData = controller.gadgetData.value;
-      if (controller.isLoadingGadgets.value && gadgetData.featured.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(gadgetAccentColor),
+Widget buildGadgetsTab() {
+  return Obx(() {
+    final gadgetData = controller.gadgetData.value;
+
+    if (controller.isLoadingGadgets.value &&
+        gadgetData.featured.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor:
+              AlwaysStoppedAnimation<Color>(
+            gadgetAccentColor,
           ),
-        );
-      }
-
-      return ListView(
-       // padding: const EdgeInsets.only(top: 12, bottom: 24),
-        children: [
-          if (gadgetData.featured.isNotEmpty)
-            ReusableCarousel<GadgetModel>(
-              context,
-              items: gadgetData.featured.obs,
-              controller: controller,
-              cardBuilder: (gadget) {
-                return FeaturedContentCardLarge(
-                  imageUrl: gadget.imageUrl,
-                  title: gadget.name,
-                  infoItems: [
-                    gadget.brand,
-                    ...gadget.keyFeatures,
-                  ].where((s) => s.isNotEmpty).toList(),
-                  rating: gadget.rating?.toStringAsFixed(1) ?? 'N/A',
-                  votes: "${gadget.votes ?? '0'} Votes",
-                  ratingIcon: Image.asset(
-                    "assets/images/gadget.png",
-                    width: 14,
-                    height: 14,
-                    color: gadgetAccentColor,
-                  ),
-                  accentColor: gadgetAccentColor,
-                  onMoreInfo: () {
-                    _showMoreInfoBottomSheet(
-                      title: gadget.name,
-                      rating: gadget.rating?.toStringAsFixed(1) ?? "N/A",
-                      votes: gadget.votes ?? "0 Votes",
-                      infoItems: gadget.keyFeatures,
-                      description:
-                          gadget.description ??
-                          "A brand new gadget from ${gadget.brand}.",
-                      accentColor: gadgetAccentColor,
-                      ratingIconAsset: "assets/images/gadget.png",
-                      onPrimaryButtonTap: () => Get.to(
-                        () => MainReviewScreenGadgets(gadgetId: gadget.id),
-                      ),
-                      itemId: gadget.id,
-                    );
-                  },
-                  onViewAllReviews: () => Get.to(
-                    () => MainReviewScreenGadgets(gadgetId: gadget.id),
-                  ),
-                  itemId: gadget.id,
-                );
-              },
-            ),
-          _buildFeaturedGadgetsSection(),
-          if (gadgetData.trending.isNotEmpty)
-            _buildTrendingGadgetsSection(gadgetData.trending),
-          _buildUpcomingGadgetsSection(),
-          _buildTechCommunitiesSection(),
-          _buildGadgetSurveySection(),
-          const SizedBox(height: 20),
-        ],
+        ),
       );
-    });
-  }
+    }
 
-  Widget _buildTrendingGadgetsSection(List<GadgetModel> trendingGadgets) {
-    if (trendingGadgets.isEmpty) return const SizedBox.shrink();
+    return ListView(
+      children: [
 
-    // Convert the list to a reactive list for the carousel
-    final RxList<GadgetModel> trendingGadgetsRx = trendingGadgets.obs;
+        // ✅ Carousel → Featured
+        if (gadgetData.featured.isNotEmpty)
+          ReusableCarousel<GadgetModel>(
+            context,
+            items: gadgetData.featured.obs,
+            controller: controller,
+
+            cardBuilder: (gadget) {
+              return FeaturedContentCardLarge(
+                imageUrl: gadget.imageUrl,
+
+                title: gadget.name,
+
+                infoItems: [
+                  gadget.brand,
+                  ...gadget.keyFeatures.take(3),
+                ]
+                    .where((s) => s.isNotEmpty)
+                    .toList(),
+
+                rating:
+                    gadget.rating
+                        ?.toStringAsFixed(1) ??
+                    'N/A',
+
+                votes:
+                    "${gadget.votes ?? '0'} Votes",
+
+                ratingIcon: Image.asset(
+                  "assets/images/gadget.png",
+                  width: 14,
+                  height: 14,
+                  color: gadgetAccentColor,
+                ),
+
+                accentColor: gadgetAccentColor,
+
+                onMoreInfo: () {
+                  _showMoreInfoBottomSheet(
+                    title: gadget.name,
+
+                    rating:
+                        gadget.rating
+                            ?.toStringAsFixed(1) ??
+                        "N/A",
+
+                    votes:
+                        gadget.votes ??
+                        "0 Votes",
+
+                    infoItems:
+                        gadget.keyFeatures,
+
+                    description:
+                        gadget.description ??
+                        "A brand new gadget from ${gadget.brand}.",
+
+                    accentColor:
+                        gadgetAccentColor,
+
+                    ratingIconAsset:
+                        "assets/images/gadget.png",
+
+                    onPrimaryButtonTap:
+                        () => Get.to(
+                              () =>
+                                  MainReviewScreenGadgets(
+                                gadgetId:
+                                    gadget.id,
+                              ),
+                            ),
+
+                    itemId: gadget.id,
+                  );
+                },
+
+                onViewAllReviews:
+                    () => Get.to(
+                          () =>
+                              MainReviewScreenGadgets(
+                            gadgetId:
+                                gadget.id,
+                          ),
+                        ),
+
+                itemId: gadget.id,
+              );
+            },
+          ),
+
+        // ✅ Featured → Featured API
+        _buildFeaturedGadgetsSection(),
+
+        // ✅ Trending → Trending API
+        _buildTrendingGadgetsSection(),
+
+        _buildUpcomingGadgetsSection(),
+
+        _buildTechCommunitiesSection(),
+
+        _buildGadgetSurveySection(),
+
+        const SizedBox(height: 20),
+      ],
+    );
+  });
+}
+
+  Widget _buildTrendingGadgetsSection() {
+  return Obx(() {
+
+    final trendingGadgets =
+        controller.gadgetData.value.trending;
+
+    if (trendingGadgets.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return TrendingCarousel<GadgetModel>(
-      context: context, // Pass context directly to the carousel
-      items: trendingGadgetsRx,
+      context: context,
+
+      items: trendingGadgets.obs,
+
       cardBuilder: (gadget) {
-        // cardBuilder now only takes the item
+
         final details = [
           gadget.brand,
-          ...gadget.keyFeatures,
-        ].where((s) => s.isNotEmpty).join(' • ');
+          ...gadget.keyFeatures.take(2),
+        ]
+            .where((s) => s.isNotEmpty)
+            .join(' • ');
 
         return TrendingCard(
           imageUrl: gadget.imageUrl,
+
           title: gadget.name,
+
           details: details,
-          starnestRating: gadget.rating?.toStringAsFixed(1) ?? "N/A",
+
+          starnestRating:
+              gadget.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
           audienceRating:
-              "4.8", // This seems to be a placeholder, adjust as needed
-          audienceVotes: gadget.votes ?? "0 votes",
+              gadget.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
+          audienceVotes:
+              "${gadget.votes ?? '0'} Votes",
+
           ratingImage: Image.asset(
             "assets/images/gadget.png",
             width: 14,
             height: 14,
             color: gadgetAccentColor,
           ),
+
           exploreButtonImage: Image.asset(
             "assets/images/gadget.png",
             width: 14,
             height: 14,
             color: Colors.white,
           ),
-          exploreButtonImageColor: gadgetAccentColor,
+
+          exploreButtonImageColor:
+              gadgetAccentColor,
+
           onExplore: () {
-            print("Explore tapped for ${gadget.name}");
-            Get.to(() => MainReviewScreenGadgets(gadgetId: gadget.id));
+            print(
+              "Explore tapped for ${gadget.name}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenGadgets(
+                gadgetId: gadget.id,
+              ),
+            );
           },
+
           onWriteReview: () {
             Get.to(
               () => AddEditReviewScreen(
                 itemName: gadget.name,
                 itemType: "Gadget",
-                accentColor: gadgetAccentColor,
-                ratingAssetPath: "assets/images/gadget.png",
+                accentColor:
+                    gadgetAccentColor,
+                ratingAssetPath:
+                    "assets/images/gadget.png",
               ),
             );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildFeaturedGadgetsSection() {
-    final featuredGadgets = controller.gadgetData.value.featured;
-    if (featuredGadgets.isEmpty) return const SizedBox.shrink();
+  return Obx(() {
+
+    final featuredGadgets =
+        controller.gadgetData.value.featured;
+
+    if (featuredGadgets.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return HorizontalCardList<GadgetModel>(
       title: 'FEATURED GADGETS',
+
       items: featuredGadgets,
+
       cardBuilder: (context, gadget) {
         return FeaturedContentCard(
           imageUrl: gadget.imageUrl,
+
           title: gadget.name,
-          rating: gadget.rating?.toStringAsFixed(1),
-          ratingIconAsset: "assets/images/gadget.png",
-          activeRatingIconColor: gadgetAccentColor,
-          inactiveRatingIconColor: Colors.white,
+
+          rating:
+              gadget.rating
+                  ?.toStringAsFixed(1),
+
+          ratingIconAsset:
+              "assets/images/gadget.png",
+
+          activeRatingIconColor:
+              gadgetAccentColor,
+
+          inactiveRatingIconColor:
+              Colors.white,
+
           onTap: () {
-            print("Explore tapped for ${gadget.name}");
-            Get.to(() => MainReviewScreenGadgets(gadgetId: gadget.id));
+            print(
+              "Explore tapped for ${gadget.name}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenGadgets(
+                gadgetId: gadget.id,
+              ),
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildUpcomingGadgetsSection() {
     final List<Map<String, String>> upcomingItems = [
@@ -1203,152 +1320,275 @@ class _HomeScreenState extends State<HomeScreen>
   /// --------------------------------------
 
   Widget buildBooksTab() {
-    return Obx(() {
-      final bookData = controller.bookData.value;
-      if (controller.isLoadingBooks.value && bookData.featured.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(bookAccentColor),
+  return Obx(() {
+
+    final bookData = controller.bookData.value;
+
+    if (controller.isLoadingBooks.value &&
+        bookData.featured.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor:
+              AlwaysStoppedAnimation<Color>(
+            bookAccentColor,
           ),
-        );
-      }
-
-      return ListView(
-       // padding: const EdgeInsets.only(top: 12, bottom: 24),
-        children: [
-          if (bookData.featured.isNotEmpty)
-            ReusableCarousel<BookModel>(
-              context,
-              items: bookData.featured.obs,
-              controller: controller,
-              cardBuilder: (book) {
-                return FeaturedContentCardLarge(
-                  imageUrl: book.imageUrl,
-                  title: book.title,
-                  infoItems: [
-                    book.author,
-                    ...book.genres,
-                  ].where((s) => s.isNotEmpty).toList(),
-                  rating: book.rating?.toStringAsFixed(1) ?? 'N/A',
-                  votes: "${book.votes ?? '0'} Votes",
-                  ratingIcon: Image.asset(
-                    "assets/images/book.png",
-                    width: 14,
-                    height: 14,
-                    color: bookAccentColor,
-                  ),
-                  accentColor: bookAccentColor,
-                  onMoreInfo: () {
-                    _showMoreInfoBottomSheet(
-                      title: book.title,
-                      rating: book.rating?.toStringAsFixed(1) ?? "N/A",
-                      votes: book.votes ?? "0 Votes",
-                      infoItems: book.genres,
-                      description:
-                          book.description ?? "A new book by ${book.author}.",
-                      accentColor: bookAccentColor,
-                      ratingIconAsset: "assets/images/book.png",
-                      onPrimaryButtonTap: () =>
-                          Get.to(() => MainReviewScreenBooks(bookId: book.id)),
-                      itemId: book.id,
-                    );
-                  },
-                  onViewAllReviews: () =>
-                      Get.to(() => MainReviewScreenBooks(bookId: book.id)),
-                  itemId: book.id,
-                );
-              },
-            ),
-
-          _buildFeaturedBooksSection(),
-          _buildTrendingBooksSection(bookData.trending),
-          _buildUpcomingBooksSection(),
-          _buildBookClubsSection(),
-          _buildBookSurveySection(),
-          const SizedBox(height: 20),
-        ],
+        ),
       );
-    });
-  }
+    }
 
-  Widget _buildTrendingBooksSection(List<BookModel> trendingBooks) {
-    if (trendingBooks.isEmpty) return const SizedBox.shrink();
+    return ListView(
+      children: [
 
-    // Convert the list to a reactive RxList for the carousel.
-    final RxList<BookModel> trendingBooksRx = trendingBooks.obs;
+        // ✅ Carousel → Featured
+        if (bookData.featured.isNotEmpty)
+          ReusableCarousel<BookModel>(
+            context,
+
+            items: bookData.featured.obs,
+
+            controller: controller,
+
+            cardBuilder: (book) {
+              return FeaturedContentCardLarge(
+                imageUrl: book.imageUrl,
+
+                title: book.title,
+
+                infoItems: [
+                  book.author,
+                  ...book.genres.take(3),
+                ]
+                    .where((s) => s.isNotEmpty)
+                    .toList(),
+
+                rating:
+                    book.rating
+                        ?.toStringAsFixed(1) ??
+                    'N/A',
+
+                votes:
+                    "${book.votes ?? '0'} Votes",
+
+                ratingIcon: Image.asset(
+                  "assets/images/book.png",
+                  width: 14,
+                  height: 14,
+                  color: bookAccentColor,
+                ),
+
+                accentColor: bookAccentColor,
+
+                onMoreInfo: () {
+                  _showMoreInfoBottomSheet(
+                    title: book.title,
+
+                    rating:
+                        book.rating
+                            ?.toStringAsFixed(1) ??
+                        "N/A",
+
+                    votes:
+                        book.votes ??
+                        "0 Votes",
+
+                    infoItems: book.genres,
+
+                    description:
+                        book.description ??
+                        "A new book by ${book.author}.",
+
+                    accentColor:
+                        bookAccentColor,
+
+                    ratingIconAsset:
+                        "assets/images/book.png",
+
+                    onPrimaryButtonTap:
+                        () => Get.to(
+                              () =>
+                                  MainReviewScreenBooks(
+                                bookId: book.id,
+                              ),
+                            ),
+
+                    itemId: book.id,
+                  );
+                },
+
+                onViewAllReviews:
+                    () => Get.to(
+                          () =>
+                              MainReviewScreenBooks(
+                            bookId: book.id,
+                          ),
+                        ),
+
+                itemId: book.id,
+              );
+            },
+          ),
+
+        // ✅ Featured Section
+        _buildFeaturedBooksSection(),
+
+        // ✅ Trending Section
+        _buildTrendingBooksSection(),
+
+        _buildUpcomingBooksSection(),
+
+        _buildBookClubsSection(),
+
+        _buildBookSurveySection(),
+
+        const SizedBox(height: 20),
+      ],
+    );
+  });
+}
+
+  Widget _buildTrendingBooksSection() {
+  return Obx(() {
+
+    final trendingBooks =
+        controller.bookData.value.trending;
+
+    if (trendingBooks.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return TrendingCarousel<BookModel>(
-      context: context, // Pass context directly to the carousel
-      items: trendingBooksRx,
+      context: context,
+
+      items: trendingBooks.obs,
+
       cardBuilder: (book) {
-        // The cardBuilder now only takes the item.
+
         final details = [
           book.author,
-          ...book.genres,
-        ].where((s) => s.isNotEmpty).join(' • ');
+          ...book.genres.take(2),
+        ]
+            .where((s) => s.isNotEmpty)
+            .join(' • ');
 
         return TrendingCard(
           imageUrl: book.imageUrl,
+
           title: book.title,
+
           details: details,
-          starnestRating: book.rating?.toStringAsFixed(1) ?? "N/A",
-          audienceRating: "4.7", // Placeholder, adjust as needed
-          audienceVotes: book.votes ?? "0 votes",
+
+          starnestRating:
+              book.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
+          audienceRating:
+              book.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
+          audienceVotes:
+              "${book.votes ?? '0'} Votes",
+
           ratingImage: Image.asset(
             "assets/images/book.png",
             width: 14,
             height: 14,
             color: bookAccentColor,
           ),
+
           exploreButtonImage: Image.asset(
             "assets/images/book.png",
             width: 14,
             height: 14,
             color: Colors.white,
           ),
-          exploreButtonImageColor: bookAccentColor,
+
+          exploreButtonImageColor:
+              bookAccentColor,
+
           onExplore: () {
-            print("Explore tapped for ${book.title}");
-            Get.to(() => MainReviewScreenBooks(bookId: book.id));
+            print(
+              "Explore tapped for ${book.title}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenBooks(
+                bookId: book.id,
+              ),
+            );
           },
+
           onWriteReview: () {
             Get.to(
               () => AddEditReviewScreen(
                 itemName: book.title,
                 itemType: "Book",
-                accentColor: bookAccentColor,
-                ratingAssetPath: "assets/images/book.png",
+                accentColor:
+                    bookAccentColor,
+                ratingAssetPath:
+                    "assets/images/book.png",
               ),
             );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildFeaturedBooksSection() {
-    final featuredBooks = controller.bookData.value.featured;
-    if (featuredBooks.isEmpty) return const SizedBox.shrink();
+  return Obx(() {
+
+    final featuredBooks =
+        controller.bookData.value.featured;
+
+    if (featuredBooks.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return HorizontalCardList<BookModel>(
       title: 'FEATURED BOOKS',
+
       items: featuredBooks,
+
       cardBuilder: (context, book) {
         return FeaturedContentCard(
           imageUrl: book.imageUrl,
+
           title: book.title,
-          rating: book.rating?.toStringAsFixed(1),
-          ratingIconAsset: "assets/images/book.png",
-          activeRatingIconColor: bookAccentColor,
-          inactiveRatingIconColor: Colors.white,
+
+          rating:
+              book.rating
+                  ?.toStringAsFixed(1),
+
+          ratingIconAsset:
+              "assets/images/book.png",
+
+          activeRatingIconColor:
+              bookAccentColor,
+
+          inactiveRatingIconColor:
+              Colors.white,
+
           onTap: () {
-            print("Explore tapped for ${book.title}");
-            Get.to(() => MainReviewScreenBooks(bookId: book.id));
+            print(
+              "Explore tapped for ${book.title}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenBooks(
+                bookId: book.id,
+              ),
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildUpcomingBooksSection() {
     final List<Map<String, String>> upcomingItems = [
@@ -1496,74 +1736,137 @@ class _HomeScreenState extends State<HomeScreen>
   /// --------------------------------------
 
   Widget buildGamesTab() {
-    return Obx(() {
-      final gameData = controller.gameData.value;
-      if (controller.isLoadingGames.value && gameData.featured.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(gameAccentColor),
-          ),
-        );
-      }
+  return Obx(() {
 
-      return ListView(
-       // padding: const EdgeInsets.only(top: 12, bottom: 24),
-        children: [
-          if (gameData.featured.isNotEmpty)
-            ReusableCarousel<GameModel>(
-              context,
-              items: gameData.featured.obs,
-              controller: controller,
-              cardBuilder: (game) {
-                return FeaturedContentCardLarge(
-                  imageUrl: game.imageUrl,
-                  title: game.title,
-                  infoItems: [
-                    game.developer,
-                    ...game.genres,
-                  ].where((s) => s.isNotEmpty).toList(),
-                  rating: game.rating?.toStringAsFixed(1) ?? 'N/A',
-                  votes: "${game.votes ?? '0'} Votes",
-                  ratingIcon: Image.asset(
-                    "assets/images/games.png",
-                    width: 14,
-                    height: 14,
-                    color: gameAccentColor,
-                  ),
-                  accentColor: gameAccentColor,
-                  onMoreInfo: () {
-                    _showMoreInfoBottomSheet(
-                      title: game.title,
-                      rating: game.rating?.toStringAsFixed(1) ?? "N/A",
-                      votes: game.votes ?? "0 Votes",
-                      infoItems: game.genres,
-                      description:
-                          game.description ??
-                          "A new game from ${game.developer}.",
-                      accentColor: gameAccentColor,
-                      ratingIconAsset: "assets/images/games.png",
-                      onPrimaryButtonTap: () =>
-                          Get.to(() => MainReviewScreenGames(gameId: game.id)),
-                      itemId: game.id,
-                    );
-                  },
-                  onViewAllReviews: () =>
-                      Get.to(() => MainReviewScreenGames(gameId: game.id)),
-                  itemId: game.id,
-                );
-              },
-            ),
-          _buildFeaturedGamesSection(),
-          _buildTrendingGamesSection(gameData.trending),
-          _buildUpcomingGamesSection(),
-          _buildGamingClansSection(),
-          _buildGameSurveySection(),
-          _buildDiscordServersSection(),
-          const SizedBox(height: 20),
-        ],
+    final gameData = controller.gameData.value;
+
+    if (controller.isLoadingGames.value &&
+        gameData.featured.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor:
+              AlwaysStoppedAnimation<Color>(
+            gameAccentColor,
+          ),
+        ),
       );
-    });
-  }
+    }
+
+    return ListView(
+      children: [
+
+        // ✅ Carousel → Featured
+        if (gameData.featured.isNotEmpty)
+          ReusableCarousel<GameModel>(
+            context,
+
+            items: gameData.featured.obs,
+
+            controller: controller,
+
+            cardBuilder: (game) {
+              return FeaturedContentCardLarge(
+                imageUrl: game.imageUrl,
+
+                title: game.title,
+
+                infoItems: [
+                  game.developer,
+                  ...game.genres.take(3),
+                  ...game.platforms.take(2),
+                ]
+                    .where((s) => s.isNotEmpty)
+                    .toList(),
+
+                rating:
+                    game.rating
+                        ?.toStringAsFixed(1) ??
+                    'N/A',
+
+                votes:
+                    "${game.votes ?? '0'} Votes",
+
+                ratingIcon: Image.asset(
+                  "assets/images/games.png",
+                  width: 14,
+                  height: 14,
+                  color: gameAccentColor,
+                ),
+
+                accentColor: gameAccentColor,
+
+                onMoreInfo: () {
+                  _showMoreInfoBottomSheet(
+                    title: game.title,
+
+                    rating:
+                        game.rating
+                            ?.toStringAsFixed(1) ??
+                        "N/A",
+
+                    votes:
+                        game.votes ??
+                        "0 Votes",
+
+                    infoItems: [
+                      ...game.genres,
+                      ...game.platforms,
+                    ],
+
+                    description:
+                        game.description ??
+                        "A new game from ${game.developer}.",
+
+                    accentColor:
+                        gameAccentColor,
+
+                    ratingIconAsset:
+                        "assets/images/games.png",
+
+                    onPrimaryButtonTap:
+                        () => Get.to(
+                              () =>
+                                  MainReviewScreenGames(
+                                gameId: game.id,
+                              ),
+                            ),
+
+                    itemId: game.id,
+                  );
+                },
+
+                onViewAllReviews:
+                    () => Get.to(
+                          () =>
+                              MainReviewScreenGames(
+                            gameId: game.id,
+                          ),
+                        ),
+
+                itemId: game.id,
+              );
+            },
+          ),
+
+        // ✅ Featured API
+        _buildFeaturedGamesSection(),
+
+        // ✅ Trending API
+        _buildTrendingGamesSection(),
+
+        _buildUpcomingGamesSection(),
+
+        _buildGamingClansSection(),
+
+        _buildGameSurveySection(),
+
+        _buildDiscordServersSection(),
+
+        const SizedBox(height: 20),
+      ],
+    );
+  });
+}
   Widget _buildDiscordServersSection() {
     final List<Map<String, String>> discordServers = [
       {
@@ -1595,84 +1898,154 @@ class _HomeScreenState extends State<HomeScreen>
     return DiscordSection(servers: discordServers);
   }
 
-  Widget _buildTrendingGamesSection(List<GameModel> trendingGames) {
-    if (trendingGames.isEmpty) return const SizedBox.shrink();
+  Widget _buildTrendingGamesSection() {
+  return Obx(() {
 
-    // Convert the list to a reactive RxList for the carousel.
-    final RxList<GameModel> trendingGamesRx = trendingGames.obs;
+    final trendingGames =
+        controller.gameData.value.trending;
+
+    if (trendingGames.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return TrendingCarousel<GameModel>(
-      context: context, // Pass context directly to the carousel
-      items: trendingGamesRx,
+      context: context,
+
+      items: trendingGames.obs,
+
       cardBuilder: (game) {
-        // The cardBuilder now only takes the item.
+
         final details = [
           game.developer,
-          ...game.genres,
-        ].where((s) => s.isNotEmpty).join(' • ');
+          ...game.genres.take(2),
+          ...game.platforms.take(1),
+        ]
+            .where((s) => s.isNotEmpty)
+            .join(' • ');
+
         return TrendingCard(
           imageUrl: game.imageUrl,
+
           title: game.title,
+
           details: details,
-          starnestRating: game.rating?.toStringAsFixed(1) ?? "N/A",
-          audienceRating: "4.9",
-          audienceVotes: game.votes ?? "0",
+
+          starnestRating:
+              game.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
+          audienceRating:
+              game.rating
+                  ?.toStringAsFixed(1) ??
+              "N/A",
+
+          audienceVotes:
+              "${game.votes ?? '0'} Votes",
+
           ratingImage: Image.asset(
             "assets/images/games.png",
             width: 14,
             height: 14,
             color: gameAccentColor,
           ),
+
           exploreButtonImage: Image.asset(
             "assets/images/games.png",
             width: 14,
             height: 14,
             color: Colors.white,
           ),
-          exploreButtonImageColor: gameAccentColor,
+
+          exploreButtonImageColor:
+              gameAccentColor,
+
           tvbutton1: "Review",
+
           tvbutton2: "Details",
+
           onExplore: () {
-            print("Explore tapped for ${game.title}");
-            Get.to(() => MainReviewScreenGames(gameId: game.id));
+            print(
+              "Explore tapped for ${game.title}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenGames(
+                gameId: game.id,
+              ),
+            );
           },
+
           onWriteReview: () {
             Get.to(
               () => AddEditReviewScreen(
                 itemName: game.title,
                 itemType: "Game",
-                accentColor: gameAccentColor,
-                ratingAssetPath: "assets/images/games.png",
+                accentColor:
+                    gameAccentColor,
+                ratingAssetPath:
+                    "assets/images/games.png",
               ),
             );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildFeaturedGamesSection() {
-    final featuredGames = controller.gameData.value.featured;
-    if (featuredGames.isEmpty) return const SizedBox.shrink();
+  return Obx(() {
+
+    final featuredGames =
+        controller.gameData.value.featured;
+
+    if (featuredGames.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return HorizontalCardList<GameModel>(
       title: 'FEATURED GAMES',
+
       items: featuredGames,
+
       cardBuilder: (context, game) {
         return FeaturedContentCard(
           imageUrl: game.imageUrl,
+
           title: game.title,
-          rating: game.rating?.toStringAsFixed(1),
-          ratingIconAsset: "assets/images/games.png",
-          activeRatingIconColor: gameAccentColor,
-          inactiveRatingIconColor: Colors.white,
+
+          rating:
+              game.rating
+                  ?.toStringAsFixed(1),
+
+          ratingIconAsset:
+              "assets/images/games.png",
+
+          activeRatingIconColor:
+              gameAccentColor,
+
+          inactiveRatingIconColor:
+              Colors.white,
+
           onTap: () {
-            print("Explore tapped for ${game.title}");
-            // Get.to(() => GameReviewScreen(itemId: game.id));
+            print(
+              "Explore tapped for ${game.title}",
+            );
+
+            Get.to(
+              () =>
+                  MainReviewScreenGames(
+                gameId: game.id,
+              ),
+            );
           },
         );
       },
     );
-  }
+  });
+}
 
   Widget _buildUpcomingGamesSection() {
     final List<Map<String, String>> upcomingItems = [
