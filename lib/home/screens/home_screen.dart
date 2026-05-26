@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mobilr_app_ui/bottomnav/notification_screen.dart';
 import 'package:mobilr_app_ui/bottomnav/profile_screen.dart';
 import 'package:mobilr_app_ui/bottomnav/search_screen.dart';
+import 'package:mobilr_app_ui/core/tracking/starnest_tracker.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/FeatureScreenJoinedCommunityList.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/community_join_bottom_sheet.dart';
 import 'package:mobilr_app_ui/home/bottomsheet/more_info_bottom_sheet.dart';
@@ -131,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
       if (!_tabController.indexIsChanging) {
         controller.changeCategory(controller.categories[_tabController.index]);
+        StarNestTracker.instance.trackTagClick(tagId: controller.categories[_tabController.index]);
       }
     });
     _nowShowingPageController = PageController(viewportFraction: 0.92);
@@ -221,6 +223,10 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   accentColor: movieAccentColor,
                   onMoreInfo: () {
+                    StarNestTracker.instance.trackView(
+                      module: 'movies/movie',
+                      itemId: movie.id,
+                    );
                     _showMoreInfoBottomSheet(
                       title: movie.title ?? "Unknown Title",
                       rating: movie.rating.toStringAsFixed(1) ?? "0.0",
@@ -252,6 +258,11 @@ class _HomeScreenState extends State<HomeScreen>
                     );
                   },
                   onViewAllReviews: () {
+                    StarNestTracker.instance.trackClick(
+                      module: 'movies/movie',
+                      itemId: movie.id,
+                      section: 'featured_carousel',
+                    );
                     Get.to(() => MainReviewScreenMovies(movieId: movie.id));
                   },
                   itemId: movie.id,
@@ -289,6 +300,11 @@ class _HomeScreenState extends State<HomeScreen>
           activeRatingIconColor: movieAccentColor,
           inactiveRatingIconColor: Colors.white,
           onTap: () {
+            StarNestTracker.instance.trackClick(
+              module: 'movies/movie',
+              itemId: movie.id,
+              section: 'featured_list',
+            );
             Get.to(
               () => MainReviewScreenMovies(
                 movieId: movie.id,
@@ -341,6 +357,11 @@ class _HomeScreenState extends State<HomeScreen>
           exploreButtonImageColor: movieAccentColor,
 
           onExplore: () {
+            StarNestTracker.instance.trackClick(
+              module: 'movies/movie',
+              itemId: movie.id,
+              section: 'trending_carousel',
+            );
             Get.to(
               () => MainReviewScreenMovies(
                 movieId: movie.id,
@@ -412,6 +433,11 @@ class _HomeScreenState extends State<HomeScreen>
             onExplore: () {
               print("Explore tapped for ${movie['title']}");
               // ✅ FIXED: Added navigation to Movie Review Screen
+              StarNestTracker.instance.trackClick(
+                module: 'movies/movie',
+                itemId: movieId,
+                section: 'upcoming_releases',
+              );
               Get.to(() => MainReviewScreenMovies(movieId: movieId));
             },
             infoIcon: const Icon(
@@ -471,6 +497,7 @@ class _HomeScreenState extends State<HomeScreen>
             accentColor: controller.currentAccentColor.value,
             onJoin: () {
               print("Joining community: ${community['name']}");
+              StarNestTracker.instance.trackTagClick(tagId: community['id']!);
               _showCommunityJoinSheet(community);
             },
             buttonIcon: Image.asset(
@@ -510,6 +537,7 @@ class _HomeScreenState extends State<HomeScreen>
               survey: movieSurvey,
               accentColor: controller.currentAccentColor.value,
               onSubmit: (String selectedOptionId) {
+                StarNestTracker.instance.trackSearch(query: 'survey_option: $selectedOptionId');
                 print(
                   "Survey submitted! Selected option ID: $selectedOptionId",
                 );
@@ -574,6 +602,10 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   accentColor: restaurantAccentColor,
                   onMoreInfo: () {
+                    StarNestTracker.instance.trackView(
+                      module: 'movies/movie',
+                      itemId: restaurant.id,
+                    );
                     _showMoreInfoBottomSheet(
                       title: restaurant.name,
                       rating: restaurant.rating.toStringAsFixed(1),
@@ -874,6 +906,7 @@ class _HomeScreenState extends State<HomeScreen>
               survey: restaurantSurvey,
               accentColor: controller.currentAccentColor.value,
               onSubmit: (String selectedOptionId) {
+                StarNestTracker.instance.trackSearch(query: 'survey_option: $selectedOptionId');
                 print(
                   "Survey submitted! Selected option ID: $selectedOptionId",
                 );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
 import 'package:mobilr_app_ui/splash/SplashMessageScreen.dart';
+import '../core/tracking/starnest_tracker.dart';
 
 // --- Theme Colors ---
 const Color screenBackgroundColor = Color(0xFF0B0B0B);
@@ -77,6 +78,12 @@ class _AddEditReviewScreenState extends State<AddEditReviewScreen> {
     print('Rating: $_currentRating');
     print('Title: ${_titleController.text}');
     print('Review: ${_reviewController.text}');
+
+    StarNestTracker.instance.trackRatingReview(
+      itemId: widget.itemName,
+      rating: (_currentRating * 2).toInt(),
+      comment: _reviewController.text,
+    );
 
     Navigator.pushReplacement(
       context,

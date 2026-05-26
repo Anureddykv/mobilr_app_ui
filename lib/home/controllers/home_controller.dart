@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mobilr_app_ui/core/api_service.dart';
+import 'package:mobilr_app_ui/core/tracking/starnest_tracker.dart';
 
 // Assuming your models are in a 'models' directory relative to this file
 // Adjust the path if your project structure is different.
@@ -60,6 +61,10 @@ class HomeController extends GetxController {
 
     if (isItemSaved(itemId)) {
       savedItemIds.remove(itemId);
+      StarNestTracker.instance.trackBookmarkRemove(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: itemId,
+      );
       print("$itemName with ID $itemId unsaved.");
 
       // Show the "Removed" custom snackbar with neutral colors
@@ -77,6 +82,10 @@ class HomeController extends GetxController {
       ));
     } else {
       savedItemIds.add(itemId);
+      StarNestTracker.instance.trackBookmarkAdd(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: itemId,
+      );
       print("$itemName with ID $itemId saved.");
 
       // Show the "Added" custom snackbar with dynamic accent colors
@@ -210,6 +219,10 @@ final RxBool hasLoadedGames = false.obs;
   void toggleUpcomingMovieNotification(String movieIdOrTitle) {
     if (notifiedUpcomingMovies.contains(movieIdOrTitle)) {
       notifiedUpcomingMovies.remove(movieIdOrTitle);
+      StarNestTracker.instance.trackNotifyDisable(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: movieIdOrTitle,
+      );
       print("Notifications OFF for: $movieIdOrTitle");
 
       Get.showSnackbar(GetSnackBar(
@@ -227,6 +240,10 @@ final RxBool hasLoadedGames = false.obs;
 
     } else {
       notifiedUpcomingMovies.add(movieIdOrTitle);
+      StarNestTracker.instance.trackNotifyEnable(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: movieIdOrTitle,
+      );
       print("Notifications ON for: $movieIdOrTitle");
 
       Get.showSnackbar(GetSnackBar(

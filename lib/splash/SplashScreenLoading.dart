@@ -31,13 +31,13 @@ class _SplashScreenState extends State<SplashScreen>
       await _controller.animateTo(1.0);
       _controller.value = 0.0;
       ///Debug Mode only 
-      if(kDebugMode){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-        return;
-      }
+      // if(kDebugMode){
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (_) => const HomeScreen()),
+      //   );
+      //   return;
+      // }
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushReplacement(
           context,

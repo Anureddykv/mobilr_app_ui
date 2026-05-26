@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobilr_app_ui/splash/SplashScreenLoading.dart';
+import 'core/tracking/starnest_tracker.dart';
 
 import 'home/screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
+  StarNestTracker.instance.init();
+  StarNestTracker.instance.appOpen();
   /* await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );*/
@@ -64,8 +67,29 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      StarNestTracker.instance.appClose();
+    } else if (state == AppLifecycleState.resumed) {
+      StarNestTracker.instance.appOpen();
+    }
+  }
 
   void _incrementCounter() {
     setState(() {
