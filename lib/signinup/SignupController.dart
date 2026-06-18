@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../core/api_service.dart';
+import '../core/tracking/starnest_tracker.dart';
 
 class SignupController extends GetxController {
   final firstNameController = TextEditingController();
@@ -43,7 +44,23 @@ class SignupController extends GetxController {
       "password": passwordController.text,
     });
     isLoading.value = false;
-    return result != null;
+    
+    if (result != null) {
+      final userId = result['userId'] ?? '';
+      final sessionId = result['sessionId'] ?? '';
+      final user = result['raw']?['user'] as Map<String, dynamic>? ?? {};
+      StarNestTracker.instance.sessionStart(
+        token: result['token'] ?? '',
+        userId: userId,
+        sessionId: sessionId,
+        firstName: user['firstName']?.toString() ?? firstNameController.text,
+        lastName: user['lastName']?.toString() ?? lastNameController.text,
+        email: user['email']?.toString() ?? emailController.text,
+        avatarUrl: user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
+      );
+      return true;
+    }
+    return false;
   }
 
   String? validateField(String label, String? value) {

@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "746262119846",
+    "project_id": "starnest-79b3a",
+    "storage_bucket": "starnest-79b3a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746262119846:android:4c50244994ababd0d1fb67",
+        "android_client_info": {
+          "package_name": "com.example.mobilr_app_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746262119846-1hotej682ouaumelcoadh8g4tjrliomv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobilr_app_ui",
+            "certificate_hash": "12190f6a800a23c414e35c66b2149246ac7cf54a"
+          }
+        },
+        {
+          "client_id": "746262119846-lutugl083ts78i6josvbp43btdh0ensg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobilr_app_ui",
+            "certificate_hash": "03338b87d972ab10119c37a64c6d15ca4f703c25"
+          }
+        },
+        {
+          "client_id": "746262119846-a2mdeso0kh11nv34d9ssghq4v9b1q6h1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_66ixaSsbG3L_kz9c4-5ZeqxJ7wntigE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746262119846-a2mdeso0kh11nv34d9ssghq4v9b1q6h1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "746262119846-5r3d20uqq8kcu3lass6vjvkajp0ko5ap.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mobilrAppUi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/tracking/starnest_tracker.dart';
 
 // --- Color Palette from Figma ---
 const Color darkBackgroundColor = Color(0xFF0B0B0B);
@@ -139,6 +140,13 @@ class _CommentCardState extends State<_CommentCard> {
   }
 
   void _handleReviewInteraction(String id, bool isLike) {
+    if (isLike) {
+      if (!isLiked) {
+        StarNestTracker.instance.trackReactionAdd(commentId: id);
+      } else {
+        StarNestTracker.instance.trackReactionRemove(commentId: id);
+      }
+    }
     setState(() {
       if (isLike) {
         if (isLiked) {

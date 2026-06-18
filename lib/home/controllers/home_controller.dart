@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mobilr_app_ui/core/api_service.dart';
+import 'package:mobilr_app_ui/core/tracking/starnest_tracker.dart';
 
 // Assuming your models are in a 'models' directory relative to this file
 // Adjust the path if your project structure is different.
@@ -29,11 +30,17 @@ const Color snackbarWarningColor = Colors.orange;
 const Color snackbarInfoColor = Color(0xFF54B6E0);
 const Color snackbarNeutralColor = Color(0xFF626365);
 
-
 class HomeController extends GetxController {
   var selectedCategory = "Movies".obs;
-  var categories = <String>['Movies', 'Restaurants', 'Gadgets', 'Books', 'Games'].obs;
-  var currentAccentColor = movieAccentColor.obs; // Initialize with default for "Movies"
+  var categories = <String>[
+    'Movies',
+    'Restaurants',
+    'Gadgets',
+    'Books',
+    'Games',
+  ].obs;
+  var currentAccentColor =
+      movieAccentColor.obs; // Initialize with default for "Movies"
 
   final Rx<String?> _viewingMovieId = Rx<String?>(null);
   String? get viewingMovieId => _viewingMovieId.value;
@@ -47,6 +54,7 @@ class HomeController extends GetxController {
   void closeMovieReviews() {
     _viewingMovieId.value = null;
   }
+
   final RxSet<String> savedItemIds = <String>{}.obs;
 
   // 2. A generic method to check if any item is saved.
@@ -56,46 +64,65 @@ class HomeController extends GetxController {
 
   // This method is already correct from our previous conversation
   void toggleItemSaved(String itemId, {String itemName = 'Item'}) {
-    final String itemDisplayName = itemName.length > 20 ? '${itemName.substring(0, 20)}...' : itemName;
+    final String itemDisplayName = itemName.length > 20
+        ? '${itemName.substring(0, 20)}...'
+        : itemName;
 
     if (isItemSaved(itemId)) {
       savedItemIds.remove(itemId);
+      StarNestTracker.instance.trackBookmarkRemove(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: itemId,
+      );
       print("$itemName with ID $itemId unsaved.");
 
       // Show the "Removed" custom snackbar with neutral colors
-      Get.showSnackbar(GetSnackBar(
-        messageText: const _CustomSnackbarWidget(
-          message: 'Removed from your list.',
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.remove,
-          iconColor: snackbarNeutralColor,
-          textColor: snackbarNeutralColor,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const _CustomSnackbarWidget(
+            message: 'Removed from your list.',
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.remove,
+            iconColor: snackbarNeutralColor,
+            textColor: snackbarNeutralColor,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
+      );
     } else {
       savedItemIds.add(itemId);
+      StarNestTracker.instance.trackBookmarkAdd(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: itemId,
+      );
       print("$itemName with ID $itemId saved.");
 
       // Show the "Added" custom snackbar with dynamic accent colors
-      Get.showSnackbar(GetSnackBar(
-        messageText: _CustomSnackbarWidget(
-          message: '$itemDisplayName added to your list!',
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.check,
-          iconColor: currentAccentColor.value,
-          textColor: currentAccentColor.value,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: _CustomSnackbarWidget(
+            message: '$itemDisplayName added to your list!',
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.check,
+            iconColor: currentAccentColor.value,
+            textColor: currentAccentColor.value,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
+      );
     }
   }
 
-  var movieData = MovieDataModel(featured: [], trending: [], upcoming: [], communities: []).obs;
+  var movieData = MovieDataModel(
+    featured: [],
+    trending: [],
+    upcoming: [],
+    communities: [],
+  ).obs;
   var isLoadingMovies = true.obs;
   final RxSet<String> notifiedUpcomingMovies = <String>{}.obs;
   var restaurantData = RestaurantDataModel(
@@ -107,9 +134,9 @@ class HomeController extends GetxController {
   var isLoadingRestaurants = true.obs;
   final RxBool hasLoadedMovies = false.obs;
   final RxBool hasLoadedRestaurants = false.obs;
-final RxBool hasLoadedGadgets = false.obs;
-final RxBool hasLoadedBooks = false.obs;
-final RxBool hasLoadedGames = false.obs;
+  final RxBool hasLoadedGadgets = false.obs;
+  final RxBool hasLoadedBooks = false.obs;
+  final RxBool hasLoadedGames = false.obs;
 
   var gadgetData = GadgetDataModel(
     featured: [],
@@ -123,7 +150,8 @@ final RxBool hasLoadedGames = false.obs;
     featured: [],
     trending: [],
     upcoming: [],
-    communities: [],).obs;
+    communities: [],
+  ).obs;
   var isLoadingBooks = true.obs;
 
   var gameData = GameDataModel(
@@ -143,11 +171,15 @@ final RxBool hasLoadedGames = false.obs;
     _updateAccentColor(selectedCategory.value);
     fetchMovieData();
   }
-  final RxString selectedSurveyOption = "".obs; // Holds the currently selected option
-  final RxBool hasSubmittedSurvey = false.obs; // Tracks if the survey has been submitted
+
+  final RxString selectedSurveyOption =
+      "".obs; // Holds the currently selected option
+  final RxBool hasSubmittedSurvey =
+      false.obs; // Tracks if the survey has been submitted
 
   void selectSurveyOption(String option) {
-    if (!hasSubmittedSurvey.value) { // Only allow selection if not already submitted
+    if (!hasSubmittedSurvey.value) {
+      // Only allow selection if not already submitted
       selectedSurveyOption.value = option;
     }
   }
@@ -158,46 +190,50 @@ final RxBool hasLoadedGames = false.obs;
       print("Survey Submitted: ${selectedSurveyOption.value}");
       hasSubmittedSurvey.value = true;
 
-      Get.showSnackbar(GetSnackBar(
-        messageText: _CustomSnackbarWidget(
-          message: "You selected: ${selectedSurveyOption.value}",
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.check,
-          iconColor: currentAccentColor.value,
-          textColor: currentAccentColor.value,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: _CustomSnackbarWidget(
+            message: "You selected: ${selectedSurveyOption.value}",
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.check,
+            iconColor: currentAccentColor.value,
+            textColor: currentAccentColor.value,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
-
+      );
     } else if (hasSubmittedSurvey.value) {
-      Get.showSnackbar(GetSnackBar(
-        messageText: const _CustomSnackbarWidget(
-          message: "You have already submitted your response.",
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.info_outline,
-          iconColor: snackbarInfoColor,
-          textColor: snackbarInfoColor,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const _CustomSnackbarWidget(
+            message: "You have already submitted your response.",
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.info_outline,
+            iconColor: snackbarInfoColor,
+            textColor: snackbarInfoColor,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
-
+      );
     } else {
-      Get.showSnackbar(GetSnackBar(
-        messageText: const _CustomSnackbarWidget(
-          message: "Please select an option before submitting.",
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.warning_amber_rounded,
-          iconColor: snackbarWarningColor,
-          textColor: snackbarWarningColor,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const _CustomSnackbarWidget(
+            message: "Please select an option before submitting.",
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.warning_amber_rounded,
+            iconColor: snackbarWarningColor,
+            textColor: snackbarWarningColor,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
+      );
     }
   }
 
@@ -210,37 +246,48 @@ final RxBool hasLoadedGames = false.obs;
   void toggleUpcomingMovieNotification(String movieIdOrTitle) {
     if (notifiedUpcomingMovies.contains(movieIdOrTitle)) {
       notifiedUpcomingMovies.remove(movieIdOrTitle);
+      StarNestTracker.instance.trackNotifyDisable(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: movieIdOrTitle,
+      );
       print("Notifications OFF for: $movieIdOrTitle");
 
-      Get.showSnackbar(GetSnackBar(
-        messageText: _CustomSnackbarWidget(
-          message: "No more notifications for $movieIdOrTitle.",
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.notifications_off_outlined,
-          iconColor: snackbarNeutralColor,
-          textColor: snackbarNeutralColor,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: _CustomSnackbarWidget(
+            message: "No more notifications for $movieIdOrTitle.",
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.notifications_off_outlined,
+            iconColor: snackbarNeutralColor,
+            textColor: snackbarNeutralColor,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
-
+      );
     } else {
       notifiedUpcomingMovies.add(movieIdOrTitle);
+      StarNestTracker.instance.trackNotifyEnable(
+        module: selectedCategory.value.toLowerCase(),
+        itemId: movieIdOrTitle,
+      );
       print("Notifications ON for: $movieIdOrTitle");
 
-      Get.showSnackbar(GetSnackBar(
-        messageText: _CustomSnackbarWidget(
-          message: "We'll notify you about $movieIdOrTitle!",
-          backgroundColor: snackbarBackgroundColor,
-          icon: Icons.notifications_active_outlined,
-          iconColor: currentAccentColor.value,
-          textColor: currentAccentColor.value,
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: _CustomSnackbarWidget(
+            message: "We'll notify you about $movieIdOrTitle!",
+            backgroundColor: snackbarBackgroundColor,
+            icon: Icons.notifications_active_outlined,
+            iconColor: currentAccentColor.value,
+            textColor: currentAccentColor.value,
+          ),
+          backgroundColor: Colors.transparent,
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      ));
+      );
     }
   }
 
@@ -248,294 +295,283 @@ final RxBool hasLoadedGames = false.obs;
     return notifiedUpcomingMovies.contains(movieIdOrTitle);
   }
 
-void changeCategory(String category) {
-  if (selectedCategory.value != category) {
-    selectedCategory.value = category;
-    _updateAccentColor(category);
+  void changeCategory(String category) {
+    if (selectedCategory.value != category) {
+      selectedCategory.value = category;
+      _updateAccentColor(category);
 
-    switch (category) {
-      case "Movies":
-        if (!hasLoadedMovies.value) {
-          fetchMovieData();
-        }
-        break;
+      switch (category) {
+        case "Movies":
+          if (!hasLoadedMovies.value) {
+            fetchMovieData();
+          }
+          break;
 
-      case "Restaurants":
-        if (!hasLoadedRestaurants.value) {
-          fetchRestaurantData();
-        }
-        break;
+        case "Restaurants":
+          if (!hasLoadedRestaurants.value) {
+            fetchRestaurantData();
+          }
+          break;
 
-      case "Gadgets":
-        if (!hasLoadedGadgets.value) {
-          fetchGadgetData();
-        }
-        break;
+        case "Gadgets":
+          if (!hasLoadedGadgets.value) {
+            fetchGadgetData();
+          }
+          break;
 
-      case "Books":
-        if (!hasLoadedBooks.value) {
-          fetchBookData();
-        }
-        break;
+        case "Books":
+          if (!hasLoadedBooks.value) {
+            fetchBookData();
+          }
+          break;
 
-      case "Games":
-        if (!hasLoadedGames.value) {
-          fetchGameData();
-        }
-        break;
+        case "Games":
+          if (!hasLoadedGames.value) {
+            fetchGameData();
+          }
+          break;
+      }
     }
   }
-}
 
   void _updateAccentColor(String category) {
     currentAccentColor.value = getAccentColorForCategory(category);
   }
 
   Future<void> fetchMovieData() async {
-  if (hasLoadedMovies.value) return;
+    if (hasLoadedMovies.value) return;
 
-  try {
-    log("🎬 fetchMovieData STARTED");
+    try {
+      //log("🎬 fetchMovieData STARTED");
 
-    isLoadingMovies.value = true;
+      isLoadingMovies.value = true;
 
-    final api = ApiService();
+      final api = ApiService();
 
-    log("📡 Fetching Featured Movies...");
-    final featuredResponse =
-        await api.fetchList('/api/movies/featured');
+      //log("📡 Fetching Featured Movies...");
+      final featuredResponse = await api.fetchList('/api/movies/featured');
 
-    log("✅ Featured Movies Loaded");
+      //log("✅ Featured Movies Loaded");
 
-    log("📡 Fetching Trending Movies...");
-    final trendingResponse =
-        await api.fetchList('/api/movies/trending');
+      //log("📡 Fetching Trending Movies...");
+      final trendingResponse = await api.fetchList('/api/movies/trending');
 
-    log("✅ Trending Movies Loaded");
+      //log("✅ Trending Movies Loaded");
 
-    final featuredMovies = featuredResponse
-        .map((e) {
-          log("🍔 Featured Movies Parsed: ${e.toString()}");
-          return MovieModel.fromApi(e);
-        })
-        .take(10)
-        .toList();
+      final featuredMovies = featuredResponse
+          .map((e) {
+            //log("🍔 Featured Movies Parsed: ${e.toString()}");
+            return MovieModel.fromApi(e);
+          })
+          .take(10)
+          .toList();
 
-    final trendingMovies = trendingResponse
-        .map((e) => MovieModel.fromApi(e))
-        .toList();
+      final trendingMovies = trendingResponse
+          .map((e) => MovieModel.fromApi(e))
+          .toList();
 
-    movieData.value = MovieDataModel(
-      featured: featuredMovies,
-      trending: trendingMovies,
-      upcoming: [],
-      communities: [],
-    );
+      movieData.value = MovieDataModel(
+        featured: featuredMovies,
+        trending: trendingMovies,
+        upcoming: [],
+        communities: [],
+      );
 
-    hasLoadedMovies.value = true;
+      hasLoadedMovies.value = true;
 
-    log("✅ Movie Data Assigned");
-
-  } catch (e, stackTrace) {
-    log("❌ Movie API Error: $e");
-    log("🧨 StackTrace: $stackTrace");
-  } finally {
-    isLoadingMovies.value = false;
-    log("🏁 fetchMovieData FINISHED");
+      //log("✅ Movie Data Assigned");
+    } catch (e, stackTrace) {
+      //log("❌ Movie API Error: $e");
+      //log("🧨 StackTrace: $stackTrace");
+    } finally {
+      isLoadingMovies.value = false;
+      //log("🏁 fetchMovieData FINISHED");
+    }
   }
-}
 
   Future<void> fetchRestaurantData() async {
-  if (hasLoadedRestaurants.value) {
-    log("⛔ Restaurants already loaded. Skipping API call.");
-    return;
+    if (hasLoadedRestaurants.value) {
+      //log("⛔ Restaurants already loaded. Skipping API call.");
+      return;
+    }
+
+    try {
+      //log("🍽 fetchRestaurantData STARTED");
+
+      isLoadingRestaurants.value = true;
+
+      final api = ApiService();
+
+      //log("📡 Fetching Featured Restaurants...");
+      final featuredResponse = await api.fetchList('/api/restaurants/featured');
+
+      //log("✅ Featured Restaurants Loaded");
+
+      //log("📡 Fetching Trending Restaurants...");
+      final trendingResponse = await api.fetchList('/api/restaurants/trending');
+
+      //log("✅ Trending Restaurants Loaded");
+
+      //log("📦 Featured Response Count: ${featuredResponse.length}");
+      //log("📦 Trending Response Count: ${trendingResponse.length}");
+
+      final featuredRestaurants = featuredResponse
+          .map((e) {
+            //log("🍔 Featured Restaurant Parsed: ${e.toString()}");
+            return RestaurantModel.fromApi(e);
+          })
+          .take(10)
+          .toList();
+
+      final trendingRestaurants = trendingResponse.map((e) {
+        //log("🔥 Trending Restaurant Parsed: ${e.toString()}");
+        return RestaurantModel.fromApi(e);
+      }).toList();
+
+      //log("🍽 Featured Restaurants Final Count: ${featuredRestaurants.length}");
+      //log("🍽 Trending Restaurants Final Count: ${trendingRestaurants.length}");
+
+      restaurantData.value = RestaurantDataModel(
+        featured: featuredRestaurants,
+        trending: trendingRestaurants,
+        upcoming: [],
+        communities: [],
+      );
+
+      //log("✅ restaurantData assigned successfully");
+
+      hasLoadedRestaurants.value = true;
+
+      //log("✅ hasLoadedRestaurants set TRUE");
+    } catch (e, stackTrace) {
+      //log("❌ Restaurant API Error: $e");
+      //log("🧨 StackTrace: $stackTrace");
+    } finally {
+      isLoadingRestaurants.value = false;
+      //log("🏁 fetchRestaurantData FINISHED");
+    }
   }
-
-  try {
-    log("🍽 fetchRestaurantData STARTED");
-
-    isLoadingRestaurants.value = true;
-
-    final api = ApiService();
-
-    log("📡 Fetching Featured Restaurants...");
-    final featuredResponse =
-        await api.fetchList('/api/restaurants/featured');
-
-    log("✅ Featured Restaurants Loaded");
-
-    log("📡 Fetching Trending Restaurants...");
-    final trendingResponse =
-        await api.fetchList('/api/restaurants/trending');
-
-    log("✅ Trending Restaurants Loaded");
-
-    log("📦 Featured Response Count: ${featuredResponse.length}");
-    log("📦 Trending Response Count: ${trendingResponse.length}");
-
-    final featuredRestaurants = featuredResponse
-        .map((e) {
-          log("🍔 Featured Restaurant Parsed: ${e.toString()}");
-          return RestaurantModel.fromApi(e);
-        })
-        .take(10)
-        .toList();
-
-    final trendingRestaurants = trendingResponse
-        .map((e) {
-          log("🔥 Trending Restaurant Parsed: ${e.toString()}");
-          return RestaurantModel.fromApi(e);
-        })
-        .toList();
-
-    log("🍽 Featured Restaurants Final Count: ${featuredRestaurants.length}");
-    log("🍽 Trending Restaurants Final Count: ${trendingRestaurants.length}");
-
-    restaurantData.value = RestaurantDataModel(
-      featured: featuredRestaurants,
-      trending: trendingRestaurants,
-      upcoming: [],
-      communities: [],
-    );
-
-    log("✅ restaurantData assigned successfully");
-
-    hasLoadedRestaurants.value = true;
-
-    log("✅ hasLoadedRestaurants set TRUE");
-
-  } catch (e, stackTrace) {
-    log("❌ Restaurant API Error: $e");
-    log("🧨 StackTrace: $stackTrace");
-  } finally {
-    isLoadingRestaurants.value = false;
-    log("🏁 fetchRestaurantData FINISHED");
-  }
-}
 
   Future<void> fetchGadgetData() async {
-  if (hasLoadedGadgets.value) return;
+    if (hasLoadedGadgets.value) return;
 
-  try {
-    isLoadingGadgets.value = true;
+    try {
+      isLoadingGadgets.value = true;
 
-    final api = ApiService();
+      final api = ApiService();
 
-    final responses = await Future.wait([
-      api.fetchList('/api/gadgets/featured'),
-      api.fetchList('/api/gadgets/trending'),
-    ]);
+      final responses = await Future.wait([
+        api.fetchList('/api/gadgets/featured'),
+        api.fetchList('/api/gadgets/trending'),
+      ]);
 
-    final featuredResponse = responses[0];
-    final trendingResponse = responses[1];
+      final featuredResponse = responses[0];
+      final trendingResponse = responses[1];
 
-    final featuredGadgets = featuredResponse
-        .map((e) => GadgetModel.fromApi(e))
-        .take(10)
-        .toList();
+      final featuredGadgets = featuredResponse
+          .map((e) => GadgetModel.fromApi(e))
+          .take(10)
+          .toList();
 
-    final trendingGadgets = trendingResponse
-        .map((e) => GadgetModel.fromApi(e))
-        .toList();
+      final trendingGadgets = trendingResponse
+          .map((e) => GadgetModel.fromApi(e))
+          .toList();
 
-    gadgetData.value = GadgetDataModel(
-      featured: featuredGadgets,
-      trending: trendingGadgets,
-      upcoming: [],
-      communities: [],
-    );
+      gadgetData.value = GadgetDataModel(
+        featured: featuredGadgets,
+        trending: trendingGadgets,
+        upcoming: [],
+        communities: [],
+      );
 
-    hasLoadedGadgets.value = true;
-
-  } catch (e) {
-    log("Gadget API Error: $e");
-  } finally {
-    isLoadingGadgets.value = false;
+      hasLoadedGadgets.value = true;
+    } catch (e) {
+      //log("Gadget API Error: $e");
+    } finally {
+      isLoadingGadgets.value = false;
+    }
   }
-}
 
   Future<void> fetchBookData() async {
-  if (hasLoadedBooks.value) return;
+    if (hasLoadedBooks.value) return;
 
-  try {
-    isLoadingBooks.value = true;
+    try {
+      isLoadingBooks.value = true;
 
-    final api = ApiService();
+      final api = ApiService();
 
-    final responses = await Future.wait([
-      api.fetchList('/api/books/featured'),
-      api.fetchList('/api/books/trending'),
-    ]);
+      final responses = await Future.wait([
+        api.fetchList('/api/books/featured'),
+        api.fetchList('/api/books/trending'),
+      ]);
 
-    final featuredResponse = responses[0];
-    final trendingResponse = responses[1];
+      final featuredResponse = responses[0];
+      final trendingResponse = responses[1];
 
-    final featuredBooks = featuredResponse
-        .map((e) => BookModel.fromApi(e))
-        .take(10)
-        .toList();
+      final featuredBooks = featuredResponse
+          .map((e) => BookModel.fromApi(e))
+          .take(10)
+          .toList();
 
-    final trendingBooks = trendingResponse
-        .map((e) => BookModel.fromApi(e))
-        .toList();
+      final trendingBooks = trendingResponse
+          .map((e) => BookModel.fromApi(e))
+          .toList();
 
-    bookData.value = BookDataModel(
-      featured: featuredBooks,
-      trending: trendingBooks,
-      upcoming: [],
-      communities: [],
-    );
+      bookData.value = BookDataModel(
+        featured: featuredBooks,
+        trending: trendingBooks,
+        upcoming: [],
+        communities: [],
+      );
 
-    hasLoadedBooks.value = true;
-
-  } catch (e) {
-    log("Book API Error: $e");
-  } finally {
-    isLoadingBooks.value = false;
+      hasLoadedBooks.value = true;
+    } catch (e) {
+      //log("Book API Error: $e");
+    } finally {
+      isLoadingBooks.value = false;
+    }
   }
-}
 
-Future<void> fetchGameData() async {
-  if (hasLoadedGames.value) return;
+  Future<void> fetchGameData() async {
+    if (hasLoadedGames.value) return;
 
-  try {
-    isLoadingGames.value = true;
+    try {
+      isLoadingGames.value = true;
 
-    final api = ApiService();
+      final api = ApiService();
 
-    final responses = await Future.wait([
-      api.fetchList('/api/games/featured'),
-      api.fetchList('/api/games/trending'),
-    ]);
+      final responses = await Future.wait([
+        api.fetchList('/api/games/featured'),
+        api.fetchList('/api/games/trending'),
+      ]);
 
-    final featuredResponse = responses[0];
-    final trendingResponse = responses[1];
+      final featuredResponse = responses[0];
+      final trendingResponse = responses[1];
 
-    final featuredGames = featuredResponse
-        .map((e) => GameModel.fromApi(e))
-        .take(10)
-        .toList();
+      final featuredGames = featuredResponse
+          .map((e) => GameModel.fromApi(e))
+          .take(10)
+          .toList();
 
-    final trendingGames = trendingResponse
-        .map((e) => GameModel.fromApi(e))
-        .toList();
+      final trendingGames = trendingResponse
+          .map((e) => GameModel.fromApi(e))
+          .toList();
 
-    gameData.value = GameDataModel(
-      featured: featuredGames,
-      trending: trendingGames,
-      upcoming: [],
-      communities: [],
-      discordServers: [],
-    );
+      gameData.value = GameDataModel(
+        featured: featuredGames,
+        trending: trendingGames,
+        upcoming: [],
+        communities: [],
+        discordServers: [],
+      );
 
-    hasLoadedGames.value = true;
-
-  } catch (e) {
-    log("Game API Error: $e");
-  } finally {
-    isLoadingGames.value = false;
+      hasLoadedGames.value = true;
+    } catch (e) {
+      //log("Game API Error: $e");
+    } finally {
+      isLoadingGames.value = false;
+    }
   }
-}
 
   Color getAccentColorForCategory(String category) {
     switch (category) {
@@ -554,7 +590,6 @@ Future<void> fetchGameData() async {
     }
   }
 }
-
 
 class _CustomSnackbarWidget extends StatelessWidget {
   final String message;
@@ -579,10 +614,7 @@ class _CustomSnackbarWidget extends StatelessWidget {
       decoration: ShapeDecoration(
         color: backgroundColor,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 2,
-            color: textColor,
-          ),
+          side: BorderSide(width: 2, color: textColor),
           borderRadius: BorderRadius.circular(12),
         ),
       ),
@@ -595,7 +627,9 @@ class _CustomSnackbarWidget extends StatelessWidget {
             height: 20,
             decoration: ShapeDecoration(
               color: iconColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
             child: Icon(icon, color: backgroundColor, size: 14),
           ),

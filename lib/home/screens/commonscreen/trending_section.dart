@@ -12,7 +12,7 @@ Widget TrendingCarousel<T>({
   Key? key,
   required BuildContext context,
   required RxList<T> items, // Now accepts an RxList for reactivity
-  required Widget Function(T item) cardBuilder,
+  required Widget Function(T item, int index) cardBuilder,
 }) {
   final HomeController controller = Get.find();
 
@@ -55,7 +55,7 @@ Widget TrendingCarousel<T>({
                 final item = items[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0), // A standard horizontal padding
-                  child: cardBuilder(item),
+                  child: cardBuilder(item, index),
                 );
               },
             ),

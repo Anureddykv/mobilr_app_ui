@@ -17,7 +17,7 @@ class DiscordSection extends StatelessWidget {
       items: servers,
       listHeight: 160,
 
-      cardBuilder: (context, server) {
+      cardBuilder: (context, server, index) {
         return DiscordServerCard(
           title: server['name']!,
           description: server['desc']!,

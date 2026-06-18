@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobilr_app_ui/core/auth_service.dart';
+import 'package:mobilr_app_ui/home/screens/home_screen.dart';
+import 'package:mobilr_app_ui/onbording/onboarding_controller.dart';
+import 'package:mobilr_app_ui/onbording/onboarding_interests_screen.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSigninStarnest.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSignup.dart';
 import 'package:mobilr_app_ui/splash/SplashMessageScreen.dart';
+import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
 
-class CredentialScreenSignin extends StatelessWidget {
+class CredentialScreenSignin extends StatefulWidget {
   const CredentialScreenSignin({super.key});
+
+  @override
+  State<CredentialScreenSignin> createState() => _CredentialScreenSigninState();
+}
+
+class _CredentialScreenSigninState extends State<CredentialScreenSignin> {
+  bool _isGoogleLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -12,82 +25,103 @@ class CredentialScreenSignin extends StatelessWidget {
       backgroundColor: const Color(0xFF0B0B0B),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            const Text(
-              'Sign in before you give\nreview',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFFE6EAED),
-                fontSize: 24,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                height: 1.2,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              const Text(
+                'Sign in before you give\nreview',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFFE6EAED),
+                  fontSize: 24,
+                  fontFamily: 'General Sans Variable',
+                  fontWeight: FontWeight.w600,
+                  height: 1.2,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Social Buttons
-            _buildSocialButtons(context),
+              // Social Buttons
+              _buildSocialButtons(context),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Divider with "or"
-            _buildDivider(),
+              // Divider with "or"
+              _buildDivider(),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Create Account Button
-            _actionButton(
-              text: "Create an Account",
-              bgColor: const Color(0xFFE6EAED),
-              textColor: const Color(0xFF0B0B0B),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>  CredentialScreenSignup(),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
+              // Create Account Button
+              _actionButton(
+                text: "Create an Account",
+                bgColor: const Color(0xFFE6EAED),
+                textColor: const Color(0xFF0B0B0B),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => CredentialScreenSignup()),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
 
-            // Terms and Conditions
-            _buildTermsAndConditions(),
-            const Spacer(),
+              // Terms and Conditions
+              _buildTermsAndConditions(),
+              const Spacer(),
 
-
-            // Bottom Logo
-            Image.asset("assets/images/ic_logo.png", height: 32, width: 260),
-            const SizedBox(height: 16),
-          ],
+              // Bottom Logo
+              Image.asset("assets/images/ic_logo.png", height: 32, width: 260),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Extracted method for building social buttons
-  Widget _buildSocialButtons(BuildContext context) {
-    // A helper function to reduce navigation boilerplate
-    void navigateToSplash() {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>  SplashMessageScreen(
-            title: "Sign in\nSuccessfully",
-            circleColor: Color(0xFF9DD870),
-            backgroundColor: Color(0xFF0B0B0B),
-            headerImageUrl: "https://placehold.co/375x48",
-            icon: Icon(Icons.check, size: 48, color: Colors.black),
-            nextPage: CredentialScreenSignup(),
+  // Real Google Sign-In handler using AuthService
+  Future<void> _handleGoogleSignIn() async {
+    if (_isGoogleLoading) return;
+    setState(() => _isGoogleLoading = true);
+
+    final result = await AuthService.instance.signInWithGoogle();
+
+    if (!mounted) return;
+    setState(() => _isGoogleLoading = false);
+
+    if (result != null) {
+      final isNewUser = result['isNewUser'] as bool? ?? false;
+      if (isNewUser) {
+        Get.put(OnboardingController());
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SplashMessageScreen(
+              title: "You are successfully\nSigned up to Starnest",
+              circleColor: const Color(0xFF9DD870),
+              backgroundColor: const Color(0xFF0B0B0B),
+              headerImageUrl: "https://placehold.co/375x48",
+              icon: const Icon(Icons.check, size: 48, color: Colors.black),
+              nextPage: OnboardingInterestsScreen(),
+            ),
           ),
-        ),
+        );
+      } else {
+        Get.offAll(() => const HomeScreen());
+      }
+    } else {
+      SnackBarUtils.showTopSnackBar(
+        context,
+        'Google sign-in failed. Please try again.',
+        isError: true,
       );
     }
+  }
 
+  // Extracted method for building social buttons
+  Widget _buildSocialButtons(BuildContext context) {
     return Column(
       children: [
         _socialButton(
@@ -97,30 +131,85 @@ class CredentialScreenSignin extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) =>  const CredentialScreenSigninStarnest(),
+                builder: (_) => const CredentialScreenSigninStarnest(),
               ),
             );
           },
         ),
         const SizedBox(height: 12),
-        _socialButton(
-          text: "Continue with Google",
-          prefix: Image.asset("assets/images/Google.png", height: 24, width: 24),
-          onTap: navigateToSplash,
-        ),
-        const SizedBox(height: 12),
-        _socialButton(
-          text: "Continue with Facebook",
-          prefix: Image.asset("assets/images/Facebook.png", height: 24, width: 24),
-          onTap: navigateToSplash,
-        ),
-        const SizedBox(height: 12),
-        _socialButton(
-          text: "Continue with Apple",
-          prefix: Image.asset("assets/images/Apple.png", height: 24, width: 24),
-          onTap: navigateToSplash,
-        ),
+        // Google button — shows a spinner while sign-in is in progress
+        _googleButton(),
+        // const SizedBox(height: 12),
+        // _socialButton(
+        //   text: "Continue with Facebook",
+        //   prefix: Image.asset(
+        //     "assets/images/Facebook.png",
+        //     height: 24,
+        //     width: 24,
+        //   ),
+        //   onTap: navigateToSplash,
+        // ),
+        // const SizedBox(height: 12),
+        // _socialButton(
+        //   text: "Continue with Apple",
+        //   prefix: Image.asset("assets/images/Apple.png", height: 24, width: 24),
+        //   onTap: navigateToSplash,
+        // ),
       ],
+    );
+  }
+
+  /// Google-specific button that shows a loading spinner during sign-in.
+  Widget _googleButton() {
+    return GestureDetector(
+      onTap: _isGoogleLoading ? null : _handleGoogleSignIn,
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          color: const Color(0xFF141414),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _isGoogleLoading
+                ? const Color(0xFF555555)
+                : const Color(0xFF333333),
+            width: 2,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_isGoogleLoading)
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFE6EAED)),
+                ),
+              )
+            else ...[
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Image.asset(
+                  "assets/images/Google.png",
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              const Text(
+                "Continue with Google",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "General Sans Variable",
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFFE6EAED),
+                  height: 0.72,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
@@ -162,7 +251,8 @@ class CredentialScreenSignin extends StatelessWidget {
           ),
           children: [
             const TextSpan(
-              text: 'By signing in using Google/Apple/Facebook you acknowledge that you have read and agree to our ',
+              text:
+                  'By signing in using Google/Apple/Facebook you acknowledge that you have read and agree to our ',
             ),
             TextSpan(
               text: 'Terms & Conditions',
@@ -208,10 +298,7 @@ class CredentialScreenSignin extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: prefix,
-            ),
+            Padding(padding: const EdgeInsets.only(right: 12), child: prefix),
             Text(
               text,
               style: const TextStyle(

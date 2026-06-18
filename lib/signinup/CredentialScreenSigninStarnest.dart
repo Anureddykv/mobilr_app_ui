@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
 import 'package:mobilr_app_ui/utils/snackbar_utils.dart';
+import '../core/tracking/starnest_tracker.dart';
 import '../core/api_service.dart';
 
 class CredentialScreenSigninStarnest extends StatefulWidget {
@@ -153,6 +154,18 @@ class _CredentialScreenSigninStarnestState extends State<CredentialScreenSigninS
           });
           
           if (result != null) {
+            final userId = result['userId'] ?? '';
+            final sessionId = result['sessionId'] ?? '';
+            final user = result['raw']?['user'] as Map<String, dynamic>? ?? {};
+            StarNestTracker.instance.sessionStart(
+              token: result['token'] ?? '',
+              userId: userId,
+              sessionId: sessionId,
+              firstName: user['firstName']?.toString(),
+              lastName: user['lastName']?.toString(),
+              email: user['email']?.toString(),
+              avatarUrl: user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
+            );
             Get.offAll(() => const HomeScreen());
           } else {
             SnackBarUtils.showTopSnackBar(context, "Invalid username or password", isError: true);
