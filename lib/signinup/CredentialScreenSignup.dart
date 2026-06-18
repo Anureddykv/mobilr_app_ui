@@ -88,37 +88,48 @@ class CredentialScreenSignup extends StatelessWidget {
   /// Builds the main "Create Account" button
   Widget _buildCreateAccountButton(BuildContext context) {
     return Obx(() => GestureDetector(
-      onTap: controller.isButtonEnabled.value
-          ? () {
+      onTap: controller.isButtonEnabled.value && !controller.isLoading.value
+          ? () async {
         if (_formKey.currentState!.validate()) {
-          Get.put(OnboardingController());
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => SplashMessageScreen(
-                title: "You are successfully\nSigned up to Starnest",
-                circleColor: const Color(0xFF9DD870),
-                backgroundColor: const Color(0xFF0B0B0B),
-                headerImageUrl: "https://placehold.co/375x48",
-                // Corrected icon color for visibility
-                icon: const Icon(Icons.check, size: 48, color: Colors.black),
-                nextPage: OnboardingInterestsScreen(),
+          final success = await controller.registerUser();
+          if (success) {
+            Get.put(OnboardingController());
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SplashMessageScreen(
+                  title: "You are successfully\nSigned up to Starnest",
+                  circleColor: const Color(0xFF9DD870),
+                  backgroundColor: const Color(0xFF0B0B0B),
+                  headerImageUrl: "https://placehold.co/375x48",
+                  // Corrected icon color for visibility
+                  icon: const Icon(Icons.check, size: 48, color: Colors.black),
+                  nextPage: OnboardingInterestsScreen(),
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Signup failed. Please try again!')));
+          }
         }
       }
           : null,
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: controller.isButtonEnabled.value
+          color: controller.isButtonEnabled.value && !controller.isLoading.value
               ? const Color(0xFFE6EAED)
               : Colors.grey[800], // Darker grey for disabled state
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.center,
-        child: Text(
+        child: controller.isLoading.value 
+          ? const SizedBox(
+              width: 20, 
+              height: 20, 
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+            )
+          : Text(
           "Create an Account",
           style: TextStyle(
             color: controller.isButtonEnabled.value

@@ -52,6 +52,68 @@ class RestaurantModel {
       joinLink: json['joinLink'] as String?,
     );
   }
+
+factory RestaurantModel.fromApi(Map<String, dynamic> json) {
+  return RestaurantModel(
+    id: json['_id']?.toString() ??
+        json['id']?.toString() ??
+        'res_${DateTime.now().millisecondsSinceEpoch}',
+
+    name: json['name'] ??
+        json['title'] ??
+        'Unknown Restaurant',
+
+    imageUrl:
+        (json['gallery'] != null &&
+                (json['gallery'] as List).isNotEmpty)
+            ? json['gallery'][0].toString()
+            : json['imageUrl'] ??
+                json['poster'] ??
+                json['thumbnail'] ??
+                'https://via.placeholder.com/355x200?text=No+Image',
+
+    // ✅ FIXED RATING
+    rating:
+        (json['rating'] is Map
+                ? json['rating']['star']
+                : json['rating']) is num
+            ? ((json['rating'] is Map
+                    ? json['rating']['star']
+                    : json['rating']) as num)
+                .toDouble()
+            : 0.0,
+
+    // ✅ FIXED CATEGORY
+    cuisineType:
+        json['categories'] is List
+            ? (json['categories'] as List).join(', ')
+            : json['cuisineType'] ??
+                json['cuisine'] ??
+                json['category'],
+
+    eta: json['eta']?.toString() ?? "25-30 mins",
+
+    // ✅ FIXED ADDRESS
+    address:
+        json['address'] is Map
+            ? "${json['address']['street'] ?? ''}, "
+              "${json['address']['city'] ?? ''}"
+            : json['address']?.toString(),
+
+    offers: (json['offers'] as List?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [],
+
+    eventTitle: json['eventTitle']?.toString(),
+
+    eventDate: json['eventDate']?.toString(),
+
+    eventDescription: json['eventDescription']?.toString(),
+
+    joinLink: json['joinLink']?.toString(),
+  );
+}
 }
 
 class RestaurantDataModel {

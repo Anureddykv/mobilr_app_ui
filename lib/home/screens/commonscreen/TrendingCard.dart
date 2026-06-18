@@ -185,40 +185,46 @@ class TrendingCard extends StatelessWidget {
 
   // Helper to build the details row with separator dots
   Widget _buildDetailsRow(String detailsString) {
-    final items = detailsString.split(',').map((e) => e.trim()).toList();
-    List<Widget> widgets = [];
-    for (int i = 0; i < items.length; i++) {
-      widgets.add(Text(
-        items[i],
-        style: const TextStyle(
-          color: secondaryTextColor,
-          fontSize: 10,
-          fontFamily: 'General Sans Variable',
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.50,
-        ),
-      ));
-      if (i < items.length - 1) {
-        widgets.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Container(
-              width: 3,
-              height: 3,
-              decoration: const ShapeDecoration(
-                color: secondaryTextColor,
-                shape: OvalBorder(),
+  final items = detailsString.split(',').map((e) => e.trim()).toList();
+
+  return Text.rich(
+    TextSpan(
+      children: [
+        for (int i = 0; i < items.length; i++) ...[
+          TextSpan(
+            text: items[i],
+          ),
+          if (i < items.length - 1)
+            const WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: SizedBox(
+                  width: 3,
+                  height: 3,
+                  child: DecoratedBox(
+                    decoration: ShapeDecoration(
+                      color: secondaryTextColor,
+                      shape: OvalBorder(),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      }
-    }
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: widgets,
-    );
-  }
+        ],
+      ],
+    ),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: const TextStyle(
+      color: secondaryTextColor,
+      fontSize: 10,
+      fontFamily: 'General Sans Variable',
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.50,
+    ),
+  );
+}
 
   // Helper to build a rating pill
   Widget _buildRatingPill({

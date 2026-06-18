@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobilr_app_ui/core/user_session.dart';
 import 'package:mobilr_app_ui/home/controllers/home_controller.dart';
 import 'package:mobilr_app_ui/settings/admin_screen_adding_new_title.dart';
 import 'package:mobilr_app_ui/settings/settings_screen.dart';
@@ -40,31 +41,46 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final HomeController homeController = Get.find<HomeController>();
+  late final UserProfile _userProfile;
 
-  // Mock data initialized here
-  final UserProfile _userProfile = UserProfile(
-    firstName: "Rohit",
-    lastName: "Parvathala",
-    email: "example@gmail.com",
-    avatarUrl: "https://placehold.co/72x72/FFFFFF/000000?text=R",
-    interests: {
-      'Movies': ['Action', 'Thriller', 'Telugu', 'Prabhas', 'NTR', 'RDJ'],
-      'Books': ['Fiction', 'Self Help', 'Fantasy'],
-      'Cuisines': ['Chinese', 'South India', 'South American'],
-    },
-    myLists: {
-      'Movies': [
-        "https://placehold.co/120x120/E05473/000000?text=RRR",
-        "", // This will now show a fallback card
-      ],
-      'Books': [
-        "https://placehold.co/120x120/54E0A1/000000?text=Ikigai"
-      ],
-      'Games': [
-        "https://placehold.co/120x120/8B54E0/000000?text=GTA+VI"
-      ],
-    },
-  );
+  @override
+  void initState() {
+    super.initState();
+    final session = UserSession.instance;
+    final fName = session.firstName ?? '';
+    final lName = session.lastName ?? '';
+    final email = session.email ?? '';
+    final avatar = session.avatarUrl ?? '';
+
+    final String initial = fName.isNotEmpty 
+        ? fName[0].toUpperCase() 
+        : (email.isNotEmpty ? email[0].toUpperCase() : 'U');
+    final fallbackAvatar = "https://placehold.co/72x72/FFFFFF/000000?text=$initial";
+
+    _userProfile = UserProfile(
+      firstName: fName.isNotEmpty ? fName : "Rohit",
+      lastName: lName.isNotEmpty ? lName : "Parvathala",
+      email: email.isNotEmpty ? email : "example@gmail.com",
+      avatarUrl: avatar.isNotEmpty ? avatar : fallbackAvatar,
+      interests: {
+        'Movies': ['Action', 'Thriller', 'Telugu', 'Prabhas', 'NTR', 'RDJ'],
+        'Books': ['Fiction', 'Self Help', 'Fantasy'],
+        'Cuisines': ['Chinese', 'South India', 'South American'],
+      },
+      myLists: {
+        'Movies': [
+          "https://placehold.co/120x120/E05473/000000?text=RRR",
+          "", // This will now show a fallback card
+        ],
+        'Books': [
+          "https://placehold.co/120x120/54E0A1/000000?text=Ikigai"
+        ],
+        'Games': [
+          "https://placehold.co/120x120/8B54E0/000000?text=GTA+VI"
+        ],
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

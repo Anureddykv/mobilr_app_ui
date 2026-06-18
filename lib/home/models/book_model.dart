@@ -36,6 +36,64 @@ class BookModel {
       description: json['description'] as String?,
     );
   }
+  factory BookModel.fromApi(Map<String, dynamic> json) {
+  final ratingData = json['rating'];
+
+  return BookModel(
+    id: json['_id']?.toString() ??
+        json['id']?.toString() ??
+        DateTime.now().millisecondsSinceEpoch.toString(),
+
+    // ✅ Name / Title
+    title: json['title']?.toString() ??
+        json['name']?.toString() ??
+        'Unknown Title',
+
+    // ✅ Author
+    author: json['author']?.toString() ??
+        json['writer']?.toString() ??
+        'Unknown Author',
+
+    // ✅ Gallery Image Support
+    imageUrl:
+        (json['gallery'] is List &&
+                (json['gallery'] as List).isNotEmpty)
+            ? json['gallery'][0].toString()
+            : json['imageUrl']?.toString() ??
+                json['poster']?.toString() ??
+                json['thumbnail']?.toString() ??
+                'https://via.placeholder.com/200x300?text=No+Cover',
+
+    // ✅ Rating Object Support
+    rating: ratingData is Map
+        ? (ratingData['star'] as num?)?.toDouble()
+        : (ratingData as num?)?.toDouble(),
+
+    // ✅ Votes Inside Rating
+    votes: ratingData is Map
+        ? ratingData['votes']?.toString()
+        : json['votes']?.toString(),
+
+    // ✅ Type → Genres
+    genres: json['genres'] is List
+        ? (json['genres'] as List)
+            .map((e) => e.toString())
+            .toList()
+        : json['type'] != null
+            ? [json['type'].toString()]
+            : [],
+
+    // ✅ Release Date
+    releaseDate:
+        json['releaseDate']?.toString() ??
+        json['createdAt']?.toString(),
+
+    // ✅ Description
+    description:
+        json['description']?.toString() ??
+        "No description available.",
+  );
+}
 }
 
 class BookDataModel {

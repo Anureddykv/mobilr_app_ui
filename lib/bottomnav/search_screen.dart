@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../core/tracking/starnest_tracker.dart';
 
 import '../review/MainReviewScreenBooks.dart';
 import '../review/MainReviewScreenMovies.dart';
@@ -174,6 +175,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _activateAiSearch() {
     if (_searchQuery.isNotEmpty && !_isAiSearchActive) {
+      StarNestTracker.instance.trackSearch(query: _searchQuery);
       setState(() {
         _isAiSearchActive = true;
         _performSearch();
@@ -261,6 +263,11 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _navigateToReviewScreen(SearchResult result) {
+    StarNestTracker.instance.trackClick(
+      module: result.id.split('_').first,
+      itemId: result.id,
+      section: 'search_results',
+    );
     Widget targetScreen;
     if (result.id.startsWith("movie_")) {
       targetScreen = MainReviewScreenMovies(movieId: result.id);

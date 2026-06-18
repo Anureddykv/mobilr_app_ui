@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../core/api_service.dart';
+import '../core/tracking/starnest_tracker.dart';
 
 class SignupController extends GetxController {
   final firstNameController = TextEditingController();
@@ -9,6 +11,7 @@ class SignupController extends GetxController {
   final passwordController = TextEditingController();
 
   var isButtonEnabled = false.obs;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -28,6 +31,36 @@ class SignupController extends GetxController {
         _validatePassword(passwordController.text) == null;
 
     isButtonEnabled.value = isValid;
+  }
+
+  Future<bool> registerUser() async {
+    isLoading.value = true;
+    final api = ApiService();
+    final result = await api.signup({
+      "firstName": firstNameController.text,
+      "lastName": lastNameController.text,
+      "email": emailController.text,
+      "phone": phoneController.text,
+      "password": passwordController.text,
+    });
+    isLoading.value = false;
+    
+    if (result != null) {
+      final userId = result['userId'] ?? '';
+      final sessionId = result['sessionId'] ?? '';
+      final user = result['raw']?['user'] as Map<String, dynamic>? ?? {};
+      StarNestTracker.instance.sessionStart(
+        token: result['token'] ?? '',
+        userId: userId,
+        sessionId: sessionId,
+        firstName: user['firstName']?.toString() ?? firstNameController.text,
+        lastName: user['lastName']?.toString() ?? lastNameController.text,
+        email: user['email']?.toString() ?? emailController.text,
+        avatarUrl: user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
+      );
+      return true;
+    }
+    return false;
   }
 
   String? validateField(String label, String? value) {
