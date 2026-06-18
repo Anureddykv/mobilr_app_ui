@@ -23,9 +23,28 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
   final List<File> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
 
-  final List<String> types = ['Film', 'TV Series', 'OTT Series', 'Anime', 'Animated', 'Others'];
-  final List<String> statuses = ['Released', 'Upcoming', 'Pre Production', 'Post Production', 'Announced'];
-  final List<String> roles = ['Director/Producer/Writer', 'a member of the Cast / Crew', 'PR/Publicist/Agent', 'Fan', 'Non of the above'];
+  final List<String> types = [
+    'Film',
+    'TV Series',
+    'OTT Series',
+    'Anime',
+    'Animated',
+    'Others',
+  ];
+  final List<String> statuses = [
+    'Released',
+    'Upcoming',
+    'Pre Production',
+    'Post Production',
+    'Announced',
+  ];
+  final List<String> roles = [
+    'Director/Producer/Writer',
+    'a member of the Cast / Crew',
+    'PR/Publicist/Agent',
+    'Fan',
+    'Non of the above',
+  ];
 
   // Function to pick images
   Future<void> _pickImages() async {
@@ -39,10 +58,14 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
 
   // Unified Submit Logic (Formerly the Go button logic)
   void _handleSubmit() {
-    if (selectedType == null || selectedStatus == null || _titleController.text.isEmpty) {
+    if (selectedType == null ||
+        selectedStatus == null ||
+        _titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Please fill all required fields (Title, Type, and Status)"),
+          content: Text(
+            "Please fill all required fields (Title, Type, and Status)",
+          ),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -63,12 +86,20 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
         backgroundColor: const Color(0xFF1F1F1F),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           '',
-          style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'General Sans Variable'),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontFamily: 'General Sans Variable',
+          ),
         ),
         actions: [
           // Moved "Go" functionality here to the AppBar as a "Save" action
@@ -100,7 +131,12 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
                   ),
                 ),
               ),
-              padding: const EdgeInsets.only(top: 24, left: 10, right: 10, bottom: 100),
+              padding: const EdgeInsets.only(
+                top: 24,
+                left: 10,
+                right: 10,
+                bottom: 100,
+              ),
               child: Column(
                 spacing: 24,
                 children: [
@@ -111,13 +147,21 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
                       children: [
                         const Text(
                           'Add new Title',
-                          style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'General Sans Variable'),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'General Sans Variable',
+                          ),
                         ),
-                        const SizedBox(width: 10,),
+                        const SizedBox(width: 10),
                         const Padding(
                           padding: EdgeInsets.only(top: 2.0),
-                          child: Icon(Icons.info_outline_rounded, size: 14, color: Colors.white,),
-                        )
+                          child: Icon(
+                            Icons.info_outline_rounded,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -153,7 +197,15 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
             padding: const EdgeInsets.all(14),
             child: Column(
               spacing: 12,
-              children: types.map((t) => _buildSelectionRow(t, selectedType, (val) => setState(() => selectedType = val))).toList(),
+              children: types
+                  .map(
+                    (t) => _buildSelectionRow(
+                      t,
+                      selectedType,
+                      (val) => setState(() => selectedType = val),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
 
@@ -162,7 +214,15 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
             padding: const EdgeInsets.all(14),
             child: Column(
               spacing: 12,
-              children: statuses.map((s) => _buildSelectionRow(s, selectedStatus, (val) => setState(() => selectedStatus = val))).toList(),
+              children: statuses
+                  .map(
+                    (s) => _buildSelectionRow(
+                      s,
+                      selectedStatus,
+                      (val) => setState(() => selectedStatus = val),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
 
@@ -172,14 +232,36 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
             child: Container(
               height: 33,
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(color: const Color(0xFF0B0B0B), borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0B0B0B),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: selectedRole == "Choose" ? null : selectedRole,
-                  hint: Text(selectedRole, style: const TextStyle(color: Color(0xFF626365), fontSize: 10)),
+                  hint: Text(
+                    selectedRole,
+                    style: const TextStyle(
+                      color: Color(0xFF626365),
+                      fontSize: 10,
+                    ),
+                  ),
                   dropdownColor: const Color(0xFF141414),
                   isExpanded: true,
-                  items: roles.map((r) => DropdownMenuItem(value: r, child: Text(r, style: const TextStyle(color: Colors.white, fontSize: 10)))).toList(),
+                  items: roles
+                      .map(
+                        (r) => DropdownMenuItem(
+                          value: r,
+                          child: Text(
+                            r,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (val) => setState(() => selectedRole = val!),
                 ),
               ),
@@ -217,7 +299,10 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
                 itemBuilder: (context, index) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.file(_selectedImages[index], fit: BoxFit.cover),
+                    child: Image.file(
+                      _selectedImages[index],
+                      fit: BoxFit.cover,
+                    ),
                   );
                 },
               ),
@@ -238,7 +323,10 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
                 children: [
                   Icon(Icons.add_a_photo_outlined, color: Colors.white54),
                   SizedBox(height: 8),
-                  Text('Select Images', style: TextStyle(color: Colors.white, fontSize: 10)),
+                  Text(
+                    'Select Images',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
                 ],
               ),
             ),
@@ -246,7 +334,11 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
 
           Padding(
             padding: const EdgeInsets.all(14),
-            child: _buildTextField(_descriptionController, "Describe your view", fontSize: 8),
+            child: _buildTextField(
+              _descriptionController,
+              "Describe your view",
+              fontSize: 12,
+            ),
           ),
         ],
       ),
@@ -270,7 +362,7 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(width: 10),
           if (showInfo)
             const Padding(
               padding: EdgeInsets.only(top: 4.0),
@@ -285,37 +377,60 @@ class _AdminScreenAddingNewTitleState extends State<AdminScreenAddingNewTitle> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, {double fontSize = 10}) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint, {
+    double fontSize = 10,
+  }) {
     return Container(
       height: 33,
-      decoration: BoxDecoration(color: const Color(0xFF0B0B0B), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B0B0B),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.white, fontSize: fontSize),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(color: const Color(0xFF626365), fontSize: fontSize),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          hintStyle: TextStyle(
+            color: const Color(0xFF626365),
+            fontSize: fontSize,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 12,
+          ),
           border: InputBorder.none,
         ),
       ),
     );
   }
 
-  Widget _buildSelectionRow(String label, String? groupVal, Function(String) onTap) {
+  Widget _buildSelectionRow(
+    String label,
+    String? groupVal,
+    Function(String) onTap,
+  ) {
     bool isSelected = label == groupVal;
     return GestureDetector(
       onTap: () => onTap(label),
       child: Row(
         children: [
           Container(
-            width: 16, height: 16,
+            width: 16,
+            height: 16,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: isSelected ? Colors.white : const Color(0xFF626365), width: 1),
+              border: Border.all(
+                color: isSelected ? Colors.white : const Color(0xFF626365),
+                width: 1,
+              ),
               color: isSelected ? Colors.white : Colors.transparent,
             ),
-            child: isSelected ? const Icon(Icons.check, size: 10, color: Colors.black) : null,
+            child: isSelected
+                ? const Icon(Icons.check, size: 10, color: Colors.black)
+                : null,
           ),
           const SizedBox(width: 10),
           Text(

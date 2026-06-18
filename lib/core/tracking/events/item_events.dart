@@ -30,9 +30,9 @@ mixin ItemEvents {
   }) {
     unawaited(TrackingClient.instance.post('/api/$module/$itemId/click', {
       "user_id": userId ?? TrackingClient.instance.userId,
-      "session_id": sessionId,
-      "context": (section != null || position != null) 
-          ? {"section": section, "position": position} 
+      "session_id": sessionId ?? TrackingClient.instance.sessionId,
+      "context": (section != null || position != null)
+          ? {"section": section, "position": position}
           : null,
     }));
   }

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 Widget ReusableCarousel<T>(BuildContext context, {
   required RxList<T> items,
-  required Widget Function(T item) cardBuilder,
+  required Widget Function(T item, int index) cardBuilder,
   double viewportFraction = 1.0,
   double cardContentHeight = 140.0,
   ValueChanged<int>? onPageChanged,
@@ -39,7 +39,7 @@ Widget ReusableCarousel<T>(BuildContext context, {
             },
             itemBuilder: (context, index) {
               final item = items[index];
-             return cardBuilder(item);
+             return cardBuilder(item, index);
             },
           ),
         ),

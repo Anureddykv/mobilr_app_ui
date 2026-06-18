@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen>
               context,
               items: movieData.featured.obs,
               controller: controller,
-              cardBuilder: (movie) {
+              cardBuilder: (movie, index) {
                 return FeaturedContentCardLarge(
                   imageUrl: movie.imageUrl,
                   title: movie.title ?? 'Unknown Movie',
@@ -262,6 +262,7 @@ class _HomeScreenState extends State<HomeScreen>
                       module: 'movies/movie',
                       itemId: movie.id,
                       section: 'featured_carousel',
+                      position: index,
                     );
                     Get.to(() => MainReviewScreenMovies(movieId: movie.id));
                   },
@@ -291,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen>
     return HorizontalCardList<MovieModel>(
       title: 'FEATURED MOVIES',
       items: featuredMovies,
-      cardBuilder: (context, movie) {
+      cardBuilder: (context, movie, index) {
         return FeaturedContentCard(
           imageUrl: movie.imageUrl,
           title: movie.title,
@@ -304,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen>
               module: 'movies/movie',
               itemId: movie.id,
               section: 'featured_list',
+              position: index,
             );
             Get.to(
               () => MainReviewScreenMovies(
@@ -328,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen>
     return TrendingCarousel<MovieModel>(
       context: context,
       items: trendingMovies.obs,
-      cardBuilder: (movie) {
+      cardBuilder: (movie, index) {
         final details = [
           movie.duration,
           movie.certification,
@@ -361,6 +363,7 @@ class _HomeScreenState extends State<HomeScreen>
               module: 'movies/movie',
               itemId: movie.id,
               section: 'trending_carousel',
+              position: index,
             );
             Get.to(
               () => MainReviewScreenMovies(
@@ -413,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen>
       title: 'UPCOMING RELEASES',
       items: upcomingMovies,
       listHeight: 320,
-      cardBuilder: (context, movie) {
+      cardBuilder: (context, movie, index) {
         final String movieId = movie["id"]!;
         return Obx(() {
           final bool isNotified = controller.isUpcomingMovieNotified(movieId);
@@ -437,6 +440,7 @@ class _HomeScreenState extends State<HomeScreen>
                 module: 'movies/movie',
                 itemId: movieId,
                 section: 'upcoming_releases',
+                position: index,
               );
               Get.to(() => MainReviewScreenMovies(movieId: movieId));
             },
@@ -488,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen>
       title: 'EXPLORE COMMUNITIES',
       items: communities,
       listHeight: 120,
-      cardBuilder: (context, community) {
+      cardBuilder: (context, community, index) {
         return Obx(() {
           return CommunityCard(
             name: community['name']!,
@@ -584,7 +588,7 @@ class _HomeScreenState extends State<HomeScreen>
               context,
               items: restaurantsData.featured.obs,
               controller: controller,
-              cardBuilder: (restaurant) {
+              cardBuilder: (restaurant, index) {
                 return FeaturedContentCardLarge(
                   imageUrl: restaurant.imageUrl,
                   title: restaurant.name ?? 'Unknown Restaurant',
@@ -668,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen>
     return HorizontalCardList<RestaurantModel>(
       title: 'FEATURED RESTAURANTS',
       items: featuredRestaurants,
-      cardBuilder: (context, restaurant) {
+      cardBuilder: (context, restaurant, index) {
         return FeaturedContentCard(
           imageUrl: restaurant.imageUrl,
           title: restaurant.name,
@@ -704,7 +708,7 @@ class _HomeScreenState extends State<HomeScreen>
       context: context,
       items: trendingRestaurants.obs,
 
-      cardBuilder: (restaurant) {
+      cardBuilder: (restaurant, index) {
         final details = [
           restaurant.cuisineType,
           restaurant.address,
@@ -790,7 +794,7 @@ class _HomeScreenState extends State<HomeScreen>
       title: 'UPCOMING OPENING',
       items: upcomingItems,
       listHeight: 320,
-      cardBuilder: (context, item) {
+      cardBuilder: (context, item, index) {
         final String itemId = item["id"]!;
         return Obx(() {
           final bool isNotified = controller.isUpcomingMovieNotified(
@@ -853,7 +857,7 @@ class _HomeScreenState extends State<HomeScreen>
       title: 'EXPLORE FOODIE COMMUNITIES',
       items: communities,
       listHeight: 120,
-      cardBuilder: (context, community) {
+      cardBuilder: (context, community, index) {
         return Obx(() {
           return CommunityCard(
             name: community['name']!,
@@ -954,7 +958,7 @@ Widget buildGadgetsTab() {
             items: gadgetData.featured.obs,
             controller: controller,
 
-            cardBuilder: (gadget) {
+            cardBuilder: (gadget, index) {
               return FeaturedContentCardLarge(
                 imageUrl: gadget.imageUrl,
 
@@ -1070,7 +1074,7 @@ Widget buildGadgetsTab() {
 
       items: trendingGadgets.obs,
 
-      cardBuilder: (gadget) {
+      cardBuilder: (gadget, index) {
 
         final details = [
           gadget.brand,
@@ -1162,7 +1166,7 @@ Widget buildGadgetsTab() {
 
       items: featuredGadgets,
 
-      cardBuilder: (context, gadget) {
+      cardBuilder: (context, gadget, index) {
         return FeaturedContentCard(
           imageUrl: gadget.imageUrl,
 
@@ -1220,7 +1224,7 @@ Widget buildGadgetsTab() {
       title: 'UPCOMING GADGETS',
       items: upcomingItems,
       listHeight: 320,
-      cardBuilder: (context, item) {
+      cardBuilder: (context, item, index) {
         final String itemId = item["id"]!;
         return Obx(() {
           final bool isNotified = controller.isUpcomingMovieNotified(itemId);
@@ -1282,7 +1286,7 @@ Widget buildGadgetsTab() {
       title: 'EXPLORE TECH COMMUNITIES',
       items: communities,
       listHeight: 120,
-      cardBuilder: (context, community) {
+      cardBuilder: (context, community, index) {
         return CommunityCard(
           name: community['name']!,
           description: community['desc']!,
@@ -1381,7 +1385,7 @@ Widget buildGadgetsTab() {
 
             controller: controller,
 
-            cardBuilder: (book) {
+            cardBuilder: (book, index) {
               return FeaturedContentCardLarge(
                 imageUrl: book.imageUrl,
 
@@ -1494,7 +1498,7 @@ Widget buildGadgetsTab() {
 
       items: trendingBooks.obs,
 
-      cardBuilder: (book) {
+      cardBuilder: (book, index) {
 
         final details = [
           book.author,
@@ -1586,7 +1590,7 @@ Widget buildGadgetsTab() {
 
       items: featuredBooks,
 
-      cardBuilder: (context, book) {
+      cardBuilder: (context, book, index) {
         return FeaturedContentCard(
           imageUrl: book.imageUrl,
 
@@ -1638,7 +1642,7 @@ Widget buildGadgetsTab() {
       title: 'UPCOMING BOOKS',
       items: upcomingItems,
       listHeight: 320,
-      cardBuilder: (context, item) {
+      cardBuilder: (context, item, index) {
         final String itemId = item["id"]!;
         return Obx(() {
           final bool isNotified = controller.isUpcomingMovieNotified(itemId);
@@ -1699,7 +1703,7 @@ Widget buildGadgetsTab() {
       title: 'EXPLORE BOOK CLUBS',
       items: communities,
       listHeight: 120,
-      cardBuilder: (context, community) {
+      cardBuilder: (context, community, index) {
         return CommunityCard(
           name: community['name']!,
           description: community['desc']!,
@@ -1797,7 +1801,7 @@ Widget buildGadgetsTab() {
 
             controller: controller,
 
-            cardBuilder: (game) {
+            cardBuilder: (game, index) {
               return FeaturedContentCardLarge(
                 imageUrl: game.imageUrl,
 
@@ -1946,7 +1950,7 @@ Widget buildGadgetsTab() {
 
       items: trendingGames.obs,
 
-      cardBuilder: (game) {
+      cardBuilder: (game, index) {
 
         final details = [
           game.developer,
@@ -2043,7 +2047,7 @@ Widget buildGadgetsTab() {
 
       items: featuredGames,
 
-      cardBuilder: (context, game) {
+      cardBuilder: (context, game, index) {
         return FeaturedContentCard(
           imageUrl: game.imageUrl,
 
@@ -2101,7 +2105,7 @@ Widget buildGadgetsTab() {
       title: 'UPCOMING GAMES',
       items: upcomingItems,
       listHeight: 320,
-      cardBuilder: (context, item) {
+      cardBuilder: (context, item, index) {
         final String itemId = item["id"]!;
         return Obx(() {
           final bool isNotified = controller.isUpcomingMovieNotified(itemId);
@@ -2162,7 +2166,7 @@ Widget buildGadgetsTab() {
       title: 'EXPLORE GAMING CLANS',
       items: communities,
       listHeight: 120,
-      cardBuilder: (context, community) {
+      cardBuilder: (context, community, index) {
         return CommunityCard(
           name: community['name']!,
           description: community['desc']!,

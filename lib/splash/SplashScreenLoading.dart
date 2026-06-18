@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilr_app_ui/core/tracking/tracking_client.dart';
+import 'package:mobilr_app_ui/core/user_session.dart';
 import 'package:mobilr_app_ui/home/screens/home_screen.dart';
-import 'package:mobilr_app_ui/onbording/onboarding_interests_screen.dart';
 import 'package:mobilr_app_ui/signinup/CredentialScreenSignin.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,22 +30,40 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(const Duration(seconds: 3), () async {
       await _controller.animateTo(1.0);
       _controller.value = 0.0;
-      ///Debug Mode only 
-      // if(kDebugMode){
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (_) => const HomeScreen()),
-      //   );
-      //   return;
-      // }
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const CredentialScreenSignin()),
+
+      // Restore any persisted session from SharedPreferences
+      await UserSession.instance.restore();
+
+      // Sync restored credentials into TrackingClient so events include
+      // user_id and session_id even after a cold start.
+      final session = UserSession.instance;
+      if (session.isLoggedIn && session.token != null) {
+        TrackingClient.instance.setAuth(
+          session.token!,
+          session.userId!,
+          sessionId: session.sessionId,
         );
+      }
+
+      Future.delayed(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        if (UserSession.instance.isLoggedIn) {
+          // Returning user — skip sign-in
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        } else {
+          // New / logged-out user
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const CredentialScreenSignin()),
+          );
+        }
       });
     });
   }
+
 
   @override
   void dispose() {
