@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/features/splash/presentation/pages/splash_screen_loading.dart';
+import 'package:starnest/features/splash/presentation/pages/splash_screen.dart';
 import 'package:starnest/features/auth/presentation/pages/credential_screen_signin.dart';
 import 'package:starnest/features/auth/presentation/pages/credential_screen_signin_starnest.dart';
 import 'package:starnest/features/auth/presentation/pages/credential_screen_signup.dart';
@@ -141,7 +141,8 @@ class AppPages {
         return CommentsScreen(
           itemTitle: args?['itemTitle'] ?? '',
           comments: args?['comments'] ?? const [],
-          iconAssetPath: args?['iconAssetPath'] ?? "assets/images/restaurants.png",
+          iconAssetPath:
+              args?['iconAssetPath'] ?? "assets/images/restaurants.png",
           iconColor: args?['iconColor'] ?? const Color(0xFF54B6E0),
         );
       },

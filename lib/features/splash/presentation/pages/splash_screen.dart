@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starnest/core/constants/app_images.dart';
+import 'package:starnest/core/constants/color_palette.dart';
+import 'package:starnest/core/extensions/context_ext.dart';
 import 'package:starnest/core/tracking/tracking_client.dart';
 import 'package:starnest/core/service/user_session.dart';
 import 'package:starnest/routes/app_routes.dart';
@@ -48,11 +51,9 @@ class _SplashScreenState extends State<SplashScreen>
       Future.delayed(const Duration(seconds: 1), () {
         if (!mounted) return;
         if (UserSession.instance.isLoggedIn) {
-          // Returning user — skip sign-in
-          Get.offAllNamed(AppRoutes.home);
+          context.pushReplacementNamed(AppRoutes.home);
         } else {
-          // New / logged-out user
-          Get.offAllNamed(AppRoutes.signin);
+          context.pushReplacementNamed(AppRoutes.signin);
         }
       });
     });
@@ -67,13 +68,9 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF83445),
+      backgroundColor: ColorPalette.error,
       body: Center(
-        child: Image.asset(
-          height: 172,
-          width: 121,
-          'assets/images/ic_logo_1.png',
-        ),
+        child: Image.asset(height: 172, width: 121, ImageRes.pngs.splash),
       ),
     );
   }
