@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starnest/core/api_service.dart';
+import 'package:starnest/core/tracking/starnest_tracker.dart';
+
+class SignupController extends GetxController {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  var isButtonEnabled = false.obs;
+  var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    firstNameController.addListener(validateForm);
+    lastNameController.addListener(validateForm);
+    emailController.addListener(validateForm);
+    phoneController.addListener(validateForm);
+    passwordController.addListener(validateForm);
+  }
+
+  void validateForm() {
+    final isValid = firstNameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty &&
+        _validateEmail(emailController.text) == null &&
+        _validatePhone(phoneController.text) == null &&
+        _validatePassword(passwordController.text) == null;
+
+    isButtonEnabled.value = isValid;
+  }
+
+  Future<bool> registerUser() async {
+    isLoading.value = true;
+    final api = ApiService();
+    final result = await api.signup({
+      "firstName": firstNameController.text,
+      "lastName": lastNameController.text,
+      "email": emailController.text,
+      "phone": phoneController.text,
+      "password": passwordController.text,
+    });
+    isLoading.value = false;
+    
+    if (result != null) {
+      final userId = result['userId'] ?? '';
+      final sessionId = result['sessionId'] ?? '';
+      final user = result['raw']?['user'] as Map<String, dynamic>? ?? {};
+      StarNestTracker.instance.sessionStart(
+        token: result['token'] ?? '',
+        userId: userId,
+        sessionId: sessionId,
+        firstName: user['firstName']?.toString() ?? firstNameController.text,
+        lastName: user['lastName']?.toString() ?? lastNameController.text,
+        email: user['email']?.toString() ?? emailController.text,
+        avatarUrl: user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
+      );
+      return true;
+    }
+    return false;
+  }
+
+  String? validateField(String label, String? value) {
+    switch (label) {
+      case "First name":
+        return (value == null || value.isEmpty) ? "First name required" : null;
+      case "Last name":
+        return (value == null || value.isEmpty) ? "Last name required" : null;
+      case "Email":
+        return _validateEmail(value);
+      case "Phone number":
+        return _validatePhone(value);
+      case "Password":
+        return _validatePassword(value);
+      default:
+        return null;
+    }
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) return "Email required";
+    if (!value.contains("@")) return "Invalid email";
+    return null;
+  }
+
+  String? _validatePhone(String? value) {
+    if (value == null || value.isEmpty) return "Phone number required";
+    if (value.length < 10) return "Invalid phone number";
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) return "Password required";
+    if (value.length < 6) return "Min 6 characters";
+    return null;
+  }
+
+  @override
+  void onClose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    super.onClose();
+  }
+}

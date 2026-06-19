@@ -1,23 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/splash/SplashScreenLoading.dart';
-import 'package:starnest/signinup/CredentialScreenSignin.dart';
-import 'package:starnest/signinup/CredentialScreenSigninStarnest.dart';
-import 'package:starnest/signinup/CredentialScreenSignup.dart';
-import 'package:starnest/onbording/onboarding_screen.dart';
-import 'package:starnest/onbording/onboarding_interests_screen.dart';
-import 'package:starnest/home/screens/home_screen.dart';
-import 'package:starnest/bottomnav/profile_screen.dart';
-import 'package:starnest/bottomnav/search_screen.dart';
-import 'package:starnest/bottomnav/notification_screen.dart';
-import 'package:starnest/settings/settings_screen.dart';
-import 'package:starnest/settings/privacy_policy_screen.dart';
-import 'package:starnest/settings/admin_screen_adding_new_title.dart';
-import 'package:starnest/review/add_edit_review_screen.dart';
-import 'package:starnest/chat/comments_screen.dart';
-import 'package:starnest/chat/features_screen_community.dart';
+import 'package:starnest/features/splash/presentation/screens/splash_screen_loading.dart';
+import 'package:starnest/features/auth/presentation/screens/credential_screen_signin.dart';
+import 'package:starnest/features/auth/presentation/screens/credential_screen_signin_starnest.dart';
+import 'package:starnest/features/auth/presentation/screens/credential_screen_signup.dart';
+import 'package:starnest/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:starnest/features/onboarding/presentation/screens/onboarding_interests_screen.dart';
+import 'package:starnest/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:starnest/features/profile/presentation/screens/profile_screen.dart';
+import 'package:starnest/features/search/presentation/screens/search_screen.dart';
+import 'package:starnest/features/notification/presentation/screens/notification_screen.dart';
+import 'package:starnest/features/settings/presentation/screens/settings_screen.dart';
+import 'package:starnest/features/settings/presentation/screens/privacy_policy_screen.dart';
+import 'package:starnest/features/settings/presentation/screens/admin_screen_adding_new_title.dart';
+import 'package:starnest/features/review/presentation/screens/add_edit_review_screen.dart';
+import 'package:starnest/features/chat/presentation/screens/comments_screen.dart';
+import 'package:starnest/features/chat/presentation/screens/features_screen_community.dart';
 import 'app_routes.dart';
-// NOTE: Above imports will resolve once screen files are migrated and use `package:starnest/...`
-// Until then, these are stubs showing intended routing structure.
 
 /// GetX page configuration list.
 /// Pass this to [GetMaterialApp.getPages].
@@ -58,7 +57,7 @@ class AppPages {
     // -------------------------------------------------------------------------
     GetPage(
       name: AppRoutes.onboarding,
-      page: () => const OnboardingScreen(),
+      page: () => OnboardingScreen(),
       transition: Transition.fade,
     ),
     GetPage(
@@ -68,11 +67,11 @@ class AppPages {
     ),
 
     // -------------------------------------------------------------------------
-    // Home
+    // Home / Shell
     // -------------------------------------------------------------------------
     GetPage(
       name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      page: () => const DashboardScreen(),
       transition: Transition.fade,
     ),
 
@@ -81,7 +80,16 @@ class AppPages {
     // -------------------------------------------------------------------------
     GetPage(
       name: AppRoutes.addReview,
-      page: () => const AddEditReviewScreen(),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>?;
+        return AddEditReviewScreen(
+          itemName: args?['itemName'] ?? '',
+          itemType: args?['itemType'] ?? 'Item',
+          initialRating: args?['initialRating'] ?? 0.0,
+          accentColor: args?['accentColor'] ?? const Color(0xFF54B6E0),
+          ratingAssetPath: args?['ratingAssetPath'] ?? "assets/images/sd.png",
+        );
+      },
       transition: Transition.downToUp,
     ),
 
@@ -100,7 +108,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.notifications,
-      page: () => const NotificationScreen(),
+      page: () => NotificationScreen(),
       transition: Transition.rightToLeft,
     ),
 
@@ -128,12 +136,27 @@ class AppPages {
     // -------------------------------------------------------------------------
     GetPage(
       name: AppRoutes.comments,
-      page: () => const CommentsScreen(),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>?;
+        return CommentsScreen(
+          itemTitle: args?['itemTitle'] ?? '',
+          comments: args?['comments'] ?? const [],
+          iconAssetPath: args?['iconAssetPath'] ?? "assets/images/restaurants.png",
+          iconColor: args?['iconColor'] ?? const Color(0xFF54B6E0),
+        );
+      },
       transition: Transition.downToUp,
     ),
     GetPage(
       name: AppRoutes.featuresCommunity,
-      page: () => const FeaturesScreenCommunity(),
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>?;
+        return FeaturesScreenCommunity(
+          communityId: args?['communityId'] ?? '',
+          communityName: args?['communityName'] ?? '',
+          communityImageUrl: args?['communityImageUrl'] ?? '',
+        );
+      },
       transition: Transition.rightToLeft,
     ),
   ];

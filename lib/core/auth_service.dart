@@ -20,18 +20,19 @@ class AuthService {
   static final AuthService instance = AuthService._internal();
   AuthService._internal();
 
-  bool _initialized = false;
+  GoogleSignIn? _googleSignIn;
 
   /// Must be called once before any sign-in attempt.
   /// Called automatically by [signInWithGoogle] if not already done.
   Future<void> _ensureInitialized() async {
-    if (_initialized) return;
+    if (_googleSignIn != null) return;
 
     // The serverClientId is the Web Client ID from Firebase Console.
     // Find it at: Firebase Console → Project Settings → General → Web API Key section,
     // or under Authentication → Sign-in method → Google → Web SDK configuration.
     final serverClientId = dotenv.env['GOOGLE_SERVER_CLIENT_ID'];
-    if (serverClientId == null || serverClientId.isEmpty ||
+    if (serverClientId == null ||
+        serverClientId.isEmpty ||
         serverClientId.startsWith('YOUR_')) {
       throw Exception(
         '[AuthService] GOOGLE_SERVER_CLIENT_ID is not set in assets/.env. '
@@ -40,8 +41,7 @@ class AuthService {
       );
     }
 
-    await GoogleSignIn.instance.initialize(serverClientId: serverClientId);
-    _initialized = true;
+    _googleSignIn = GoogleSignIn(serverClientId: serverClientId);
     log('[AuthService] GoogleSignIn initialized with serverClientId.');
   }
 
@@ -54,36 +54,36 @@ class AuthService {
       // ── 0. Ensure GoogleSignIn is initialised with the serverClientId ────
       await _ensureInitialized();
 
-      final googleSignIn = GoogleSignIn.instance;
+      final googleSignIn = _googleSignIn!;
 
-      // ── 1. Check platform support ─────────────────────────────────────────
-      if (!googleSignIn.supportsAuthenticate()) {
-        log('[AuthService] GoogleSignIn.authenticate() not supported on this platform.');
-        return null;
-      }
-
-      // ── 2. Trigger native Google account picker ───────────────────────────
+      // ── 1. Trigger native Google account picker ───────────────────────────
       GoogleSignInAccount? googleUser;
       try {
-        googleUser = await googleSignIn.authenticate();
+        googleUser = await googleSignIn.signIn();
       } catch (e) {
-        log('[AuthService] Google authenticate() cancelled or failed: $e');
+        log('[AuthService] Google signIn() cancelled or failed: $e');
         return null;
       }
 
-      // ── 3. Build a Firebase credential from the OIDC (ID) token ──────────
-      //       In google_sign_in v7, GoogleSignInAuthentication only exposes
-      //       idToken (accessToken is no longer available).
+      if (googleUser == null) {
+        log('[AuthService] Google sign-in cancelled by user.');
+        return null;
+      }
+
+      // ── 2. Build a Firebase credential from the OIDC (ID) and access tokens 
+      final GoogleSignInAuthentication authentication =
+          await googleUser.authentication;
       final OAuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleUser.authentication.idToken,
+        idToken: authentication.idToken,
+        accessToken: authentication.accessToken,
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       // ── 4. Get the Firebase ID Token (what the backend needs) ─────────────
       //       Per spec: use FirebaseAuth.instance.currentUser?.getIdToken()
-      final String? firebaseIdToken =
-          await FirebaseAuth.instance.currentUser?.getIdToken();
+      final String? firebaseIdToken = await FirebaseAuth.instance.currentUser
+          ?.getIdToken();
 
       if (firebaseIdToken == null) {
         log('[AuthService] Failed to retrieve Firebase ID Token.');
@@ -107,7 +107,9 @@ class AuthService {
       final String sessionId = result['sessionId'] ?? '';
 
       if (userId.isEmpty || sessionId.isEmpty) {
-        log('[AuthService] Backend response missing userId or sessionId. Raw: ${result['raw']}');
+        log(
+          '[AuthService] Backend response missing userId or sessionId. Raw: ${result['raw']}',
+        );
         return null;
       }
 
@@ -118,7 +120,9 @@ class AuthService {
 
       final nameParts = displayName.trim().split(' ');
       final String firstName = nameParts.isNotEmpty ? nameParts.first : '';
-      final String lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+      final String lastName = nameParts.length > 1
+          ? nameParts.sublist(1).join(' ')
+          : '';
 
       final String token = result['token'] as String? ?? '';
 
@@ -129,16 +133,17 @@ class AuthService {
         firstName: userRaw['firstName']?.toString() ?? firstName,
         lastName: userRaw['lastName']?.toString() ?? lastName,
         email: userRaw['email']?.toString() ?? googleEmail,
-        avatarUrl: userRaw['profileImage']?.toString() ?? userRaw['avatarUrl']?.toString() ?? googlePhoto,
+        avatarUrl:
+            userRaw['profileImage']?.toString() ??
+            userRaw['avatarUrl']?.toString() ??
+            googlePhoto,
       );
 
       // Sync into TrackingClient so all events carry user_id and session_id
       TrackingClient.instance.setAuth(token, userId, sessionId: sessionId);
 
       log('[AuthService] Sign-in successful. userId=$userId');
-      return {
-        'isNewUser': result['isNewUser'] as bool? ?? false,
-      };
+      return {'isNewUser': result['isNewUser'] as bool? ?? false};
     } catch (e, st) {
       log('[AuthService] signInWithGoogle error: $e', stackTrace: st);
       return null;
@@ -148,6 +153,7 @@ class AuthService {
   /// Signs out of Google and Firebase and clears the local session.
   Future<void> signOut() async {
     try {
+      await _googleSignIn?.signOut();
       await FirebaseAuth.instance.signOut();
       await UserSession.instance.clear();
     } catch (e) {
