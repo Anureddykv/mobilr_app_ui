@@ -1,19 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_string.dart';
 
-/// Centralised SharedPreferences manager.
-/// All keys are from [app_string.dart] — no magic strings.
-///
-/// Initialise once at app startup:
-/// ```dart
-/// await SharedPreferenceManager.init();
-/// ```
-///
-/// Then use the singleton anywhere:
-/// ```dart
-/// SharedPreferenceManager.instance.saveToken('abc');
-/// final token = SharedPreferenceManager.instance.getToken();
-/// ```
 class SharedPreferenceManager {
   SharedPreferenceManager._();
 
@@ -23,8 +10,7 @@ class SharedPreferenceManager {
 
   /// Must be called once before any other method — typically in [main].
   static Future<void> init() async {
-    instance._prefs =
-        await SharedPreferences.getInstance();
+    instance._prefs = await SharedPreferences.getInstance();
   }
 
   // ==========================================================================
@@ -36,8 +22,7 @@ class SharedPreferenceManager {
 
   String? getToken() => _prefs.getString(STRING_KEY_APPTOKEN);
 
-  Future<void> removeToken() async =>
-      _prefs.remove(STRING_KEY_APPTOKEN);
+  Future<void> removeToken() async => _prefs.remove(STRING_KEY_APPTOKEN);
 
   // ==========================================================================
   // Refresh Token
@@ -70,8 +55,7 @@ class SharedPreferenceManager {
   Future<void> saveProfileDetails(String json) async =>
       _prefs.setString(STRING_KEY_PROFILE_DETAILS, json);
 
-  String? getProfileDetails() =>
-      _prefs.getString(STRING_KEY_PROFILE_DETAILS);
+  String? getProfileDetails() => _prefs.getString(STRING_KEY_PROFILE_DETAILS);
 
   // ==========================================================================
   // FCM
@@ -95,8 +79,7 @@ class SharedPreferenceManager {
   Future<void> setIsFirstTime(bool value) async =>
       _prefs.setBool(STRING_KEY_IS_FIRST_TIME, value);
 
-  bool isFirstTime() =>
-      _prefs.getBool(STRING_KEY_IS_FIRST_TIME) ?? true;
+  bool isFirstTime() => _prefs.getBool(STRING_KEY_IS_FIRST_TIME) ?? true;
 
   // ==========================================================================
   // Interests

@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ignore_for_file: constant_identifier_names
-
-/// Central color palette for the StarNest app.
-/// All hardcoded colors from across the project are named and defined here.
-/// Use these tokens instead of inline Color(0xFF...) values.
 class ColorPalette {
   ColorPalette._();
 

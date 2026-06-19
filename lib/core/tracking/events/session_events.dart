@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import '../tracking_client.dart';
 import '../event_logger.dart';
-import '../../user_session.dart';
+import '../../service/user_session.dart';
 
 mixin SessionEvents {
   void sessionStart({
@@ -38,8 +38,10 @@ token     : "${token.isEmpty ? "(empty)" : token.substring(0, token.length.clamp
     }
     TrackingClient.instance.setAuth(token, userId, sessionId: sessionId);
 
-    log('✅ TrackingClient after setAuth → userId="${TrackingClient.instance.userId}" sessionId="${TrackingClient.instance.sessionId}"',
-        name: 'starnest.tracker');
+    log(
+      '✅ TrackingClient after setAuth → userId="${TrackingClient.instance.userId}" sessionId="${TrackingClient.instance.sessionId}"',
+      name: 'starnest.tracker',
+    );
 
     EventLogger.logEvent("session_start", {
       "session_id": sessionId,
@@ -50,10 +52,12 @@ token     : "${token.isEmpty ? "(empty)" : token.substring(0, token.length.clamp
 
   void sessionEnd({required String userId, String? sessionId}) {
     final sid = sessionId ?? UserSession.instance.sessionId;
-    unawaited(TrackingClient.instance.post('/api/users/logout', {
-      "user_id": userId,
-      "session_id": sid,
-    }));
+    unawaited(
+      TrackingClient.instance.post('/api/users/logout', {
+        "user_id": userId,
+        "session_id": sid,
+      }),
+    );
     UserSession.instance.clear();
     TrackingClient.instance.clearAuth();
     EventLogger.logEvent("session_end", {

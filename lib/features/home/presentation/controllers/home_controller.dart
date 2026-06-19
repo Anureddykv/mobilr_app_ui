@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:starnest/core/api_service.dart';
+import 'package:starnest/core/service/api_service.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
 
 import '../../data/models/movie_model.dart';

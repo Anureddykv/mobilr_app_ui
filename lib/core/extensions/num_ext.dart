@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
-// ============================================================================
-// SpacingExtension — convenience space widgets and EdgeInsets on num
-// ============================================================================
-
 extension SpacingExtension on num {
-  // --------------------------------------------------------------------------
-  // Space Widgets
-  // --------------------------------------------------------------------------
-
   /// Vertical SizedBox with [this] height
   Widget get vSpace => SizedBox(height: toDouble());
 

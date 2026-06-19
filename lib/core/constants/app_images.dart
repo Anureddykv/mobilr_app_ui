@@ -1,5 +1,3 @@
-/// Typed asset path accessors for all StarNest resources.
-/// Prefer these over inline string paths to get compile-time safety.
 class ImageRes {
   static const ImageAssets images = ImageAssets();
   static const PngAssets pngs = PngAssets();

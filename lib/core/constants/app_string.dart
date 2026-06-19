@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 // ==========================================================================
 // HTTP / API Keys
 // ==========================================================================
@@ -22,10 +20,3 @@ const String STRING_KEY_HAS_VIEWED_ONBOARDING = 'hasViewedOnboarding';
 const String STRING_KEY_SELECTED_INTERESTS = 'selectedInterests';
 const String STRING_KEY_USER_EMAIL = 'userEmail';
 const String STRING_KEY_USER_NAME = 'userName';
-
-// ==========================================================================
-// API Base
-// ==========================================================================
-
-const String STRING_BASE_URL = '';        // Fill with real base URL
-const String STRING_BEARER_PREFIX = 'Bearer ';

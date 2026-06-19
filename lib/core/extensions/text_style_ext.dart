@@ -2,27 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/color_palette.dart';
 
-// ============================================================================
-// Font Families
-// ============================================================================
-
-/// All font family names used in StarNest.
-/// General Sans Variable is the primary font; add new families here as needed.
 class AppFontFamily {
   AppFontFamily._();
 
-  /// Primary — loaded from assets/font/ (GeneralSans-*.otf)
   static const String generalSans = 'General Sans Variable';
-
-  // Reserved slots for future fonts (like snipit's approach):
-  // static const String maisonNeue = 'Maison Neue';
-  // static const String instrumentSerif = 'InstrumentSerif';
-  // static const String dmSans = 'DMSans';
 }
-
-// ============================================================================
-// Font Sizes (screenutil-aware)
-// ============================================================================
 
 class AppFontSize {
   AppFontSize._();
@@ -50,18 +34,6 @@ class AppFontSize {
   static double get s48 => 48.0.sp;
 }
 
-// ============================================================================
-// Text Styles — base + size variants
-// ============================================================================
-
-/// Pre-built text styles. Each getter returns a base style with the
-/// given font size; chain extension methods to customise weight/color/font.
-///
-/// Example usage:
-/// ```dart
-/// Text('Hello', style: TextStyles.s16.w600.white)
-/// Text('Sub', style: TextStyles.s14.w400.muted)
-/// ```
 class TextStyles {
   TextStyles._();
 
@@ -130,8 +102,7 @@ extension TextStyleExtension on TextStyle {
   // --------------------------------------------------------------------------
   // Font Family shortcuts (add more as new fonts are registered)
   // --------------------------------------------------------------------------
-  TextStyle get generalSans =>
-      copyWith(fontFamily: AppFontFamily.generalSans);
+  TextStyle get generalSans => copyWith(fontFamily: AppFontFamily.generalSans);
 
   // --------------------------------------------------------------------------
   // Line Height (pixel-based, Figma style)
@@ -163,8 +134,7 @@ extension TextStyleExtension on TextStyle {
   // Decoration
   // --------------------------------------------------------------------------
   TextStyle get underline => copyWith(decoration: TextDecoration.underline);
-  TextStyle get lineThrough =>
-      copyWith(decoration: TextDecoration.lineThrough);
+  TextStyle get lineThrough => copyWith(decoration: TextDecoration.lineThrough);
 
   // --------------------------------------------------------------------------
   // Letter Spacing

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/core/api_service.dart';
+import 'package:starnest/core/service/api_service.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
 
 class SignupController extends GetxController {
@@ -24,7 +24,8 @@ class SignupController extends GetxController {
   }
 
   void validateForm() {
-    final isValid = firstNameController.text.isNotEmpty &&
+    final isValid =
+        firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty &&
         _validateEmail(emailController.text) == null &&
         _validatePhone(phoneController.text) == null &&
@@ -44,7 +45,7 @@ class SignupController extends GetxController {
       "password": passwordController.text,
     });
     isLoading.value = false;
-    
+
     if (result != null) {
       final userId = result['userId'] ?? '';
       final sessionId = result['sessionId'] ?? '';
@@ -56,7 +57,8 @@ class SignupController extends GetxController {
         firstName: user['firstName']?.toString() ?? firstNameController.text,
         lastName: user['lastName']?.toString() ?? lastNameController.text,
         email: user['email']?.toString() ?? emailController.text,
-        avatarUrl: user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
+        avatarUrl:
+            user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
       );
       return true;
     }

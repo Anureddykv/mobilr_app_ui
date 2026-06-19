@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:starnest/core/user_session.dart';
+import 'package:starnest/core/service/user_session.dart';
 import 'event_logger.dart';
 import 'models/track_event.dart';
 

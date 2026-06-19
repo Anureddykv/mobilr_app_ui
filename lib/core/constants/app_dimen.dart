@@ -1,10 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// ignore_for_file: constant_identifier_names
-
-/// Centralised dimension tokens for the StarNest app.
-/// All values are screenutil-aware (responsive).
-/// Design base: 390×844 (iPhone 14).
 class AppDimen {
   AppDimen._();
 

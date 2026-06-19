@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/features/splash/presentation/screens/splash_screen_loading.dart';
-import 'package:starnest/features/auth/presentation/screens/credential_screen_signin.dart';
-import 'package:starnest/features/auth/presentation/screens/credential_screen_signin_starnest.dart';
-import 'package:starnest/features/auth/presentation/screens/credential_screen_signup.dart';
-import 'package:starnest/features/onboarding/presentation/screens/onboarding_screen.dart';
-import 'package:starnest/features/onboarding/presentation/screens/onboarding_interests_screen.dart';
-import 'package:starnest/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:starnest/features/profile/presentation/screens/profile_screen.dart';
-import 'package:starnest/features/search/presentation/screens/search_screen.dart';
-import 'package:starnest/features/notification/presentation/screens/notification_screen.dart';
-import 'package:starnest/features/settings/presentation/screens/settings_screen.dart';
-import 'package:starnest/features/settings/presentation/screens/privacy_policy_screen.dart';
-import 'package:starnest/features/settings/presentation/screens/admin_screen_adding_new_title.dart';
-import 'package:starnest/features/review/presentation/screens/add_edit_review_screen.dart';
-import 'package:starnest/features/chat/presentation/screens/comments_screen.dart';
-import 'package:starnest/features/chat/presentation/screens/features_screen_community.dart';
+import 'package:starnest/features/splash/presentation/pages/splash_screen_loading.dart';
+import 'package:starnest/features/auth/presentation/pages/credential_screen_signin.dart';
+import 'package:starnest/features/auth/presentation/pages/credential_screen_signin_starnest.dart';
+import 'package:starnest/features/auth/presentation/pages/credential_screen_signup.dart';
+import 'package:starnest/features/onboarding/presentation/pages/onboarding_screen.dart';
+import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen.dart';
+import 'package:starnest/features/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:starnest/features/profile/presentation/pages/profile_screen.dart';
+import 'package:starnest/features/search/presentation/pages/search_screen.dart';
+import 'package:starnest/features/notification/presentation/pages/notification_screen.dart';
+import 'package:starnest/features/settings/presentation/pages/settings_screen.dart';
+import 'package:starnest/features/settings/presentation/pages/privacy_policy_screen.dart';
+import 'package:starnest/features/settings/presentation/pages/admin_screen_adding_new_title.dart';
+import 'package:starnest/features/review/presentation/pages/add_edit_review_screen.dart';
+import 'package:starnest/features/chat/presentation/pages/comments_screen.dart';
+import 'package:starnest/features/chat/presentation/pages/features_screen_community.dart';
 import 'app_routes.dart';
 
 /// GetX page configuration list.

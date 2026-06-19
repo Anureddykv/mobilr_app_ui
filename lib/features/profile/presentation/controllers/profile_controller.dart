@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:starnest/core/user_session.dart';
+import 'package:starnest/core/service/user_session.dart';
 
 class UserProfile {
   final String firstName;
@@ -31,10 +31,11 @@ class ProfileController extends GetxController {
     final email = session.email ?? '';
     final avatar = session.avatarUrl ?? '';
 
-    final String initial = fName.isNotEmpty 
-        ? fName[0].toUpperCase() 
+    final String initial = fName.isNotEmpty
+        ? fName[0].toUpperCase()
         : (email.isNotEmpty ? email[0].toUpperCase() : 'U');
-    final fallbackAvatar = "https://placehold.co/72x72/FFFFFF/000000?text=$initial";
+    final fallbackAvatar =
+        "https://placehold.co/72x72/FFFFFF/000000?text=$initial";
 
     userProfile = UserProfile(
       firstName: fName.isNotEmpty ? fName : "Rohit",
@@ -47,23 +48,18 @@ class ProfileController extends GetxController {
         'Cuisines': ['Chinese', 'South India', 'South American'],
       },
       myLists: {
-        'Movies': [
-          "https://placehold.co/120x120/E05473/000000?text=RRR",
-          "",
-        ],
-        'Books': [
-          "https://placehold.co/120x120/54E0A1/000000?text=Ikigai"
-        ],
-        'Games': [
-          "https://placehold.co/120x120/8B54E0/000000?text=GTA+VI"
-        ],
+        'Movies': ["https://placehold.co/120x120/E05473/000000?text=RRR", ""],
+        'Books': ["https://placehold.co/120x120/54E0A1/000000?text=Ikigai"],
+        'Games': ["https://placehold.co/120x120/8B54E0/000000?text=GTA+VI"],
       },
     ).obs;
   }
 
   void addTypeToMyLists(String newType) {
     if (newType.isNotEmpty && !userProfile.value.myLists.containsKey(newType)) {
-      final updatedLists = Map<String, List<String>>.from(userProfile.value.myLists);
+      final updatedLists = Map<String, List<String>>.from(
+        userProfile.value.myLists,
+      );
       updatedLists[newType] = [];
       userProfile.value = UserProfile(
         firstName: userProfile.value.firstName,
