@@ -10,7 +10,7 @@ import 'core/managers/shared_preference_manager.dart';
 import 'core/themes/app_theme.dart';
 import 'core/tracking/starnest_tracker.dart';
 import 'firebase_options.dart';
-import 'localization/generated/l10n.dart';
+import 'l10n/app_localizations.dart';
 import 'routes/app_pages.dart';
 import 'routes/app_routes.dart';
 
@@ -69,12 +69,12 @@ class StarNestApp extends StatelessWidget {
 
           // Localization
           localizationsDelegates: const [
-            Lang.delegate,
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: Lang.delegate.supportedLocales,
+          supportedLocales: AppLocalizations.supportedLocales,
 
           // Routing
           initialRoute: AppRoutes.splash,

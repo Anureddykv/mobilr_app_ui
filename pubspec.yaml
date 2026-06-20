@@ -34,7 +34,6 @@ dependencies:
 
   # --- Localization ---
   intl: ^0.20.2
-  intl_utils: ^2.8.14
 
   # --- Media ---
   shimmer: ^3.0.0
@@ -55,15 +54,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
-# flutter_intl plugin config (used by IDE Flutter Intl extension)
-flutter_intl:
-  enabled: true
-  arb_dir: lib/localization
-  output_dir: lib/localization/generated
-  class_name: Lang
-  use_deferred_loading: false
-
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:

@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appTitle": "StarNest",
+  "@appTitle": {
+    "description": "App Name"
+  }
+}
