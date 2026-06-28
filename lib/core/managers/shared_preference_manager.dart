@@ -34,6 +34,30 @@ class SharedPreferenceManager {
   String? getRefreshToken() => _prefs.getString(STRING_KEY_REFRESHTOKEN);
 
   // ==========================================================================
+  // Session (replaces UserSession — single source of truth)
+  // ==========================================================================
+
+  Future<void> saveSessionId(String sessionId) async =>
+      _prefs.setString(STRING_KEY_SESSION_ID, sessionId);
+
+  String? getSessionId() => _prefs.getString(STRING_KEY_SESSION_ID);
+
+  Future<void> saveFirstName(String name) async =>
+      _prefs.setString(STRING_KEY_FIRST_NAME, name);
+
+  String? getFirstName() => _prefs.getString(STRING_KEY_FIRST_NAME);
+
+  Future<void> saveLastName(String name) async =>
+      _prefs.setString(STRING_KEY_LAST_NAME, name);
+
+  String? getLastName() => _prefs.getString(STRING_KEY_LAST_NAME);
+
+  Future<void> saveAvatarUrl(String url) async =>
+      _prefs.setString(STRING_KEY_AVATAR_URL, url);
+
+  String? getAvatarUrl() => _prefs.getString(STRING_KEY_AVATAR_URL);
+
+  // ==========================================================================
   // User
   // ==========================================================================
 
@@ -92,17 +116,25 @@ class SharedPreferenceManager {
       _prefs.getStringList(STRING_KEY_SELECTED_INTERESTS) ?? [];
 
   // ==========================================================================
-  // Session
+  // Session state
   // ==========================================================================
 
-  bool get isLoggedIn => getToken() != null && getToken()!.isNotEmpty;
+  /// True when both a token and userId are stored (user is authenticated).
+  bool get isLoggedIn =>
+      (getToken()?.isNotEmpty ?? false) &&
+      (getUserId()?.isNotEmpty ?? false) &&
+      (getSessionId()?.isNotEmpty ?? false);
 
-  /// Clears all stored user data (called on logout).
+  /// Clears all stored user/session data (called on logout).
   Future<void> clearSession() async {
     await Future.wait([
       removeToken(),
       _prefs.remove(STRING_KEY_REFRESHTOKEN),
       _prefs.remove(STRING_KEY_USERID),
+      _prefs.remove(STRING_KEY_SESSION_ID),
+      _prefs.remove(STRING_KEY_FIRST_NAME),
+      _prefs.remove(STRING_KEY_LAST_NAME),
+      _prefs.remove(STRING_KEY_AVATAR_URL),
       _prefs.remove(STRING_KEY_PROFILE_DETAILS),
       _prefs.remove(STRING_KEY_USER_NAME),
       _prefs.remove(STRING_KEY_USER_EMAIL),

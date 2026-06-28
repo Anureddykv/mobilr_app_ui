@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:starnest/core/constants/color_palette.dart';
 import '../../core/constants/app_dimen.dart';
 import '../../core/extensions/text_style_ext.dart';
 
@@ -59,8 +60,9 @@ class CommonButton extends StatelessWidget {
                   width: 20.r,
                   height: 20.r,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(textColor!),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      ColorPalette.grey800,
+                    ),
                   ),
                 )
               : Row(

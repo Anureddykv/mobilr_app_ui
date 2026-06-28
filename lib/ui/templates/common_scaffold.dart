@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:starnest/core/extensions/widget_ext.dart';
 import '../../core/constants/color_palette.dart';
-import '../../core/themes/gradients.dart';
+import '../../app/themes/gradients.dart';
 import 'package:starnest/ui/molecules/common_appbar.dart';
 
 /// Standard scaffold for StarNest screens.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/routes/app_routes.dart';
+import 'package:starnest/app/routes/app_routes.dart';
 import 'package:starnest/features/onboarding/presentation/controllers/onboarding_controller.dart';
 
 class OnboardingInterestsScreenGames extends StatelessWidget {
@@ -14,8 +14,9 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
     final String title = interestData['title'];
     final String description = interestData['description'];
     final Color color = interestData['color'];
-    final Map<String, List<String>> sections =
-    Map<String, List<String>>.from(interestData['sections']);
+    final Map<String, List<String>> sections = Map<String, List<String>>.from(
+      interestData['sections'],
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B0B0B),
@@ -35,7 +36,7 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
                       fontSize: 24,
                       fontFamily: 'General Sans',
                       fontWeight: FontWeight.w600,
-                        height: 0.72
+                      height: 0.72,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -62,9 +63,7 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
                         ...sections.entries.map((entry) {
                           return _buildSection(entry.key, entry.value, color);
                         }).toList(),
-                        const SizedBox(
-                            height:
-                            100),
+                        const SizedBox(height: 100),
                       ],
                     ),
                   ),
@@ -78,10 +77,7 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            Color(0x000B0B0B),
-                            Color(0xFF0B0B0B),
-                          ],
+                          colors: [Color(0x000B0B0B), Color(0xFF0B0B0B)],
                           stops: [0.0, 1.0],
                         ),
                       ),
@@ -118,15 +114,11 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
                   fontSize: 14,
                   fontFamily: 'General Sans',
                   fontWeight: FontWeight.w500,
-                    height: 0.72
+                  height: 0.72,
                 ),
               ),
               SizedBox(width: 8),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 12,
-                color: Color(0xFFE6EAED),
-              ),
+              Icon(Icons.arrow_forward_ios, size: 12, color: Color(0xFFE6EAED)),
             ],
           ),
         ),
@@ -147,7 +139,7 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
               fontSize: 18,
               fontFamily: 'General Sans',
               fontWeight: FontWeight.w500,
-                height: 0.72
+              height: 0.72,
             ),
           ),
           const SizedBox(height: 12),
@@ -163,12 +155,14 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
                 sectionItems: items,
               ),
               ...items
-                  .map((item) => _TagChip(
-                label: item,
-                controller: controller,
-                color: interestColor,
-              ))
-                  .toList()
+                  .map(
+                    (item) => _TagChip(
+                      label: item,
+                      controller: controller,
+                      color: interestColor,
+                    ),
+                  )
+                  .toList(),
             ],
           ),
         ],
@@ -186,7 +180,7 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
               onPressed: () {
                 final isFirstScreen =
                     controller.selectedMainInterests.first ==
-                        controller.activeSubInterestScreen.value;
+                    controller.activeSubInterestScreen.value;
                 if (isFirstScreen) {
                   Get.back();
                 } else {
@@ -203,11 +197,11 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
               child: const Text(
                 'Back',
                 style: TextStyle(
-                    color: Color(0xFFE6EAED),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'General Sans Variable',
-                    height: 0.72
+                  color: Color(0xFFE6EAED),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'General Sans Variable',
+                  height: 0.72,
                 ),
               ),
             ),
@@ -228,15 +222,15 @@ class OnboardingInterestsScreenGames extends StatelessWidget {
               child: Obx(() {
                 final isLastScreen =
                     controller.selectedMainInterests.last ==
-                        controller.activeSubInterestScreen.value;
+                    controller.activeSubInterestScreen.value;
                 return Text(
                   isLastScreen ? 'Finish' : 'Next',
                   style: const TextStyle(
-                      color: Color(0xFF0B0B0B),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'General Sans Variable',
-                      height: 0.72
+                    color: Color(0xFF0B0B0B),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'General Sans Variable',
+                    height: 0.72,
                   ),
                 );
               }),
@@ -268,9 +262,11 @@ class _TagChip extends StatelessWidget {
     return Obx(() {
       bool isSelected;
       if (isSelectAll) {
-        isSelected = sectionItems != null &&
-            sectionItems!
-                .every((item) => controller.collectedSubInterests.contains(item));
+        isSelected =
+            sectionItems != null &&
+            sectionItems!.every(
+              (item) => controller.collectedSubInterests.contains(item),
+            );
       } else {
         isSelected = controller.collectedSubInterests.contains(label);
       }

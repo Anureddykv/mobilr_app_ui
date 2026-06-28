@@ -7,12 +7,12 @@ import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/managers/shared_preference_manager.dart';
-import 'core/themes/app_theme.dart';
+import 'app/themes/app_theme.dart';
 import 'core/tracking/starnest_tracker.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
-import 'routes/app_pages.dart';
-import 'routes/app_routes.dart';
+import 'app/routes/app_pages.dart';
+import 'app/routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,16 +31,16 @@ Future<void> main() async {
     ),
   );
 
-  // Load env
+  // Load environment variables first — other init steps may depend on them.
   await dotenv.load(fileName: 'assets/.env');
 
-  // Init SharedPreferences
+  // Initialise shared preferences — must happen before any datasource reads.
   await SharedPreferenceManager.init();
 
-  // Init Firebase
+  // Initialise Firebase.
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Init tracking
+  // Initialise analytics / tracking.
   StarNestTracker.instance.init();
   StarNestTracker.instance.appOpen();
 
@@ -53,7 +53,7 @@ class StarNestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      // Base design dimensions (Figma reference)
+      // Base design dimensions (Figma reference).
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: false,
@@ -76,11 +76,9 @@ class StarNestApp extends StatelessWidget {
           ],
           supportedLocales: AppLocalizations.supportedLocales,
 
-          // Routing
+          // Routing — bindings are attached per-route in AppPages.
           initialRoute: AppRoutes.splash,
           getPages: AppPages.pages,
-
-          home: child,
         );
       },
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/color_palette.dart';
+import '../../core/constants/color_palette.dart';
 import 'widgets/input_theme.dart';
 
 /// App-wide Material theme definitions.

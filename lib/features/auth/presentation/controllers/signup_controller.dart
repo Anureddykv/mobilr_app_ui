@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/core/service/api_service.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
+import 'package:starnest/features/auth/domain/usecases/signup_usecase.dart';
 
+/// GetX controller for the sign-up screen.
 class SignupController extends GetxController {
+  SignupController(this._signupUseCase);
+
+  final SignupUseCase _signupUseCase;
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -12,6 +17,7 @@ class SignupController extends GetxController {
 
   var isButtonEnabled = false.obs;
   var isLoading = false.obs;
+  final errorMessage = RxnString();
 
   @override
   void onInit() {
@@ -36,46 +42,51 @@ class SignupController extends GetxController {
 
   Future<bool> registerUser() async {
     isLoading.value = true;
-    final api = ApiService();
-    final result = await api.signup({
-      "firstName": firstNameController.text,
-      "lastName": lastNameController.text,
-      "email": emailController.text,
-      "phone": phoneController.text,
-      "password": passwordController.text,
-    });
+    errorMessage.value = null;
+
+    final result = await _signupUseCase(
+      SignupParams(
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        password: passwordController.text,
+      ),
+    );
+
     isLoading.value = false;
 
-    if (result != null) {
-      final userId = result['userId'] ?? '';
-      final sessionId = result['sessionId'] ?? '';
-      final user = result['raw']?['user'] as Map<String, dynamic>? ?? {};
-      StarNestTracker.instance.sessionStart(
-        token: result['token'] ?? '',
-        userId: userId,
-        sessionId: sessionId,
-        firstName: user['firstName']?.toString() ?? firstNameController.text,
-        lastName: user['lastName']?.toString() ?? lastNameController.text,
-        email: user['email']?.toString() ?? emailController.text,
-        avatarUrl:
-            user['profileImage']?.toString() ?? user['avatarUrl']?.toString(),
-      );
-      return true;
-    }
-    return false;
+    return result.fold(
+      onFailure: (failure) {
+        errorMessage.value = failure.message;
+        return false;
+      },
+      onSuccess: (entity) {
+        StarNestTracker.instance.sessionStart(
+          token: entity.token,
+          userId: entity.userId,
+          sessionId: entity.sessionId,
+          firstName: entity.firstName ?? firstNameController.text,
+          lastName: entity.lastName ?? lastNameController.text,
+          email: entity.email ?? emailController.text,
+          avatarUrl: entity.avatarUrl,
+        );
+        return true;
+      },
+    );
   }
 
   String? validateField(String label, String? value) {
     switch (label) {
-      case "First name":
-        return (value == null || value.isEmpty) ? "First name required" : null;
-      case "Last name":
-        return (value == null || value.isEmpty) ? "Last name required" : null;
-      case "Email":
+      case 'First name':
+        return (value == null || value.isEmpty) ? 'First name required' : null;
+      case 'Last name':
+        return (value == null || value.isEmpty) ? 'Last name required' : null;
+      case 'Email':
         return _validateEmail(value);
-      case "Phone number":
+      case 'Phone number':
         return _validatePhone(value);
-      case "Password":
+      case 'Password':
         return _validatePassword(value);
       default:
         return null;
@@ -83,20 +94,20 @@ class SignupController extends GetxController {
   }
 
   String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) return "Email required";
-    if (!value.contains("@")) return "Invalid email";
+    if (value == null || value.isEmpty) return 'Email required';
+    if (!value.contains('@')) return 'Invalid email';
     return null;
   }
 
   String? _validatePhone(String? value) {
-    if (value == null || value.isEmpty) return "Phone number required";
-    if (value.length < 10) return "Invalid phone number";
+    if (value == null || value.isEmpty) return 'Phone number required';
+    if (value.length < 10) return 'Invalid phone number';
     return null;
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) return "Password required";
-    if (value.length < 6) return "Min 6 characters";
+    if (value == null || value.isEmpty) return 'Password required';
+    if (value.length < 6) return 'Min 6 characters';
     return null;
   }
 

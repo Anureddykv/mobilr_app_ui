@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:starnest/routes/app_routes.dart';
+import 'package:starnest/app/routes/app_routes.dart';
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen_books.dart';
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen_gadgets.dart';
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen_games.dart';
@@ -10,7 +10,9 @@ import 'package:starnest/features/onboarding/presentation/controllers/onboarding
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen_movies.dart';
 
 class OnboardingInterestsScreen extends StatelessWidget {
-  final OnboardingController controller = Get.put<OnboardingController>(OnboardingController());
+  final OnboardingController controller = Get.put<OnboardingController>(
+    OnboardingController(),
+  );
 
   OnboardingInterestsScreen({super.key});
 
@@ -40,7 +42,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'General Sans Variable',
-                  height: 0.72
+                  height: 0.72,
                 ),
               ),
               const SizedBox(height: 16),
@@ -63,7 +65,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                   fontSize: 18,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w500,
-                    height: 0.72
+                  height: 0.72,
                 ),
               ),
               const SizedBox(height: 16),
@@ -73,9 +75,11 @@ class OnboardingInterestsScreen extends StatelessWidget {
                   runSpacing: 12.0,
                   children: interests.map((interest) {
                     return Obx(() {
-                      final bool isSelected = controller.selectedMainInterests.contains(interest['name']);
+                      final bool isSelected = controller.selectedMainInterests
+                          .contains(interest['name']);
                       return GestureDetector(
-                        onTap: () => controller.toggleMainInterest(interest['name']!),
+                        onTap: () =>
+                            controller.toggleMainInterest(interest['name']!),
                         child: _InterestChip(
                           label: interest['name']!,
                           color: interest['color']!,
@@ -117,7 +121,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                 fontSize: 16,
                 fontFamily: 'General Sans Variable',
                 fontWeight: FontWeight.w600,
-                  height: 0.72
+                height: 0.72,
               ),
             ),
           ),
@@ -130,7 +134,11 @@ class OnboardingInterestsScreen extends StatelessWidget {
                 controller.startSubInterestFlow();
                 Get.to(() => OnboardingSubInterestsRouter());
               } else {
-                SnackBarUtils.showTopSnackBar(context, 'Please select atleast 1 Interest', isError: true);
+                SnackBarUtils.showTopSnackBar(
+                  context,
+                  'Please select atleast 1 Interest',
+                  isError: true,
+                );
               }
             },
             style: ElevatedButton.styleFrom(
@@ -147,7 +155,7 @@ class OnboardingInterestsScreen extends StatelessWidget {
                 fontSize: 16,
                 fontFamily: 'General Sans Variable',
                 fontWeight: FontWeight.w600,
-                  height: 0.72
+                height: 0.72,
               ),
             ),
           ),
@@ -209,10 +217,7 @@ class _InterestChip extends StatelessWidget {
       decoration: ShapeDecoration(
         color: isSelected ? color : Colors.transparent,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1.5,
-            color: color,
-          ),
+          side: BorderSide(width: 1.5, color: color),
           borderRadius: BorderRadius.circular(16),
         ),
       ),
@@ -229,9 +234,7 @@ class _InterestChip extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: ShapeDecoration(
-                  shape: OvalBorder(
-                    side: BorderSide(width: 1.5, color: color),
-                  ),
+                  shape: OvalBorder(side: BorderSide(width: 1.5, color: color)),
                 ),
               ),
             Text(
@@ -242,7 +245,7 @@ class _InterestChip extends StatelessWidget {
                 fontFamily: 'General Sans Variable',
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.70,
-                  height: 0.72
+                height: 0.72,
               ),
             ),
           ],

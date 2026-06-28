@@ -8,27 +8,31 @@ import 'package:starnest/core/extensions/context_ext.dart';
 import 'package:starnest/core/extensions/num_ext.dart';
 import 'package:starnest/core/extensions/text_style_ext.dart';
 import 'package:starnest/core/utils/snackbar_utils.dart';
-import 'package:starnest/features/auth/presentation/widget/term_condition_widget.dart';
-import 'package:starnest/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen.dart';
 import 'package:starnest/features/auth/presentation/controllers/signup_controller.dart';
+import 'package:starnest/features/auth/presentation/widget/term_condition_widget.dart';
 import 'package:starnest/l10n/app_localizations.dart';
-import 'package:starnest/routes/app_routes.dart';
+import 'package:starnest/app/routes/app_routes.dart';
 import 'package:starnest/ui/atoms/common_button.dart';
 import 'package:starnest/ui/atoms/common_divider.dart';
 import 'package:starnest/ui/atoms/common_textfield.dart';
-import 'package:starnest/ui/pages/splash_message_screen.dart';
 import 'package:starnest/ui/templates/common_scaffold.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends GetView<SignupController> {
   SignUpScreen({super.key});
 
-  final SignupController controller = Get.put(SignupController());
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context)!;
+
+    // Show error snackbar reactively whenever errorMessage changes.
+    ever(controller.errorMessage, (msg) {
+      if (msg != null && msg.isNotEmpty && context.mounted) {
+        SnackBarUtils.showTopSnackBar(context, msg, isError: true);
+      }
+    });
+
     return CommonScaffold(
       showBack: true,
       defaultPadding: true,
@@ -47,56 +51,41 @@ class SignUpScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             24.verticalSpace,
-
-            /// Fields
             CommonTextField(
               controller: controller.firstNameController,
-              hint: "First name",
+              hint: 'First name',
             ),
             16.verticalSpace,
             CommonTextField(
               controller: controller.lastNameController,
-              hint: "Last name",
+              hint: 'Last name',
             ),
             16.verticalSpace,
             CommonTextField(
               controller: controller.emailController,
-              hint: "Email",
+              hint: 'Email',
               keyboardType: TextInputType.emailAddress,
             ),
             16.verticalSpace,
             CommonTextField(
               controller: controller.phoneController,
-              hint: "Phone number",
+              hint: 'Phone number',
               keyboardType: TextInputType.phone,
             ),
             16.verticalSpace,
             CommonTextField.password(
               controller: controller.passwordController,
-              hint: "Password",
+              hint: 'Password',
             ),
             32.verticalSpace,
-
-            /// Create Account Button
             _buildCreateAccountButton(context, strings),
             12.verticalSpace,
-
-            /// Divider
-            CommonDivider(
-              text: strings.orDivider,
-              color: ColorPalette.white400,
-            ),
+            CommonDivider(text: strings.orDivider, color: ColorPalette.white400),
             12.verticalSpace,
-
-            /// Sign in button
             _buildSignInButton(context, strings),
             16.verticalSpace,
-
-            /// Terms
             TermsAndCondition(strings: strings),
-            Spacer(),
-
-            /// Bottom Logo
+            const Spacer(),
             SvgPicture.asset(ImageRes.svgs.appTitleLogo),
             16.verticalSpace,
           ],
@@ -105,7 +94,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the main "Create Account" button
   Widget _buildCreateAccountButton(
     BuildContext context,
     AppLocalizations strings,
@@ -119,35 +107,14 @@ class SignUpScreen extends StatelessWidget {
         textStyle: TextStyles.s16.w600.generalSans
             .lhPercent(100)
             .cl(ColorPalette.grey800),
+        isLoading: controller.isLoading.value,
         onTap: controller.isButtonEnabled.value && !controller.isLoading.value
             ? () async {
                 if (_formKey.currentState!.validate()) {
                   final success = await controller.registerUser();
+                  if (!context.mounted) return;
                   if (success) {
-                    Get.put(OnboardingController());
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SplashMessageScreen(
-                          title: "You are successfully\nSigned up to Starnest",
-                          circleColor: const Color(0xFF9DD870),
-                          backgroundColor: const Color(0xFF0B0B0B),
-                          headerImageUrl: "https://placehold.co/375x48",
-                          icon: const Icon(
-                            Icons.check,
-                            size: 48,
-                            color: Colors.black,
-                          ),
-                          nextPage: OnboardingInterestsScreen(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    SnackBarUtils.showTopSnackBar(
-                      context,
-                      'Signup failed. Please try again!',
-                      isError: true,
-                    );
+                    Get.toNamed(AppRoutes.onboarding);
                   }
                 }
               }
@@ -156,7 +123,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the secondary "Sign in now" button
   Widget _buildSignInButton(BuildContext context, AppLocalizations strings) {
     return CommonButton(
       padding: 12.paddingV,
@@ -167,9 +133,7 @@ class SignUpScreen extends StatelessWidget {
       textStyle: TextStyles.s16.w600.generalSans
           .lhPercent(100)
           .cl(ColorPalette.white300),
-      onTap: () {
-        context.pushReplacementNamed(AppRoutes.signinStarnest);
-      },
+      onTap: () => context.pushReplacementNamed(AppRoutes.signinStarnest),
     );
   }
 }

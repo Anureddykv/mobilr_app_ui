@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starnest/features/splash/presentation/bindings/splash_binding.dart';
 import 'package:starnest/features/splash/presentation/pages/splash_screen.dart';
+import 'package:starnest/features/auth/presentation/bindings/auth_binding.dart';
 import 'package:starnest/features/auth/presentation/pages/login_option_screen.dart';
 import 'package:starnest/features/auth/presentation/pages/login_screen.dart';
 import 'package:starnest/features/auth/presentation/pages/signup_screen.dart';
@@ -30,6 +32,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.splash,
       page: () => const SplashScreen(),
+      binding: SplashBinding(),
       transition: Transition.fade,
     ),
 
@@ -39,16 +42,19 @@ class AppPages {
     GetPage(
       name: AppRoutes.loginOption,
       page: () => const LoginOptionScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.signinStarnest,
       page: () => const SignInScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.signup,
       page: () => SignUpScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
 
@@ -87,7 +93,7 @@ class AppPages {
           itemType: args?['itemType'] ?? 'Item',
           initialRating: args?['initialRating'] ?? 0.0,
           accentColor: args?['accentColor'] ?? const Color(0xFF54B6E0),
-          ratingAssetPath: args?['ratingAssetPath'] ?? "assets/images/sd.png",
+          ratingAssetPath: args?['ratingAssetPath'] ?? 'assets/images/sd.png',
         );
       },
       transition: Transition.downToUp,
@@ -142,7 +148,7 @@ class AppPages {
           itemTitle: args?['itemTitle'] ?? '',
           comments: args?['comments'] ?? const [],
           iconAssetPath:
-              args?['iconAssetPath'] ?? "assets/images/restaurants.png",
+              args?['iconAssetPath'] ?? 'assets/images/restaurants.png',
           iconColor: args?['iconColor'] ?? const Color(0xFF54B6E0),
         );
       },
