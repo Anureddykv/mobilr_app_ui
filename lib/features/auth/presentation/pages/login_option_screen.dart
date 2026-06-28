@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:starnest/core/constants/app_images.dart';
 import 'package:starnest/core/constants/color_palette.dart';
-import 'package:starnest/core/extensions/context_ext.dart';
 import 'package:starnest/core/extensions/num_ext.dart';
 import 'package:starnest/core/extensions/text_style_ext.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import 'package:starnest/core/utils/snackbar_utils.dart';
 import 'package:starnest/features/auth/presentation/controllers/login_option_controller.dart';
 import 'package:starnest/features/auth/presentation/widget/term_condition_widget.dart';
@@ -57,7 +57,7 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
             textStyle: TextStyles.s16.w600.generalSans
                 .lhPercent(100)
                 .cl(ColorPalette.grey800),
-            onTap: () => context.pushNamed(AppRoutes.signup),
+            onTap: () => NavigationService.instance.to(AppRoutes.signup),
           ),
           16.verticalSpace,
           TermsAndCondition(strings: strings),
@@ -86,7 +86,8 @@ class LoginOptionScreen extends GetView<LoginOptionController> {
                 .cl(ColorPalette.grey400),
             borderRadius: 16,
             border: Border.all(color: ColorPalette.grey400, width: 2),
-            onTap: () => context.pushNamed(AppRoutes.signinStarnest),
+            onTap: () =>
+                NavigationService.instance.to(AppRoutes.signinStarnest),
           ),
           12.verticalSpace,
 

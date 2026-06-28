@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:starnest/app/routes/app_routes.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import 'package:starnest/features/auth/domain/usecases/google_signin_usecase.dart';
 
 /// GetX controller for the login option (social sign-in) screen.
@@ -27,9 +28,9 @@ class LoginOptionController extends GetxController {
       onSuccess: (entity) {
         if (entity.isNewUser) {
           // Navigate to onboarding for new users.
-          Get.toNamed(AppRoutes.onboarding);
+          NavigationService.instance.to(AppRoutes.onboarding);
         } else {
-          Get.offAllNamed(AppRoutes.home);
+          NavigationService.instance.offAll(AppRoutes.home);
         }
       },
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starnest/app/routes/app_routes.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
 import 'package:starnest/features/auth/domain/usecases/signup_usecase.dart';
 
@@ -40,7 +42,7 @@ class SignupController extends GetxController {
     isButtonEnabled.value = isValid;
   }
 
-  Future<bool> registerUser() async {
+  Future<void> registerUser() async {
     isLoading.value = true;
     errorMessage.value = null;
 
@@ -56,7 +58,7 @@ class SignupController extends GetxController {
 
     isLoading.value = false;
 
-    return result.fold(
+    result.fold(
       onFailure: (failure) {
         errorMessage.value = failure.message;
         return false;
@@ -71,7 +73,7 @@ class SignupController extends GetxController {
           email: entity.email ?? emailController.text,
           avatarUrl: entity.avatarUrl,
         );
-        return true;
+        NavigationService.instance.off(AppRoutes.onboarding);
       },
     );
   }

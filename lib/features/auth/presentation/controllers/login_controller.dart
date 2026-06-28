@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/app/routes/app_routes.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
 import 'package:starnest/features/auth/domain/usecases/login_usecase.dart';
 
@@ -61,7 +62,7 @@ class LoginController extends GetxController {
           email: entity.email,
           avatarUrl: entity.avatarUrl,
         );
-        Get.offAllNamed(AppRoutes.home);
+        NavigationService.instance.offAll(AppRoutes.home);
       },
     );
   }

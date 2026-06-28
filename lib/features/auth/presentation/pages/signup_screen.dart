@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:starnest/core/constants/app_images.dart';
 import 'package:starnest/core/constants/color_palette.dart';
-import 'package:starnest/core/extensions/context_ext.dart';
 import 'package:starnest/core/extensions/num_ext.dart';
 import 'package:starnest/core/extensions/text_style_ext.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import 'package:starnest/core/utils/snackbar_utils.dart';
 import 'package:starnest/features/auth/presentation/controllers/signup_controller.dart';
 import 'package:starnest/features/auth/presentation/widget/term_condition_widget.dart';
@@ -80,7 +80,10 @@ class SignUpScreen extends GetView<SignupController> {
             32.verticalSpace,
             _buildCreateAccountButton(context, strings),
             12.verticalSpace,
-            CommonDivider(text: strings.orDivider, color: ColorPalette.white400),
+            CommonDivider(
+              text: strings.orDivider,
+              color: ColorPalette.white400,
+            ),
             12.verticalSpace,
             _buildSignInButton(context, strings),
             16.verticalSpace,
@@ -111,10 +114,10 @@ class SignUpScreen extends GetView<SignupController> {
         onTap: controller.isButtonEnabled.value && !controller.isLoading.value
             ? () async {
                 if (_formKey.currentState!.validate()) {
-                  final success = await controller.registerUser();
-                  if (!context.mounted) return;
-                  if (success) {
-                    Get.toNamed(AppRoutes.onboarding);
+                  await controller.registerUser();
+                  final err = controller.errorMessage.value;
+                  if (err != null && context.mounted) {
+                    SnackBarUtils.showTopSnackBar(context, err, isError: true);
                   }
                 }
               }
@@ -133,7 +136,7 @@ class SignUpScreen extends GetView<SignupController> {
       textStyle: TextStyles.s16.w600.generalSans
           .lhPercent(100)
           .cl(ColorPalette.white300),
-      onTap: () => context.pushReplacementNamed(AppRoutes.signinStarnest),
+      onTap: () => NavigationService.instance.off(AppRoutes.signinStarnest),
     );
   }
 }

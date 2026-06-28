@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:starnest/core/extensions/context_ext.dart';
+import 'package:starnest/core/service/navigator_service.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/constants/app_dimen.dart';
 import '../../core/extensions/text_style_ext.dart';
@@ -51,7 +50,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: AppDimen.appBarLeadingWidth,
       leading: showBack
           ? IconButton(
-              onPressed: onBack ?? () => context.pop(),
+              onPressed: onBack ?? () => NavigationService.instance.back(),
               icon: const Icon(Icons.arrow_back, color: Colors.white),
             )
           : null,
