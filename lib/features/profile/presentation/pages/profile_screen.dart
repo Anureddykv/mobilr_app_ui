@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/features/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:starnest/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:starnest/features/profile/domain/entities/user_profile.dart';
 import 'package:starnest/features/settings/presentation/pages/admin_screen_adding_new_title.dart';
 import 'package:starnest/features/settings/presentation/pages/settings_screen.dart';
 
@@ -22,7 +23,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController profileController = Get.put(ProfileController());
-  final DashboardController dashboardController = Get.find<DashboardController>();
+  final DashboardController dashboardController =
+      Get.find<DashboardController>();
 
   @override
   Widget build(BuildContext context) {
@@ -145,9 +147,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Settings Icon
           InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
             borderRadius: BorderRadius.circular(24),
             child: const Padding(
@@ -265,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: entry.value
                         .map((interest) => _buildFilterChip(interest))
                         .toList(),
-                  )
+                  ),
                 ],
               ),
             );
@@ -335,8 +337,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: (itemUrl.isEmpty)
                               ? const Center(
-                                  child: Icon(Icons.add_photo_alternate_outlined,
-                                      color: secondaryTextColor),
+                                  child: Icon(
+                                    Icons.add_photo_alternate_outlined,
+                                    color: secondaryTextColor,
+                                  ),
                                 )
                               : null,
                         );
@@ -354,8 +358,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Center(
-                            child: Icon(Icons.add,
-                                color: secondaryTextColor, size: 30),
+                            child: Icon(
+                              Icons.add,
+                              color: secondaryTextColor,
+                              size: 30,
+                            ),
                           ),
                         ),
                       ),
@@ -418,7 +425,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AdminScreenAddingNewTitle()),
+                MaterialPageRoute(
+                  builder: (context) => const AdminScreenAddingNewTitle(),
+                ),
               );
             },
             child: Container(
@@ -446,10 +455,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: chipBackgroundColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text('Add New Type',
-              style: TextStyle(color: Colors.white, height: 0.72)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text(
+            'Add New Type',
+            style: TextStyle(color: Colors.white, height: 0.72),
+          ),
           content: TextField(
             controller: controller,
             style: const TextStyle(color: Colors.white),
@@ -457,16 +469,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               hintText: 'Enter title type...',
               hintStyle: TextStyle(color: secondaryTextColor, height: 0.72),
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: secondaryTextColor)),
+                borderSide: BorderSide(color: secondaryTextColor),
+              ),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
+                borderSide: BorderSide(color: Colors.white),
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child:
-                  const Text('Cancel', style: TextStyle(color: Colors.white, height: 0.72)),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white, height: 0.72),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -476,7 +492,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
                 Navigator.pop(context);
               },
-              child: const Text('Add', style: TextStyle(color: Colors.white, height: 0.72)),
+              child: const Text(
+                'Add',
+                style: TextStyle(color: Colors.white, height: 0.72),
+              ),
             ),
           ],
         );

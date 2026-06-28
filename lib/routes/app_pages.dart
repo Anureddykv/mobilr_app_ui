@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/features/splash/presentation/pages/splash_screen.dart';
-import 'package:starnest/features/auth/presentation/pages/credential_screen_signin.dart';
-import 'package:starnest/features/auth/presentation/pages/credential_screen_signin_starnest.dart';
-import 'package:starnest/features/auth/presentation/pages/credential_screen_signup.dart';
+import 'package:starnest/features/auth/presentation/pages/login_option_screen.dart';
+import 'package:starnest/features/auth/presentation/pages/login_screen.dart';
+import 'package:starnest/features/auth/presentation/pages/signup_screen.dart';
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_screen.dart';
 import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen.dart';
 import 'package:starnest/features/dashboard/presentation/pages/dashboard_screen.dart';
@@ -37,18 +37,18 @@ class AppPages {
     // Auth
     // -------------------------------------------------------------------------
     GetPage(
-      name: AppRoutes.signin,
-      page: () => const CredentialScreenSignin(),
+      name: AppRoutes.loginOption,
+      page: () => const LoginOptionScreen(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.signinStarnest,
-      page: () => const CredentialScreenSigninStarnest(),
+      page: () => const SignInScreen(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.signup,
-      page: () => CredentialScreenSignup(),
+      page: () => SignUpScreen(),
       transition: Transition.rightToLeft,
     ),
 

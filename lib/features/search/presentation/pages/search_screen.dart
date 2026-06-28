@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:starnest/core/tracking/starnest_tracker.dart';
+import 'package:starnest/features/search/domain/entities/search_result.dart';
+import 'package:starnest/features/search/presentation/controllers/search_controller.dart'
+    as search_ctrl;
 import 'package:starnest/features/review/presentation/pages/main_review_screen_books.dart';
 import 'package:starnest/features/review/presentation/pages/main_review_screen_movies.dart';
 import 'package:starnest/features/review/presentation/pages/main_review_screen_games.dart';
@@ -15,30 +19,6 @@ const Color faintTextColor = Color(0xFF3F3F3F);
 const Color primaryTextColor = Colors.white;
 const Color accentColor = Color(0xFF54B6E0);
 const Color ratingBarBackgroundColor = Color(0xFF1E1E1E);
-
-class SearchResult {
-  final String id;
-  final String title;
-  final String imageUrl;
-  final String subtitle1;
-  final String subtitle2;
-  final String subtitle3;
-  final String description;
-  final List<String> tags;
-  final double rating;
-
-  SearchResult({
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-    required this.subtitle1,
-    required this.subtitle2,
-    required this.subtitle3,
-    required this.description,
-    this.tags = const [],
-    this.rating = 0.0,
-  });
-}
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -69,19 +49,19 @@ class _SearchScreenState extends State<SearchScreen> {
   final List<Map<String, String>> _mockRecentData = [
     {
       "url": "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
-      "title": "Kalki 2898 AD"
+      "title": "Kalki 2898 AD",
     },
     {
       "url": "https://image.tmdb.org/t/p/w500/8Y4u2Qut2jI8t33fF2gIeG2xT5A.jpg",
-      "title": "Salaar"
+      "title": "Salaar",
     },
     {
       "url": "https://image.tmdb.org/t/p/w500/r9oTE27Lptp0I1b5y2Q2I6L52iM.jpg",
-      "title": "RRR"
+      "title": "RRR",
     },
     {
       "url": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Ya0GGW8iq.jpg",
-      "title": "Dune: Part Two"
+      "title": "Dune: Part Two",
     },
   ];
 
@@ -95,7 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
     SearchResult(
       id: "movie_rrr",
       title: "RRR",
-      imageUrl: "https://image.tmdb.org/t/p/w500/r9oTE27Lptp0I1b5y2Q2I6L52iM.jpg",
+      imageUrl:
+          "https://image.tmdb.org/t/p/w500/r9oTE27Lptp0I1b5y2Q2I6L52iM.jpg",
       subtitle1: "2h 58m",
       subtitle2: "U/A",
       subtitle3: "Telugu",
@@ -106,7 +87,8 @@ class _SearchScreenState extends State<SearchScreen> {
     SearchResult(
       id: "movie_kalki",
       title: "Kalki 2898 AD",
-      imageUrl: "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
+      imageUrl:
+          "https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
       subtitle1: "3h 1m",
       subtitle2: "U/A",
       subtitle3: "Sci-Fi",
@@ -117,7 +99,8 @@ class _SearchScreenState extends State<SearchScreen> {
     SearchResult(
       id: "movie_dune2",
       title: "Dune: Part Two",
-      imageUrl: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Ya0GGW8iq.jpg",
+      imageUrl:
+          "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Ya0GGW8iq.jpg",
       subtitle1: "2h 46m",
       subtitle2: "PG-13",
       subtitle3: "English",
@@ -129,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
       id: "book_silent_patient",
       title: "The Silent Patient",
       imageUrl:
-      "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1668783433l/40097951.jpg",
+          "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1668783433l/40097951.jpg",
       subtitle1: "Book",
       subtitle2: "Psychological",
       subtitle3: "Thriller",
@@ -178,6 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     }
   }
+
   final GlobalKey _topRowKey = GlobalKey();
   double _topRowHeight = 40.0;
 
@@ -205,8 +189,9 @@ class _SearchScreenState extends State<SearchScreen> {
       results = _isAiSearchActive ? [] : _allSearchResults;
     } else {
       results = _allSearchResults
-          .where((r) =>
-          r.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .where(
+            (r) => r.title.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
           .toList();
     }
 
@@ -218,13 +203,16 @@ class _SearchScreenState extends State<SearchScreen> {
 
     setState(() {
       _filteredSearchResults = results;
-      _relevantFilters = _allSearchResults
-          .where((r) =>
-          r.title.toLowerCase().contains(_searchQuery.toLowerCase()))
-          .expand((r) => r.tags)
-          .toSet()
-          .toList()
-        ..sort();
+      _relevantFilters =
+          _allSearchResults
+              .where(
+                (r) =>
+                    r.title.toLowerCase().contains(_searchQuery.toLowerCase()),
+              )
+              .expand((r) => r.tags)
+              .toSet()
+              .toList()
+            ..sort();
     });
   }
 
@@ -316,21 +304,32 @@ class _SearchScreenState extends State<SearchScreen> {
       decoration: InputDecoration(
         hintText: 'Ask Starnest AI anything...',
         hintStyle: const TextStyle(
-            color: faintTextColor, fontSize: 14, fontWeight: FontWeight.w500, height: 0.72),
+          color: faintTextColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          height: 0.72,
+        ),
         prefixIcon: const Icon(Icons.search, color: faintTextColor, size: 22),
         suffixIcon: _searchQuery.isNotEmpty
             ? IconButton(
-          icon: const Icon(Icons.close, color: secondaryTextColor, size: 20),
-          onPressed: _clearSearch,
-        )
+                icon: const Icon(
+                  Icons.close,
+                  color: secondaryTextColor,
+                  size: 20,
+                ),
+                onPressed: _clearSearch,
+              )
             : null,
         filled: true,
         fillColor: cardBackgroundColor,
-        contentPadding:
-        const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 20,
+        ),
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(16.0),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }
@@ -339,24 +338,30 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       children: [
-        const Text('Suggestions',
-            style: TextStyle(
-                color: faintTextColor,
-                fontSize: 12,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                height: 0.72)),
+        const Text(
+          'Suggestions',
+          style: TextStyle(
+            color: faintTextColor,
+            fontSize: 12,
+            fontFamily: 'General Sans Variable',
+            fontWeight: FontWeight.w600,
+            height: 0.72,
+          ),
+        ),
         const SizedBox(height: 14),
         _buildSuggestionChips(),
 
         const SizedBox(height: 24),
-        const Text('Recents',
-            style: TextStyle(
-                color: faintTextColor,
-                fontSize: 12,
-                fontFamily: 'General Sans Variable',
-                fontWeight: FontWeight.w600,
-                height: 0.72)),
+        const Text(
+          'Recents',
+          style: TextStyle(
+            color: faintTextColor,
+            fontSize: 12,
+            fontFamily: 'General Sans Variable',
+            fontWeight: FontWeight.w600,
+            height: 0.72,
+          ),
+        ),
         const SizedBox(height: 12),
         _isLoading ? _buildRecentsShimmer() : _buildRecentMovies(),
       ],
@@ -368,7 +373,7 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       itemCount: _filteredSearchResults.length,
       separatorBuilder: (context, index) =>
-      const Divider(color: cardBackgroundColor, height: 1),
+          const Divider(color: cardBackgroundColor, height: 1),
       itemBuilder: (context, index) {
         final result = _filteredSearchResults[index];
         return _buildSearchResultItem(result, index + 1);
@@ -391,9 +396,11 @@ class _SearchScreenState extends State<SearchScreen> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 50.0),
             child: Center(
-                child: Text('No results for the selected filters.',
-                    style:
-                    TextStyle(color: secondaryTextColor, fontSize: 16))),
+              child: Text(
+                'No results for the selected filters.',
+                style: TextStyle(color: secondaryTextColor, fontSize: 16),
+              ),
+            ),
           )
         else
           ListView.separated(
@@ -401,7 +408,7 @@ class _SearchScreenState extends State<SearchScreen> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _filteredSearchResults.length,
             separatorBuilder: (context, index) =>
-            const Divider(color: chipBackgroundColor, height: 1),
+                const Divider(color: chipBackgroundColor, height: 1),
             itemBuilder: (context, index) {
               final result = _filteredSearchResults[index];
               return _buildNumberedSearchResultItem(result, index + 1);
@@ -415,7 +422,9 @@ class _SearchScreenState extends State<SearchScreen> {
     return Align(
       alignment: Alignment.centerRight,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: const ShapeDecoration(
@@ -444,12 +453,17 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildAiResponseCard() {
-    final rrrResult = _allSearchResults.firstWhere((r) => r.id == "movie_rrr", orElse: () => _allSearchResults.first);
+    final rrrResult = _allSearchResults.firstWhere(
+      (r) => r.id == "movie_rrr",
+      orElse: () => _allSearchResults.first,
+    );
 
     return Align(
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.95),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.95,
+        ),
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: const ShapeDecoration(
@@ -469,7 +483,11 @@ class _SearchScreenState extends State<SearchScreen> {
               Text.rich(
                 TextSpan(
                   style: const TextStyle(
-                      color: Colors.white, fontSize: 14, height: 1.5, fontFamily: 'General Sans Variable'),
+                    color: Colors.white,
+                    fontSize: 14,
+                    height: 1.5,
+                    fontFamily: 'General Sans Variable',
+                  ),
                   children: [
                     const TextSpan(
                       text: 'RRR',
@@ -482,8 +500,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     TextSpan(
                       text: 'Academy Award',
                       style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withOpacity(0.8)),
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
                     ),
                     const TextSpan(
                       text: '.',
@@ -493,7 +512,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               const SizedBox(height: 14),
-              const Divider(color: chipBackgroundColor, height: 1, thickness: 1),
+              const Divider(
+                color: chipBackgroundColor,
+                height: 1,
+                thickness: 1,
+              ),
               const SizedBox(height: 14),
               _buildEmbeddedResultCard(rrrResult),
               const SizedBox(height: 14),
@@ -524,7 +547,9 @@ class _SearchScreenState extends State<SearchScreen> {
             height: 80,
             decoration: ShapeDecoration(
               image: DecorationImage(
-                  image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
+                image: NetworkImage(result.imageUrl),
+                fit: BoxFit.cover,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -548,7 +573,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           fontSize: 16,
                           fontFamily: 'General Sans Variable',
                           fontWeight: FontWeight.w600,
-                            height: 0.72
+                          height: 0.72,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -602,7 +627,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 16,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w600,
-                    height: 0.72
+                  height: 0.72,
                 ),
               ),
               const SizedBox(width: 8),
@@ -617,22 +642,42 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   Widget star;
                   if (i < fullStars) {
-                    star = Image.asset("assets/images/sd.png", width: 16, height: 16, color: filledStarColor);
+                    star = Image.asset(
+                      "assets/images/sd.png",
+                      width: 16,
+                      height: 16,
+                      color: filledStarColor,
+                    );
                   } else if (i == fullStars && fraction >= 0.25) {
                     star = Stack(
                       children: [
-                        Image.asset("assets/images/sd.png", width: 16, height: 16, color: emptyStarColor),
+                        Image.asset(
+                          "assets/images/sd.png",
+                          width: 16,
+                          height: 16,
+                          color: emptyStarColor,
+                        ),
                         ClipRect(
                           child: Align(
                             alignment: Alignment.centerLeft,
                             widthFactor: fraction,
-                            child: Image.asset("assets/images/sd.png", width: 16, height: 16, color: filledStarColor),
+                            child: Image.asset(
+                              "assets/images/sd.png",
+                              width: 16,
+                              height: 16,
+                              color: filledStarColor,
+                            ),
                           ),
                         ),
                       ],
                     );
                   } else {
-                    star = Image.asset("assets/images/sd.png", width: 16, height: 16, color: emptyStarColor);
+                    star = Image.asset(
+                      "assets/images/sd.png",
+                      width: 16,
+                      height: 16,
+                      color: emptyStarColor,
+                    );
                   }
                   return Padding(
                     padding: const EdgeInsets.only(right: 2.0),
@@ -658,7 +703,11 @@ class _SearchScreenState extends State<SearchScreen> {
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (Widget child, Animation<double> animation) {
-              return SizeTransition(sizeFactor: animation, child: child, axisAlignment: -1.0);
+              return SizeTransition(
+                sizeFactor: animation,
+                child: child,
+                axisAlignment: -1.0,
+              );
             },
             child: _showFilters
                 ? _buildAllFiltersList()
@@ -703,12 +752,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w400,
                       letterSpacing: 0.40,
-                        height: 0.72
+                      height: 0.72,
                     ),
                   ),
                   const SizedBox(width: 4),
                   Icon(
-                    _showFilters ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    _showFilters
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: Colors.white,
                     size: 14,
                   ),
@@ -724,14 +775,16 @@ class _SearchScreenState extends State<SearchScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _selectedFilters
-                    .map((filter) => Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: _buildFilterChip(
-                        label: filter,
-                        isSelected: true,
-                        onTap: () => _toggleFilter(filter),
+                    .map(
+                      (filter) => Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: _buildFilterChip(
+                          label: filter,
+                          isSelected: true,
+                          onTap: () => _toggleFilter(filter),
+                        ),
                       ),
-                    ))
+                    )
                     .toList(),
               ),
             ),
@@ -757,11 +810,13 @@ class _SearchScreenState extends State<SearchScreen> {
         spacing: 12,
         runSpacing: 12,
         children: _relevantFilters
-            .map((filter) => _buildFilterChip(
-          label: filter,
-          isSelected: _selectedFilters.contains(filter),
-          onTap: () => _toggleFilter(filter),
-        ))
+            .map(
+              (filter) => _buildFilterChip(
+                label: filter,
+                isSelected: _selectedFilters.contains(filter),
+                onTap: () => _toggleFilter(filter),
+              ),
+            )
             .toList(),
       ),
     );
@@ -782,7 +837,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ? Colors.white.withOpacity(0.15)
               : Colors.white.withOpacity(0.08),
           borderRadius: BorderRadius.circular(10),
-          border: isSelected ? Border.all(color: Colors.white.withOpacity(0.3), width: 1) : null,
+          border: isSelected
+              ? Border.all(color: Colors.white.withOpacity(0.3), width: 1)
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -794,12 +851,14 @@ class _SearchScreenState extends State<SearchScreen> {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
+                color: isSelected
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.6),
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 fontFamily: 'General Sans Variable',
                 letterSpacing: 0.3,
-                  height: 0.72
+                height: 0.72,
               ),
             ),
           ],
@@ -825,7 +884,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 16,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w600,
-                    height: 0.72
+                  height: 0.72,
                 ),
               ),
             ),
@@ -835,8 +894,12 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 80,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  image: NetworkImage(result.imageUrl),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -849,11 +912,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'General Sans Variable',
-                        fontWeight: FontWeight.w600,
-                        ),
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -875,7 +938,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontSize: 12,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w500,
-                        height: 0.72
+                      height: 0.72,
                     ),
                   ),
                 ],
@@ -900,11 +963,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontSize: 14,
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w600,
-                      height: 0.72
+                    height: 0.72,
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -928,7 +991,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontSize: 16,
                   fontFamily: 'General Sans Variable',
                   fontWeight: FontWeight.w600,
-                    height: 0.72
+                  height: 0.72,
                 ),
               ),
             ),
@@ -938,8 +1001,12 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 80,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(result.imageUrl), fit: BoxFit.cover),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  image: NetworkImage(result.imageUrl),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -952,11 +1019,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'General Sans Variable',
-                        fontWeight: FontWeight.w600,
-                        height: 0.72),
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'General Sans Variable',
+                      fontWeight: FontWeight.w600,
+                      height: 0.72,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -978,7 +1046,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontSize: 12,
                       fontFamily: 'General Sans Variable',
                       fontWeight: FontWeight.w500,
-                        height: 0.72
+                      height: 0.72,
                     ),
                   ),
                 ],
@@ -1004,11 +1072,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontSize: 14,
                     fontFamily: 'General Sans Variable',
                     fontWeight: FontWeight.w600,
-                      height: 0.72
+                    height: 0.72,
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -1031,10 +1099,12 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Container(
                 decoration: ShapeDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(movie['url']!),
-                      fit: BoxFit.cover),
+                    image: NetworkImage(movie['url']!),
+                    fit: BoxFit.cover,
+                  ),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
               ),
             ),
@@ -1056,17 +1126,22 @@ class _SearchScreenState extends State<SearchScreen> {
               visualDensity: VisualDensity.compact,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+              labelPadding: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 0,
+              ),
               label: Text('“$suggestion”'),
               backgroundColor: chipBackgroundColor,
               labelStyle: const TextStyle(
-                  color: faintTextColor,
-                  fontSize: 12,
-                  fontFamily: 'General Sans Variable',
-                  fontWeight: FontWeight.w500,
-                  height: 1.1),
+                color: faintTextColor,
+                fontSize: 12,
+                fontFamily: 'General Sans Variable',
+                fontWeight: FontWeight.w500,
+                height: 1.1,
+              ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+                borderRadius: BorderRadius.circular(6),
+              ),
               side: BorderSide.none,
             ),
           ),
@@ -1091,7 +1166,8 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ),
           ),
@@ -1101,13 +1177,17 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildSubtitleText(String text) {
-    return Text(text,
-        style: const TextStyle(
-            color: secondaryTextColor,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'General Sans Variable',
-            letterSpacing: 0.5,height: 0.72));
+    return Text(
+      text,
+      style: const TextStyle(
+        color: secondaryTextColor,
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'General Sans Variable',
+        letterSpacing: 0.5,
+        height: 0.72,
+      ),
+    );
   }
 
   Widget _buildDotSeparator() {

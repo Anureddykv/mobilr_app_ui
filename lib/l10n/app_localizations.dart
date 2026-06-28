@@ -94,11 +94,101 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
-  /// No description provided for @appTitle.
+  /// The name of the application displayed in the app header and stores.
   ///
   /// In en, this message translates to:
   /// **'StarNest'**
   String get appTitle;
+
+  /// Prompt shown when a user attempts to submit a review without being signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in before you give review'**
+  String get signInBeforeReview;
+
+  /// Button text used to navigate users to the account registration screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an Account'**
+  String get createAccount;
+
+  /// Button text for signing in with a StarNest account.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Starnest'**
+  String get loginWithStarnest;
+
+  /// Button text for authenticating with a Google account.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// Button text for authenticating with a Facebook account.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Facebook'**
+  String get continueWithFacebook;
+
+  /// Button text for authenticating with an Apple account.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// Text displayed between multiple authentication options.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orDivider;
+
+  /// Text shown before links to the Terms & Conditions and Privacy Policy on the sign-in screen.
+  ///
+  /// In en, this message translates to:
+  /// **'By signing in using Google/Apple/Facebook you acknowledge that you have read and agree to our '**
+  String get termsAcknowledgement;
+
+  /// Label for the Terms & Conditions link.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsConditions;
+
+  /// Connector word used between Terms & Conditions and Privacy Policy links.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get andWord;
+
+  /// Label for the Privacy Policy link.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Success message displayed after a user creates a new StarNest account.
+  ///
+  /// In en, this message translates to:
+  /// **'You are successfully\nSigned up to Starnest'**
+  String get signupSuccess;
+
+  /// Error message shown when Google authentication is unsuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. Please try again.'**
+  String get googleSignInFailed;
+
+  /// Button text for signing in with a StarNest account.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// Button text for signing in with a StarNest account.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in now'**
+  String get signInNow;
 }
 
 class _AppLocalizationsDelegate

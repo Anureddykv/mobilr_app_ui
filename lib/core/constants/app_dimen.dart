@@ -7,7 +7,7 @@ class AppDimen {
   // Buttons
   // ==========================================================================
 
-  static double get btnHeight => 56.0.h;
+  static double get btnHeight => 48.0.h;
   static double get btnHeightLg => 64.0.h;
   static double get btnWidth => 345.0.w;
   static double get btnRadius => 14.r;
@@ -17,7 +17,7 @@ class AppDimen {
   // Inputs
   // ==========================================================================
 
-  static double get inputHeight => 56.0.h;
+  static double get inputHeight => 48.0.h;
   static double get inputPadding => 16.0.w;
   static double get inputBorderRadius => 12.r;
 
@@ -34,7 +34,10 @@ class AppDimen {
   // ==========================================================================
 
   /// Default horizontal screen padding
-  static double get screenPaddingH => 20.0.w;
+  static double get screenPaddingH => 24.0.w;
+
+  /// Default vertical screen padding
+  static double get screenPaddingV => 16.0.h;
 
   /// Default vertical section spacing
   static double get sectionSpacingV => 24.0.h;

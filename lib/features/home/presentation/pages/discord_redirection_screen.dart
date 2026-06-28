@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/features/dashboard/presentation/pages/dashboard_screen.dart';
-import 'package:starnest/features/auth/presentation/pages/credential_screen_signup.dart';
+import 'package:starnest/features/auth/presentation/pages/signup_screen.dart';
 
 class DiscordRedirectionScreen extends StatelessWidget {
   final String serverName;
@@ -37,7 +37,6 @@ class DiscordRedirectionScreen extends StatelessWidget {
             Navigator.maybePop(context);
           },
         ),
-
       ),
       body: SafeArea(
         child: SizedBox(

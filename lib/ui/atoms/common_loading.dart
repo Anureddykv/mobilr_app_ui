@@ -29,9 +29,7 @@ class CommonLoading extends StatelessWidget {
           height: size,
           child: CircularProgressIndicator(
             strokeWidth: 2.5,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              color ?? ColorPalette.movieAccent,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(color!),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/features/chat/presentation/pages/features_screen_community.dart';
+import 'package:starnest/features/community/domain/entities/community.dart';
 import 'package:starnest/features/community/presentation/controllers/community_controller.dart';
 import 'package:starnest/features/community/presentation/pages/community_info_screen.dart';
 import 'package:starnest/features/dashboard/presentation/controllers/dashboard_controller.dart';
@@ -10,8 +11,11 @@ class JoinedCommunityListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CommunityController communityController = Get.put(CommunityController());
-    final DashboardController dashboardController = Get.find<DashboardController>();
+    final CommunityController communityController = Get.put(
+      CommunityController(),
+    );
+    final DashboardController dashboardController =
+        Get.find<DashboardController>();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B0B0B),
@@ -36,11 +40,7 @@ class JoinedCommunityListScreen extends StatelessWidget {
         elevation: 0,
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Divider(
-            color: Color(0xFF191919),
-            height: 1,
-            thickness: 1,
-          ),
+          child: Divider(color: Color(0xFF191919), height: 1, thickness: 1),
         ),
       ),
       body: Obx(() {
@@ -48,7 +48,9 @@ class JoinedCommunityListScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           itemCount: communityController.communities.length,
           itemBuilder: (context, index) {
-            return CommunityListItem(community: communityController.communities[index]);
+            return CommunityListItem(
+              community: communityController.communities[index],
+            );
           },
         );
       }),
@@ -64,11 +66,13 @@ class CommunityListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(() => FeaturesScreenCommunity(
-              communityId: community.id,
-              communityName: community.name,
-              communityImageUrl: community.imageUrl,
-            ));
+        Get.to(
+          () => FeaturesScreenCommunity(
+            communityId: community.id,
+            communityName: community.name,
+            communityImageUrl: community.imageUrl,
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -83,11 +87,13 @@ class CommunityListItem extends StatelessWidget {
             // Community Image with onTap for info screen
             GestureDetector(
               onTap: () {
-                Get.to(() => FeaturesScreenCommunityInfo(
-                      communityName: community.name,
-                      communityImageUrl: community.imageUrl,
-                      memberCount: community.memberCount,
-                    ));
+                Get.to(
+                  () => FeaturesScreenCommunityInfo(
+                    communityName: community.name,
+                    communityImageUrl: community.imageUrl,
+                    memberCount: community.memberCount,
+                  ),
+                );
               },
               child: SizedBox(
                 width: 56,
@@ -179,10 +185,15 @@ class CommunityListItem extends StatelessWidget {
                 if (community.unreadCount > 0)
                   Container(
                     constraints: const BoxConstraints(minWidth: 15),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
                     decoration: ShapeDecoration(
                       color: const Color(0xFF9DD870),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: Text(
                       community.unreadCount.toString(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:starnest/core/extensions/context_ext.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/constants/app_dimen.dart';
 import '../../core/extensions/text_style_ext.dart';
@@ -37,8 +38,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(
-        AppDimen.appBarHeight + (bottom?.preferredSize.height ?? 0),
-      );
+    AppDimen.appBarHeight + (bottom?.preferredSize.height ?? 0),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,35 +50,14 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leadingWidth: AppDimen.appBarLeadingWidth,
       leading: showBack
-          ? GestureDetector(
-              onTap: onBack ?? () => Navigator.of(context).pop(),
-              child: Container(
-                margin: EdgeInsets.only(left: 16.w),
-                width: 40.r,
-                height: 40.r,
-                decoration: BoxDecoration(
-                  color: ColorPalette.cardBg,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: ColorPalette.separator,
-                    width: 1,
-                  ),
-                ),
-                child: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: ColorPalette.white,
-                  size: 18.r,
-                ),
-              ),
+          ? IconButton(
+              onPressed: onBack ?? () => context.pop(),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
             )
           : null,
-      title: titleWidget ??
-          (title != null
-              ? Text(
-                  title!,
-                  style: TextStyles.s18.w600,
-                )
-              : null),
+      title:
+          titleWidget ??
+          (title != null ? Text(title!, style: TextStyles.s18.w600) : null),
       actions: actions,
       bottom: bottom,
     );

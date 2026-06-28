@@ -91,10 +91,10 @@ extension TextStyleExtension on TextStyle {
   TextStyle get black => copyWith(color: ColorPalette.black);
   TextStyle get muted => copyWith(color: ColorPalette.textSecondary);
   TextStyle get hint => copyWith(color: ColorPalette.textHint);
-  TextStyle get primary => copyWith(color: ColorPalette.movieAccent);
+  // TextStyle get primary => copyWith(color: ColorPalette.movieAccent);
   TextStyle get red => copyWith(color: ColorPalette.error);
   TextStyle get green => copyWith(color: ColorPalette.success);
-  TextStyle get amber => copyWith(color: ColorPalette.ratingAmber);
+  // TextStyle get amber => copyWith(color: ColorPalette.ratingAmber);
 
   /// Dynamic colour
   TextStyle cl(Color color) => copyWith(color: color);
@@ -114,7 +114,15 @@ extension TextStyleExtension on TextStyle {
     return copyWith(height: px / fs);
   }
 
+  TextStyle lhPercent(double percent) {
+    final fs = fontSize ?? AppFontSize.s14;
+    return copyWith(height: (fs * (percent / 100)) / fs);
+  }
+
   // Named pixel line heights
+  TextStyle get h10 => lhPx(10);
+  TextStyle get h12 => lhPx(12);
+  TextStyle get h14 => lhPx(14);
   TextStyle get h16 => lhPx(16);
   TextStyle get h18 => lhPx(18);
   TextStyle get h20 => lhPx(20);

@@ -54,7 +54,7 @@ class StarNestApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       // Base design dimensions (Figma reference)
-      designSize: const Size(390, 844),
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: false,
       builder: (context, child) {

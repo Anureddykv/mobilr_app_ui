@@ -1,5 +1,6 @@
 class ImageRes {
   static const PngAssets pngs = PngAssets();
+  static const SvgAssets svgs = SvgAssets();
   static const JsonAssets json = JsonAssets();
 }
 
@@ -22,11 +23,24 @@ class PngAssets {
 
   // Backgrounds
   String get darkBg => '$_base/dark_bg.png';
+}
 
-  String get appLogo => '$_base/logo.png';
-  String get googleLogo => '$_base/google_logo.png';
-  String get appleLogo => '$_base/apple_logo.png';
-  String get facebookLogo => '$_base/facebook_logo.png';
+// ==========================================================================
+// SVG assets
+// ==========================================================================
+
+class SvgAssets {
+  const SvgAssets();
+  final String _base = 'assets/images';
+
+  // Icons
+  String get appIcon => '$_base/icons/app_icon.svg';
+  String get googleIcon => '$_base/icons/google_icon.svg';
+  String get appleIcon => '$_base/icons/apple_icon.svg';
+  String get facebookIcon => '$_base/icons/facebook_icon.svg';
+
+  //Logo
+  String get appTitleLogo => '$_base/logo/title_logo.svg';
 }
 
 // ==========================================================================

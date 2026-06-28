@@ -16,7 +16,7 @@ class AppRoutes {
   // Auth
   // ==========================================================================
 
-  static const String signin = '/signin';
+  static const String loginOption = '/loginOption';
   static const String signinStarnest = '/signinStarnest';
   static const String signup = '/signup';
 

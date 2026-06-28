@@ -9,20 +9,14 @@ class AppGradients {
   static const LinearGradient mainBackground = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      ColorPalette.darkBg,
-      ColorPalette.cardBg,
-    ],
+    colors: [ColorPalette.darkBg, ColorPalette.cardBg],
   );
 
   /// Card overlay gradient — fades image to dark bottom
   static const LinearGradient cardOverlay = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      Colors.transparent,
-      Color(0xCC0B0B0B),
-    ],
+    colors: [Colors.transparent, Color(0xCC0B0B0B)],
   );
 
   /// Accent shimmer gradient (highlight sweep)
@@ -30,8 +24,8 @@ class AppGradients {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      ColorPalette.movieAccent,
-      ColorPalette.bookAccent,
+      // ColorPalette.movieAccent,
+      // ColorPalette.bookAccent,
     ],
   );
 

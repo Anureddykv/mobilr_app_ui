@@ -2,6 +2,66 @@
   "@@locale": "en",
   "appTitle": "StarNest",
   "@appTitle": {
-    "description": "App Name"
+    "description": "The name of the application displayed in the app header and stores."
+  },
+  "signInBeforeReview": "Sign in before you give review",
+  "@signInBeforeReview": {
+    "description": "Prompt shown when a user attempts to submit a review without being signed in."
+  },
+  "createAccount": "Create an Account",
+  "@createAccount": {
+    "description": "Button text used to navigate users to the account registration screen."
+  },
+  "loginWithStarnest": "Login with Starnest",
+  "@loginWithStarnest": {
+    "description": "Button text for signing in with a StarNest account."
+  },
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Button text for authenticating with a Google account."
+  },
+  "continueWithFacebook": "Continue with Facebook",
+  "@continueWithFacebook": {
+    "description": "Button text for authenticating with a Facebook account."
+  },
+  "continueWithApple": "Continue with Apple",
+  "@continueWithApple": {
+    "description": "Button text for authenticating with an Apple account."
+  },
+  "orDivider": "or",
+  "@orDivider": {
+    "description": "Text displayed between multiple authentication options."
+  },
+  "termsAcknowledgement": "By signing in using Google/Apple/Facebook you acknowledge that you have read and agree to our ",
+  "@termsAcknowledgement": {
+    "description": "Text shown before links to the Terms & Conditions and Privacy Policy on the sign-in screen."
+  },
+  "termsConditions": "Terms & Conditions",
+  "@termsConditions": {
+    "description": "Label for the Terms & Conditions link."
+  },
+  "andWord": " and ",
+  "@andWord": {
+    "description": "Connector word used between Terms & Conditions and Privacy Policy links."
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Label for the Privacy Policy link."
+  },
+  "signupSuccess": "You are successfully\nSigned up to Starnest",
+  "@signupSuccess": {
+    "description": "Success message displayed after a user creates a new StarNest account."
+  },
+  "googleSignInFailed": "Google sign-in failed. Please try again.",
+  "@googleSignInFailed": {
+    "description": "Error message shown when Google authentication is unsuccessful."
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Button text for signing in with a StarNest account."
+  },
+  "signInNow": "Sign in now",
+  "@signInNow": {
+    "description": "Button text for signing in with a StarNest account."
   }
 }

@@ -8,28 +8,28 @@ class ColorPalette {
   // ==========================================================================
 
   /// Movie / info accent — bright sky blue
-  static const Color movieAccent = Color(0xFF54B6E0);
+  // static const Color movieAccent = Color(0xFF54B6E0);
 
-  /// Game accent — muted lime green
-  static const Color gameAccent = Color(0xFF90BE6D);
+  // /// Game accent — muted lime green
+  // static const Color gameAccent = Color(0xFF90BE6D);
 
-  /// Book accent — soft lavender
-  static const Color bookAccent = Color(0xFFCDBBE9);
+  // /// Book accent — soft lavender
+  // static const Color bookAccent = Color(0xFFCDBBE9);
 
-  /// Gadget / danger accent — vivid red-orange
-  static const Color gadgetAccent = Color(0xFFE45659);
+  // /// Gadget / danger accent — vivid red-orange
+  // static const Color gadgetAccent = Color(0xFFE45659);
 
-  /// Star / rating highlight — warm amber
-  static const Color ratingAmber = Color(0xFFF9C74F);
+  // /// Star / rating highlight — warm amber
+  // static const Color ratingAmber = Color(0xFFF9C74F);
 
-  /// Link / interactive blue
-  static const Color linkBlue = Color(0xFF436BEF);
+  // /// Link / interactive blue
+  // static const Color linkBlue = Color(0xFF436BEF);
 
-  /// Soft green (alternate success shade)
-  static const Color softGreen = Color(0xFF9DD870);
+  // /// Soft green (alternate success shade)
+  // static const Color softGreen = Color(0xFF9DD870);
 
-  /// Warm orange (notification / badge)
-  static const Color warmOrange = Color(0xFFE5AB5A);
+  // /// Warm orange (notification / badge)
+  // static const Color warmOrange = Color(0xFFE5AB5A);
 
   // ==========================================================================
   // Backgrounds
@@ -61,13 +61,11 @@ class ColorPalette {
   static const Color grey900 = Color(0xFF333333);
 
   /// Mid grey — disabled state
-  static const Color grey700 = Color(0xFF3F3F3F);
 
   /// Medium grey — chip / tag background
   static const Color grey500 = Color(0xFF4B4B4B);
 
   /// Secondary text — subdued labels
-  static const Color grey400 = Color(0xFF555555);
 
   /// Muted body text
   static const Color textSecondary = Color(0xFF626365);
@@ -111,4 +109,14 @@ class ColorPalette {
 
   static const Color shimmerBase = Color(0xFF2D2D2D);
   static const Color shimmerHighlight = Color(0xFF464646);
+
+  // Correct ColorPallete
+  // White
+  static const Color white300 = Color.fromRGBO(230, 234, 237, 1);
+  static const Color white400 = Color.fromRGBO(204, 204, 204, 1);
+
+  // Gray
+  static const Color grey400 = Color.fromRGBO(51, 51, 51, 1);
+  static const Color grey700 = Color.fromRGBO(20, 20, 20, 1);
+  static const Color grey800 = Color.fromRGBO(11, 11, 11, 1);
 }

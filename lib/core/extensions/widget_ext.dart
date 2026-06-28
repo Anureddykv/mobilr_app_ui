@@ -16,19 +16,22 @@ extension WidgetExtension on Widget {
       Padding(padding: EdgeInsets.all(AppDimen.defaultPadding), child: this);
 
   Widget get paddingH => Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppDimen.screenPaddingH),
-      child: this);
+    padding: EdgeInsets.symmetric(horizontal: AppDimen.screenPaddingH),
+    child: this,
+  );
 
   Widget get paddingV => Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimen.paddingVt),
-      child: this);
+    padding: EdgeInsets.symmetric(vertical: AppDimen.paddingVt),
+    child: this,
+  );
 
   Widget get paddingHV => Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppDimen.screenPaddingH,
-        vertical: AppDimen.paddingVt,
-      ),
-      child: this);
+    padding: EdgeInsets.symmetric(
+      horizontal: AppDimen.screenPaddingH,
+      vertical: AppDimen.screenPaddingV,
+    ),
+    child: this,
+  );
 
   // --------------------------------------------------------------------------
   // Padding — custom values
@@ -39,21 +42,17 @@ extension WidgetExtension on Widget {
     double top = 0,
     double right = 0,
     double bottom = 0,
-  }) =>
-      Padding(
-        padding: EdgeInsets.only(
-          left: left,
-          top: top,
-          right: right,
-          bottom: bottom,
-        ),
-        child: this,
-      );
+  }) => Padding(
+    padding: EdgeInsets.only(
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+    ),
+    child: this,
+  );
 
-  Widget paddingSymmetric({
-    double horizontal = 0,
-    double vertical = 0,
-  }) =>
+  Widget paddingSymmetric({double horizontal = 0, double vertical = 0}) =>
       Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontal,
@@ -83,8 +82,7 @@ extension WidgetExtension on Widget {
   // Visibility
   // --------------------------------------------------------------------------
 
-  Widget visible(bool isVisible) =>
-      Visibility(visible: isVisible, child: this);
+  Widget visible(bool isVisible) => Visibility(visible: isVisible, child: this);
 
   Widget get hide => Visibility(visible: false, child: this);
 

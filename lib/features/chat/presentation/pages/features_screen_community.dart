@@ -6,12 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:starnest/features/community/presentation/pages/community_info_screen.dart';
+import 'package:starnest/features/chat/domain/entities/chat_message.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:starnest/core/utils/snackbar_utils.dart';
-
-// --- Message Type Enum ---
-enum MessageType { text, image, audio, file }
 
 // --- Colors ---
 const Color communityScreenBackgroundColor = Color(0xFF0B0B0B);
@@ -114,7 +112,9 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       _messages.add(message);
     });
     // Use a post-frame callback to ensure the list has been updated
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom(animated: true));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _scrollToBottom(animated: true),
+    );
   }
 
   /// Scrolls the chat list to the very bottom.
@@ -195,13 +195,18 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
   Future<void> _toggleRecording() async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
-      SnackBarUtils.showTopSnackBar(context, "Microphone permission is required", isError: true);
+      SnackBarUtils.showTopSnackBar(
+        context,
+        "Microphone permission is required",
+        isError: true,
+      );
       return;
     }
 
     if (!_isRecording) {
       Directory tempDir = await getTemporaryDirectory();
-      String filePath = '${tempDir.path}/audio_${DateTime.now().millisecondsSinceEpoch}.aac';
+      String filePath =
+          '${tempDir.path}/audio_${DateTime.now().millisecondsSinceEpoch}.aac';
       await _recorder.openRecorder();
       await _recorder.startRecorder(toFile: filePath);
       setState(() => _isRecording = true);
@@ -228,7 +233,10 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: Colors.white),
-                title: const Text("Camera", style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  "Camera",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _openCamera();
@@ -236,15 +244,24 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: Colors.white),
-                title: const Text("Gallery", style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  "Gallery",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _openGallery();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.insert_drive_file, color: Colors.white),
-                title: const Text("Files", style: TextStyle(color: Colors.white)),
+                leading: const Icon(
+                  Icons.insert_drive_file,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  "Files",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _pickFile();
@@ -267,18 +284,20 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Get.back(); 
+            Get.back();
           },
         ),
 
         title: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: (){
-            Get.to(() => FeaturesScreenCommunityInfo(
-              communityName: widget.communityName,
-              communityImageUrl: widget.communityImageUrl,
-              memberCount: 1200,
-            ));
+          onTap: () {
+            Get.to(
+              () => FeaturesScreenCommunityInfo(
+                communityName: widget.communityName,
+                communityImageUrl: widget.communityImageUrl,
+                memberCount: 1200,
+              ),
+            );
           },
           child: Row(
             children: [
@@ -307,11 +326,15 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 18.0,
+              ),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final bool showHeader = index == 0 || _messages[index - 1].userId != message.userId;
+                final bool showHeader =
+                    index == 0 || _messages[index - 1].userId != message.userId;
                 return _MessageBubble(message: message, showHeader: showHeader);
               },
             ),
@@ -322,7 +345,10 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
     );
   }
 
-  Widget _buildCustomIconButton(String imagePath, {required VoidCallback onTap}) {
+  Widget _buildCustomIconButton(
+    String imagePath, {
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -345,7 +371,9 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF141414).withOpacity(0.95),
-        border: const Border(top: BorderSide(width: 0.8, color: appBarTopBorderColor)),
+        border: const Border(
+          top: BorderSide(width: 0.8, color: appBarTopBorderColor),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -354,7 +382,10 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0B0B0B),
                   borderRadius: BorderRadius.circular(20),
@@ -394,12 +425,20 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
             else
               Row(
                 children: [
-                  _buildCustomIconButton('assets/images/camera.png', onTap: _openCamera),
                   _buildCustomIconButton(
-                    _isRecording ? 'assets/images/mice.png' : 'assets/images/mice.png',
+                    'assets/images/camera.png',
+                    onTap: _openCamera,
+                  ),
+                  _buildCustomIconButton(
+                    _isRecording
+                        ? 'assets/images/mice.png'
+                        : 'assets/images/mice.png',
                     onTap: _toggleRecording,
                   ),
-                  _buildCustomIconButton('assets/images/plus.png', onTap: _openAttachmentOptions),
+                  _buildCustomIconButton(
+                    'assets/images/plus.png',
+                    onTap: _openAttachmentOptions,
+                  ),
                 ],
               ),
           ],
@@ -407,30 +446,6 @@ class _FeaturesScreenCommunityState extends State<FeaturesScreenCommunity> {
       ),
     );
   }
-}
-
-class ChatMessage {
-  final String id;
-  final MessageType type;
-  final String? text;
-  final String? filePath;
-  final String userId;
-  final String userName;
-  final String avatarUrl;
-  final DateTime timestamp;
-  final bool isMe;
-
-  ChatMessage({
-    required this.id,
-    required this.type,
-    this.text,
-    this.filePath,
-    required this.userId,
-    required this.userName,
-    required this.avatarUrl,
-    required this.timestamp,
-    required this.isMe,
-  });
 }
 
 class _MessageBubble extends StatelessWidget {
@@ -441,7 +456,9 @@ class _MessageBubble extends StatelessWidget {
 
   /// Builds the content of the bubble based on the message type.
   Widget _buildBubbleContent() {
-    Color bubbleColor = message.isMe ? messageBubbleColorMe : messageBubbleColorOther;
+    Color bubbleColor = message.isMe
+        ? messageBubbleColorMe
+        : messageBubbleColorOther;
     Color textColor = message.isMe ? Colors.white : communityPrimaryTextColor;
 
     switch (message.type) {
@@ -478,23 +495,25 @@ class _MessageBubble extends StatelessWidget {
     final isMe = message.isMe;
     final messageHeader = showHeader
         ? Padding(
-      padding: const EdgeInsets.only(bottom: 4.0),
-      child: Text(
-        message.userName,
-        style: const TextStyle(
-          color: communitySecondaryTextColor,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'General Sans Variable',
-        ),
-      ),
-    )
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              message.userName,
+              style: const TextStyle(
+                color: communitySecondaryTextColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'General Sans Variable',
+              ),
+            ),
+          )
         : const SizedBox.shrink();
 
     return Padding(
       padding: EdgeInsets.only(top: showHeader ? 12.0 : 4.0),
       child: Row(
-        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isMe
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isMe && showHeader)
@@ -508,7 +527,9 @@ class _MessageBubble extends StatelessWidget {
           if (!isMe) const SizedBox(width: 8),
           Flexible(
             child: Column(
-              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: isMe
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
                 if (!isMe && showHeader) messageHeader,
                 _buildBubbleContent(),
@@ -555,18 +576,26 @@ class _TextBubble extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             text,
-            style: TextStyle(color: textColor, fontSize: 14, fontFamily: 'General Sans Variable'),
+            style: TextStyle(
+              color: textColor,
+              fontSize: 14,
+              fontFamily: 'General Sans Variable',
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             DateFormat('h:mm a').format(timestamp),
             style: TextStyle(
-              color: isMe ? Colors.white.withOpacity(0.7) : communitySecondaryTextColor,
+              color: isMe
+                  ? Colors.white.withOpacity(0.7)
+                  : communitySecondaryTextColor,
               fontSize: 10,
               fontFamily: 'General Sans Variable',
             ),
@@ -582,12 +611,18 @@ class _ImageBubble extends StatelessWidget {
   final DateTime timestamp;
   final bool isMe;
 
-  const _ImageBubble({required this.filePath, required this.timestamp, required this.isMe});
+  const _ImageBubble({
+    required this.filePath,
+    required this.timestamp,
+    required this.isMe,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.6,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Stack(
@@ -642,7 +677,11 @@ class _FileBubble extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(isAudio ? Icons.graphic_eq : Icons.insert_drive_file, color: textColor, size: 28),
+          Icon(
+            isAudio ? Icons.graphic_eq : Icons.insert_drive_file,
+            color: textColor,
+            size: 28,
+          ),
           const SizedBox(width: 10),
           Flexible(
             child: Column(
@@ -651,14 +690,21 @@ class _FileBubble extends StatelessWidget {
               children: [
                 Text(
                   fileName,
-                  style: TextStyle(color: textColor, fontSize: 14, fontFamily: 'General Sans Variable'),
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    fontFamily: 'General Sans Variable',
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   DateFormat('h:mm a').format(timestamp),
-                  style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 10),
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),

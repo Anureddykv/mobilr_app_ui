@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:starnest/core/extensions/widget_ext.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/themes/gradients.dart';
 import 'package:starnest/ui/molecules/common_appbar.dart';
@@ -28,13 +29,14 @@ class CommonScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.backgroundColor,
-    this.showBack = true,
+    this.showBack = false,
     this.useSafeArea = true,
-    this.useGradientBg = true,
+    this.useGradientBg = false,
     this.resizeToAvoidBottomInset = true,
     this.actions,
     this.onBack,
     this.padding,
+    this.defaultPadding = false,
   });
 
   /// Convenience constructor that builds a [CommonAppBar] from a title string
@@ -54,10 +56,12 @@ class CommonScaffold extends StatelessWidget {
   final List<Widget>? actions;
   final VoidCallback? onBack;
   final EdgeInsetsGeometry? padding;
+  final bool defaultPadding;
 
   @override
   Widget build(BuildContext context) {
-    final resolvedAppBar = appBar ??
+    final resolvedAppBar =
+        appBar ??
         (title != null
             ? CommonAppBar(
                 title: title,
@@ -65,10 +69,14 @@ class CommonScaffold extends StatelessWidget {
                 onBack: onBack,
                 actions: actions,
               )
+            : showBack
+            ? CommonAppBar(showBack: showBack, onBack: onBack)
             : null);
 
     Widget content = padding != null
         ? Padding(padding: padding!, child: body)
+        : defaultPadding
+        ? body.paddingHV
         : body;
 
     if (useSafeArea) {
@@ -77,7 +85,9 @@ class CommonScaffold extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      backgroundColor: useGradientBg ? Colors.transparent : backgroundColor ?? ColorPalette.darkBg,
+      backgroundColor: useGradientBg
+          ? Colors.transparent
+          : backgroundColor ?? ColorPalette.darkBg,
       appBar: resolvedAppBar,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

@@ -65,12 +65,12 @@ class CommonTextField extends StatefulWidget {
     this.enabled = true,
     this.height,
     this.fillColor,
-  })  : isPassword = true,
-        keyboardType = TextInputType.visiblePassword,
-        maxLines = 1,
-        minLines = null,
-        maxLength = null,
-        suffixIcon = null;
+  }) : isPassword = true,
+       keyboardType = TextInputType.visiblePassword,
+       maxLines = 1,
+       minLines = null,
+       maxLength = null,
+       suffixIcon = null;
 
   final String? label;
   final String? hint;
@@ -130,11 +130,17 @@ class _CommonTextFieldState extends State<CommonTextField> {
             focusNode: widget.focusNode,
             enabled: widget.enabled,
             inputFormatters: widget.inputFormatters,
-            style: TextStyles.s14.w400,
+            cursorColor: ColorPalette.grey400,
+            style: TextStyles.s14.w400.generalSans.copyWith(
+              color: ColorPalette.white300,
+            ),
             decoration: InputDecoration(
               hintText: widget.hint,
+              hintStyle: TextStyles.s12.w600.generalSans
+                  .copyWith(color: ColorPalette.grey400)
+                  .lhPercent(100),
               filled: true,
-              fillColor: widget.fillColor ?? ColorPalette.inputFill,
+              fillColor: widget.fillColor ?? ColorPalette.grey700,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.isPassword
                   ? GestureDetector(
@@ -143,13 +149,60 @@ class _CommonTextFieldState extends State<CommonTextField> {
                         _obscure
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
-                        color: ColorPalette.textHint,
+                        color: ColorPalette.grey400,
                         size: 20,
                       ),
                     )
                   : widget.suffixIcon,
               errorText: widget.errorText,
               counterText: '',
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: ColorPalette.grey400,
+                  width: 2,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: ColorPalette.grey400,
+                  width: 2,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: ColorPalette.grey400,
+                  width: 2,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: ColorPalette.error,
+                  width: 2,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: ColorPalette.error,
+                  width: 2,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+              ),
+              errorStyle: TextStyles.s12.w400.generalSans
+                  .copyWith(color: ColorPalette.error)
+                  .lhPercent(100),
             ),
           ),
         ),

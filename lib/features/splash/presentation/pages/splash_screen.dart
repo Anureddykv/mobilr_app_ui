@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
         if (UserSession.instance.isLoggedIn) {
           context.pushReplacementNamed(AppRoutes.home);
         } else {
-          context.pushReplacementNamed(AppRoutes.signin);
+          context.pushReplacementNamed(AppRoutes.loginOption);
         }
       });
     });
