@@ -13,6 +13,7 @@ import 'package:starnest/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:starnest/features/auth/presentation/controllers/login_controller.dart';
 import 'package:starnest/features/auth/presentation/controllers/login_option_controller.dart';
 import 'package:starnest/features/auth/presentation/controllers/signup_controller.dart';
+import 'package:starnest/features/auth/presentation/controllers/user_interest_controller.dart';
 
 /// GetX Binding for all auth-related routes.
 ///
@@ -91,5 +92,7 @@ class AuthBinding extends Bindings {
     Get.lazyPut<LoginOptionController>(
       () => LoginOptionController(Get.find<GoogleSignInUseCase>()),
     );
+
+    Get.lazyPut<UserInterestController>(() => UserInterestController());
   }
 }

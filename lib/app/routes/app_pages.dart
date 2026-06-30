@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starnest/features/splash/presentation/bindings/splash_binding.dart';
+import 'package:starnest/features/splash/presentation/pages/onboarding_screen.dart';
 import 'package:starnest/features/splash/presentation/pages/splash_screen.dart';
 import 'package:starnest/features/auth/presentation/bindings/auth_binding.dart';
 import 'package:starnest/features/auth/presentation/pages/login_option_screen.dart';
 import 'package:starnest/features/auth/presentation/pages/login_screen.dart';
 import 'package:starnest/features/auth/presentation/pages/signup_screen.dart';
-import 'package:starnest/features/onboarding/presentation/pages/onboarding_screen.dart';
-import 'package:starnest/features/onboarding/presentation/pages/onboarding_interests_screen.dart';
+import 'package:starnest/features/auth/presentation/pages/user_interest_screen.dart';
+import 'package:starnest/features/auth/presentation/pages/user_preference_screen.dart';
 import 'package:starnest/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:starnest/features/profile/presentation/pages/profile_screen.dart';
 import 'package:starnest/features/search/presentation/pages/search_screen.dart';
@@ -67,8 +68,15 @@ class AppPages {
       transition: Transition.fade,
     ),
     GetPage(
-      name: AppRoutes.onboardingInterests,
-      page: () => OnboardingInterestsScreen(),
+      name: AppRoutes.userInterest,
+      page: () => UserInterestScreen(),
+      binding: AuthBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.userPreference,
+      page: () => UserPreferenceScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
 

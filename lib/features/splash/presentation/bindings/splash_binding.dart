@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:starnest/core/managers/shared_preference_manager.dart';
 import 'package:starnest/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:starnest/features/splash/domain/usecases/check_session_usecase.dart';
+import 'package:starnest/features/splash/presentation/controllers/onboarding_controller.dart';
 import 'package:starnest/features/splash/presentation/controllers/splash_controller.dart';
 
 /// GetX Binding for the Splash screen.
@@ -23,5 +24,6 @@ class SplashBinding extends Bindings {
     Get.put<SplashController>(
       SplashController(Get.find<CheckSessionUseCase>()),
     );
+    Get.put<OnboardingController>(OnboardingController());
   }
 }

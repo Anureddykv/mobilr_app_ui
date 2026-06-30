@@ -182,7 +182,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           body: Container(
             clipBehavior: Clip.antiAlias,
             decoration: const BoxDecoration(
-              color: ColorPalette.darkBg,
+              color: ColorPalette.grey800,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(17),
                 topRight: Radius.circular(20),

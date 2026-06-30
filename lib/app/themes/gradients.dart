@@ -9,7 +9,7 @@ class AppGradients {
   static const LinearGradient mainBackground = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [ColorPalette.darkBg, ColorPalette.cardBg],
+    colors: [ColorPalette.grey800, ColorPalette.cardBg],
   );
 
   /// Card overlay gradient — fades image to dark bottom

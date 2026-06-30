@@ -44,8 +44,8 @@ class CommonButton extends StatelessWidget {
       onTap: (isEnabled && !isLoading) ? onTap : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        width: width ?? AppDimen.btnWidth,
-        height: height ?? AppDimen.btnHeight,
+        width: width,
+        height: height,
         padding: padding,
         decoration: BoxDecoration(
           color: backgroundColor,

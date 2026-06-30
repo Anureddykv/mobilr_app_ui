@@ -87,7 +87,7 @@ class CommonScaffold extends StatelessWidget {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: useGradientBg
           ? Colors.transparent
-          : backgroundColor ?? ColorPalette.darkBg,
+          : backgroundColor ?? ColorPalette.grey800,
       appBar: resolvedAppBar,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
@@ -99,7 +99,7 @@ class CommonScaffold extends StatelessWidget {
               child: content,
             )
           : Container(
-              color: backgroundColor ?? ColorPalette.darkBg,
+              color: backgroundColor ?? ColorPalette.grey800,
               child: content,
             ),
     );

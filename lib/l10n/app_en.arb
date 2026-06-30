@@ -63,5 +63,93 @@
   "signInNow": "Sign in now",
   "@signInNow": {
     "description": "Button text for signing in with a StarNest account."
+  },
+  "onboarding1": "Finding the honest and actual reviews of your Favourite movies",
+  "@onboarding1": {
+    "description": "Text for onboarding screen 1."
+  },
+  "onboarding2": "Finding your next great read shouldn't be a mystery.",
+  "@onboarding2": {
+    "description": "Text for onboarding screen 2."
+  },
+  "onboarding3": "Now you dont have to regret ruining your date by the bad Food",
+  "@onboarding3": {
+    "description": "Text for onboarding screen 3."
+  },
+  "onboarding4": "Level up your gaming with honest reviews.",
+  "@onboarding4": {
+    "description": "Text for onboarding screen 4."
+  },
+  "onboarding5": "Choose the perfect gadget, every time.",
+  "@onboarding5": {
+    "description": "Text for onboarding screen 5."
+  },
+  "letsGetStarted": "Let's Get Started!",
+  "@letsGetStarted": {
+    "description": "Let's Get Started!"
+  },
+  "tellUsWhatYouAreInto": "Tell us what you're into! Select the categories that spark your interest, and we'll help you explore more of what you love.",
+  "@tellUsWhatYouAreInto": {
+    "description": "Tell us what you're into! Select the categories that spark your interest, and we'll help you explore more of what you love."
+  },
+  "chooseYourInterests": "Choose Your Interests",
+  "@chooseYourInterests": {
+    "description": "Choose Your Interests"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip"
+  },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Continue"
+  },
+  "pleaseSelectAtleast1Interest": "Please select atleast 1 Interest",
+  "@pleaseSelectAtleast1Interest": {
+    "description": "Please select atleast 1 Interest"
+  },
+  "lightsCameraAction": "Lights, Camera, Action!",
+  "@lightsCameraAction": {
+    "description": "Lights, Camera, Action!"
+  },
+  "moviesExcitesYou": "We know everyone has their favorite genres, actors, and directors. Let us know what excites you in the world of movies!",
+  "@moviesExcitesYou": {
+    "description": "We know everyone has their favorite genres, actors, and directors. Let us know what excites you in the world of movies!"
+  },
+  "foodieModeOn": "Foodie Mode: On!",
+  "@foodieModeOn": {
+    "description": "Foodie Mode: On!"
+  },
+  "culinaryInterests": "From spicy to savory, pick your culinary interests. Whether it's cuisine, chains, or vegan-friendly options—we'll help you find the perfect dish for your taste!",
+  "@culinaryInterests": {
+    "description": "From spicy to savory, pick your culinary interests. Whether it's cuisine, chains, or vegan-friendly options—we'll help you find the perfect dish for your taste!"
+  },
+  "techEnthusiast": "Tech Enthusiast? We Got You.",
+  "@techEnthusiast": {
+    "description": "Tech Enthusiast? We Got You."
+  },
+  "gadgetsYouAreInto": "Tech is always evolving. Let us know what gadgets you're into, and we'll keep you updated on all the coolest devices!",
+  "@gadgetsYouAreInto": {
+    "description": "Tech is always evolving. Let us know what gadgets you're into, and we'll keep you updated on all the coolest devices!"
+  },
+  "booksBooksBooks": "Books, Books, Books!",
+  "@booksBooksBooks": {
+    "description": "Books, Books, Books!"
+  },
+  "loveToRead": "From mystery to fantasy, let us know what you love to read. We'll help you find new books and authors that match your taste!",
+  "@loveToRead": {
+    "description": "From mystery to fantasy, let us know what you love to read. We'll help you find new books and authors that match your taste!"
+  },
+  "gameOn": "Game On!",
+  "@gameOn": {
+    "description": "Game On!"
+  },
+  "gamingInterests": "Whether you're into role-playing, action, or strategy, we can match you with the games you'll love. Tell us about your gaming interests!",
+  "@gamingInterests": {
+    "description": "Whether you're into role-playing, action, or strategy, we can match you with the games you'll love. Tell us about your gaming interests!"
+  },
+  "selectAll": "Select All",
+  "@selectAll": {
+    "description": "Select All"
   }
 }

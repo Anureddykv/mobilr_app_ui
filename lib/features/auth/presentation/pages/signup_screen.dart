@@ -111,17 +111,18 @@ class SignUpScreen extends GetView<SignupController> {
             .lhPercent(100)
             .cl(ColorPalette.grey800),
         isLoading: controller.isLoading.value,
-        onTap: controller.isButtonEnabled.value && !controller.isLoading.value
-            ? () async {
-                if (_formKey.currentState!.validate()) {
-                  await controller.registerUser();
-                  final err = controller.errorMessage.value;
-                  if (err != null && context.mounted) {
-                    SnackBarUtils.showTopSnackBar(context, err, isError: true);
-                  }
-                }
-              }
-            : null,
+        // onTap: controller.isButtonEnabled.value && !controller.isLoading.value
+        //     ? () async {
+        //         if (_formKey.currentState!.validate()) {
+        //           await controller.registerUser();
+        //           final err = controller.errorMessage.value;
+        //           if (err != null && context.mounted) {
+        //             SnackBarUtils.showTopSnackBar(context, err, isError: true);
+        //           }
+        //         }
+        //       }
+        //     : null,
+        onTap: () => NavigationService.instance.offAll(AppRoutes.userInterest),
       ),
     );
   }

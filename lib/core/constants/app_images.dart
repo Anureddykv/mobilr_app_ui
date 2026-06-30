@@ -41,6 +41,13 @@ class SvgAssets {
 
   //Logo
   String get appTitleLogo => '$_base/logo/title_logo.svg';
+
+  //Onboarding
+  String get onboarding1 => '$_base/svg/onboarding1.svg';
+  String get onboarding2 => '$_base/svg/onboarding2.svg';
+  String get onboarding3 => '$_base/svg/onboarding3.svg';
+  String get onboarding4 => '$_base/svg/onboarding4.svg';
+  String get onboarding5 => '$_base/svg/onboarding5.svg';
 }
 
 // ==========================================================================

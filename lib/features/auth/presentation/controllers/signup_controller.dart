@@ -73,7 +73,7 @@ class SignupController extends GetxController {
           email: entity.email ?? emailController.text,
           avatarUrl: entity.avatarUrl,
         );
-        NavigationService.instance.off(AppRoutes.onboarding);
+        NavigationService.instance.off(AppRoutes.userInterest);
       },
     );
   }

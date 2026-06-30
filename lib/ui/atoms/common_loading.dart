@@ -22,7 +22,7 @@ class CommonLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundColor ?? ColorPalette.darkBg,
+      color: backgroundColor ?? ColorPalette.grey800,
       child: Center(
         child: SizedBox(
           width: size,

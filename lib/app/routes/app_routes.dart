@@ -12,6 +12,10 @@ class AppRoutes {
   /// Initial route — Splash screen
   static const String splash = '/';
 
+  // Onboarding
+
+  static const String onboarding = '/onboarding';
+
   // ==========================================================================
   // Auth
   // ==========================================================================
@@ -21,11 +25,11 @@ class AppRoutes {
   static const String signup = '/signup';
 
   // ==========================================================================
-  // Onboarding
+  // Preference
   // ==========================================================================
 
-  static const String onboarding = '/onboarding';
-  static const String onboardingInterests = '/onboardingInterests';
+  static const String userInterest = '/userInterest';
+  static const String userPreference = '/userPreference';
 
   // ==========================================================================
   // Home / Main

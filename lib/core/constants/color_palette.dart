@@ -36,7 +36,6 @@ class ColorPalette {
   // ==========================================================================
 
   /// Primary app background — deepest dark
-  static const Color darkBg = Color(0xFF0B0B0B);
 
   /// Card / surface background
   static const Color cardBg = Color(0xFF141414);
@@ -112,10 +111,12 @@ class ColorPalette {
 
   // Correct ColorPallete
   // White
+  static const Color white100 = Color.fromRGBO(255, 255, 255, 1);
   static const Color white300 = Color.fromRGBO(230, 234, 237, 1);
   static const Color white400 = Color.fromRGBO(204, 204, 204, 1);
 
   // Gray
+  static const Color grey300 = Color.fromRGBO(64, 64, 64, 1);
   static const Color grey400 = Color.fromRGBO(51, 51, 51, 1);
   static const Color grey700 = Color.fromRGBO(20, 20, 20, 1);
   static const Color grey800 = Color.fromRGBO(11, 11, 11, 1);

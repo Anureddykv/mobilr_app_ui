@@ -18,8 +18,8 @@ class AppThemes {
 
     // Colors
     // primaryColor: ColorPalette.movieAccent,
-    scaffoldBackgroundColor: ColorPalette.darkBg,
-    canvasColor: ColorPalette.darkBg,
+    scaffoldBackgroundColor: ColorPalette.grey800,
+    canvasColor: ColorPalette.grey800,
     dividerColor: ColorPalette.separator,
 
     // Color scheme
@@ -46,7 +46,7 @@ class AppThemes {
 
     // AppBar
     appBarTheme: const AppBarTheme(
-      backgroundColor: ColorPalette.darkBg,
+      backgroundColor: ColorPalette.grey800,
       elevation: 0,
       centerTitle: true,
       iconTheme: IconThemeData(color: ColorPalette.white),

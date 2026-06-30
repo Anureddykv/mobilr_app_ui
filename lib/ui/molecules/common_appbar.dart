@@ -43,7 +43,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor ?? ColorPalette.darkBg,
+      backgroundColor: backgroundColor ?? ColorPalette.grey800,
       elevation: elevation,
       centerTitle: centerTitle,
       automaticallyImplyLeading: false,

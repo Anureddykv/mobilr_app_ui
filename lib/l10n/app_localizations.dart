@@ -189,6 +189,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign in now'**
   String get signInNow;
+
+  /// Text for onboarding screen 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding the honest and actual reviews of your Favourite movies'**
+  String get onboarding1;
+
+  /// Text for onboarding screen 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your next great read shouldn\'t be a mystery.'**
+  String get onboarding2;
+
+  /// Text for onboarding screen 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Now you dont have to regret ruining your date by the bad Food'**
+  String get onboarding3;
+
+  /// Text for onboarding screen 4.
+  ///
+  /// In en, this message translates to:
+  /// **'Level up your gaming with honest reviews.'**
+  String get onboarding4;
+
+  /// Text for onboarding screen 5.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the perfect gadget, every time.'**
+  String get onboarding5;
+
+  /// Let's Get Started!
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s Get Started!'**
+  String get letsGetStarted;
+
+  /// Tell us what you're into! Select the categories that spark your interest, and we'll help you explore more of what you love.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what you\'re into! Select the categories that spark your interest, and we\'ll help you explore more of what you love.'**
+  String get tellUsWhatYouAreInto;
+
+  /// Choose Your Interests
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Interests'**
+  String get chooseYourInterests;
+
+  /// Skip
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// Continue
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueText;
+
+  /// Please select atleast 1 Interest
+  ///
+  /// In en, this message translates to:
+  /// **'Please select atleast 1 Interest'**
+  String get pleaseSelectAtleast1Interest;
+
+  /// Lights, Camera, Action!
+  ///
+  /// In en, this message translates to:
+  /// **'Lights, Camera, Action!'**
+  String get lightsCameraAction;
+
+  /// We know everyone has their favorite genres, actors, and directors. Let us know what excites you in the world of movies!
+  ///
+  /// In en, this message translates to:
+  /// **'We know everyone has their favorite genres, actors, and directors. Let us know what excites you in the world of movies!'**
+  String get moviesExcitesYou;
+
+  /// Foodie Mode: On!
+  ///
+  /// In en, this message translates to:
+  /// **'Foodie Mode: On!'**
+  String get foodieModeOn;
+
+  /// From spicy to savory, pick your culinary interests. Whether it's cuisine, chains, or vegan-friendly options—we'll help you find the perfect dish for your taste!
+  ///
+  /// In en, this message translates to:
+  /// **'From spicy to savory, pick your culinary interests. Whether it\'s cuisine, chains, or vegan-friendly options—we\'ll help you find the perfect dish for your taste!'**
+  String get culinaryInterests;
+
+  /// Tech Enthusiast? We Got You.
+  ///
+  /// In en, this message translates to:
+  /// **'Tech Enthusiast? We Got You.'**
+  String get techEnthusiast;
+
+  /// Tech is always evolving. Let us know what gadgets you're into, and we'll keep you updated on all the coolest devices!
+  ///
+  /// In en, this message translates to:
+  /// **'Tech is always evolving. Let us know what gadgets you\'re into, and we\'ll keep you updated on all the coolest devices!'**
+  String get gadgetsYouAreInto;
+
+  /// Books, Books, Books!
+  ///
+  /// In en, this message translates to:
+  /// **'Books, Books, Books!'**
+  String get booksBooksBooks;
+
+  /// From mystery to fantasy, let us know what you love to read. We'll help you find new books and authors that match your taste!
+  ///
+  /// In en, this message translates to:
+  /// **'From mystery to fantasy, let us know what you love to read. We\'ll help you find new books and authors that match your taste!'**
+  String get loveToRead;
+
+  /// Game On!
+  ///
+  /// In en, this message translates to:
+  /// **'Game On!'**
+  String get gameOn;
+
+  /// Whether you're into role-playing, action, or strategy, we can match you with the games you'll love. Tell us about your gaming interests!
+  ///
+  /// In en, this message translates to:
+  /// **'Whether you\'re into role-playing, action, or strategy, we can match you with the games you\'ll love. Tell us about your gaming interests!'**
+  String get gamingInterests;
+
+  /// Select All
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAll;
 }
 
 class _AppLocalizationsDelegate
